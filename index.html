@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>KaliVentas | Recargas para revendedores</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg:#020617;
+      --bg-soft:#020617;
+      --card:#020617;
+      --primary:#4f46e5;
+      --accent:#22c55e;
+      --text:#f9fafb;
+      --muted:#9ca3af;
+      --border:#1f2937;
+    }
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
+    body{
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:radial-gradient(circle at top,#1e293b 0,#020617 55%,#000 100%);
+      color:var(--text);
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+    a{color:inherit;text-decoration:none;}
+    .container{
+      width:100%;
+      max-width:1100px;
+      margin:0 auto;
+      padding:0 1.4rem;
+    }
+    header{
+      position:sticky;
+      top:0;
+      z-index:10;
+      backdrop-filter:blur(16px);
+      background:linear-gradient(to bottom,rgba(2,6,23,.96),rgba(15,23,42,.7),transparent);
+      border-bottom:1px solid rgba(15,23,42,.95);
+    }
+    nav{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:0.9rem 0;
+      gap:1rem;
+    }
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:.6rem;
+    }
+    .logo-icon{
+      width:30px;height:30px;border-radius:999px;
+      background:radial-gradient(circle at 30% 0,#a855f7,#4338ca);
+      display:flex;align-items:center;justify-content:center;
+      font-weight:800;font-size:.85rem;
+      box-shadow:0 0 12px rgba(79,70,229,.9);
+    }
+    .logo-text span:first-child{
+      font-weight:600;
+      font-size:.95rem;
+      letter-spacing:.04em;
+    }
+    .logo-text span:last-child{
+      font-size:.7rem;
+      text-transform:uppercase;
+      color:var(--muted);
+      letter-spacing:.16em;
+    }
+    .nav-links{
+      display:flex;
+      gap:1rem;
+      font-size:.85rem;
+      color:var(--muted);
+    }
+    .nav-links a:hover{color:var(--text);}
+    .nav-cta{
+      display:flex;
+      gap:.6rem;
+      align-items:center;
+    }
+    .btn{
+      border-radius:999px;
+      padding:.45rem .9rem;
+      border:1px solid rgba(148,163,184,.6);
+      font-size:.8rem;
+      cursor:pointer;
+      background:transparent;
+      color:var(--text);
+      display:inline-flex;
+      align-items:center;
+      gap:.3rem;
+    }
+    .btn-primary{
+      border:none;
+      background:linear-gradient(135deg,#4f46e5,#6366f1,#22c55e);
+      box-shadow:0 0 16px rgba(79,70,229,.9);
+    }
+    .btn-outline:hover{
+      background:rgba(15,23,42,.9);
+    }
+    .btn-primary:hover{
+      filter:brightness(1.05);
+      transform:translateY(-1px);
+    }
+    main{flex:1;}
+    .hero{
+      padding:2.2rem 0 2rem;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);
+      gap:2rem;
+      align-items:center;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:.35rem;
+      padding:.3rem .7rem;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.4);
+      font-size:.75rem;
+      color:var(--muted);
+      background:rgba(15,23,42,.9);
+    }
+    .pill-dot{
+      width:8px;height:8px;border-radius:999px;
+      background:radial-gradient(circle at 30% 0,#22c55e,#16a34a);
+      box-shadow:0 0 8px rgba(34,197,94,.9);
+    }
+    h1{
+      margin-top:.9rem;
+      font-size:clamp(2rem,4vw,2.5rem);
+      font-weight:800;
+      letter-spacing:-.04em;
+    }
+    h1 span.highlight{
+      background:linear-gradient(135deg,#6366f1,#22c55e);
+      -webkit-background-clip:text;
+      color:transparent;
+    }
+    .hero-sub{
+      margin-top:.6rem;
+      font-size:.92rem;
+      color:var(--muted);
+      max-width:30rem;
+    }
+    .hero-cta{
+      margin-top:1.3rem;
+      display:flex;
+      flex-wrap:wrap;
+      gap:.8rem;
+      align-items:center;
+    }
+    .hero-badges{
+      margin-top:1.2rem;
+      display:flex;
+      flex-wrap:wrap;
+      gap:.7rem;
+      font-size:.78rem;
+      color:var(--muted);
+    }
+    .badge{
+      padding:.35rem .6rem;
+      border-radius:999px;
+      border:1px solid rgba(31,41,55,.9);
+      background:rgba(15,23,42,.95);
+    }
+    .hero-card{
+      background:radial-gradient(circle at 0% 0%,rgba(79,70,229,.4),rgba(15,23,42,.98));
+      border-radius:20px;
+      padding:1.3rem 1.2rem;
+      border:1px solid rgba(31,41,55,.95);
+      box-shadow:0 16px 40px rgba(15,23,42,.9);
+      font-size:.84rem;
+    }
+    .hero-card h2{
+      font-size:1rem;
+      margin-bottom:.35rem;
+    }
+    .hero-card p{
+      color:var(--muted);
+      margin-bottom:.6rem;
+    }
+    .hero-list li{
+      margin-left:1.1rem;
+      color:var(--muted);
+      margin-bottom:.2rem;
+    }
+    .section{
+      padding:0 0 2rem;
+    }
+    .section h2{
+      font-size:1.15rem;
+      margin-bottom:.3rem;
+    }
+    .section p{
+      font-size:.86rem;
+      color:var(--muted);
+      max-width:32rem;
+    }
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:1rem;
+      margin-top:1.1rem;
+    }
+    .card{
+      background:rgba(15,23,42,.96);
+      border-radius:16px;
+      border:1px solid rgba(31,41,55,.95);
+      padding:.9rem .9rem .8rem;
+      font-size:.82rem;
+    }
+    .card h3{
+      font-size:.9rem;
+      margin-bottom:.25rem;
+    }
+    .card p{
+      color:var(--muted);
+      font-size:.8rem;
+    }
+    footer{
+      border-top:1px solid rgba(15,23,42,.95);
+      padding:1.4rem 0 1rem;
+      font-size:.78rem;
+      color:var(--muted);
+      text-align:center;
+    }
+    @media (max-width:880px){
+      .hero-grid{
+        grid-template-columns:minmax(0,1fr);
+      }
+      .hero-card{
+        margin-top:1rem;
+      }
+      .cards{
+        grid-template-columns:minmax(0,1fr);
+      }
+      .nav-links{display:none;}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <nav>
+      <a href="index.html" class="logo">
+        <div class="logo-icon">KV</div>
+        <div class="logo-text">
+          <span>KaliVentas</span>
+          <span>Recargas & Streaming</span>
+        </div>
+      </a>
+      <div class="nav-links">
+        <a href="#como-funciona">Cómo funciona</a>
+        <a href="#info">Info</a>
+        <a href="#contacto">Contacto</a>
+      </div>
+      <div class="nav-cta">
+        <a class="btn btn-outline" href="login.html">Acceso revendedores</a>
+        <a class="btn btn-primary" href="registro.html">Quiero ser revendedor</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          <div class="pill">
+            <span class="pill-dot"></span>
+            <span>Panel privado de recargas para revendedores</span>
+          </div>
+          <h1>
+            Haz negocio revendiéndo<br/>
+            <span class="highlight">monedas de juegos y servicios de streaming</span>
+            con KaliVentas.
+          </h1>
+          <p class="hero-sub">
+            Esta página pública solo muestra lo básico. El catálogo completo de productos, precios y recargas
+            se muestra únicamente dentro del panel de revendedores (después de registrarte e iniciar sesión).
+          </p>
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="registro.html">Crear cuenta de revendedor</a>
+            <a class="btn btn-outline" href="login.html">Ya soy revendedor</a>
+          </div>
+          <div class="hero-badges">
+            <div class="badge">Mínimo de recarga: $200 MXN</div>
+            <div class="badge">Catálogo privado solo para revendedores</div>
+            <div class="badge">Soporte por WhatsApp: +52 56 4880 4810</div>
+          </div>
+        </div>
+        <div>
+          <div class="hero-card">
+            <h2>¿Qué es KaliVentas?</h2>
+            <p>
+              KaliVentas es un panel de recargas pensado para revendedores que atienden por redes, WhatsApp
+              o tiendas físicas. Tú vendes, nosotros te apoyamos con las recargas.
+            </p>
+            <ul class="hero-list">
+              <li>Registro simple para revendedores.</li>
+              <li>Catálogo privado de juegos y streaming dentro del panel.</li>
+              <li>Pagas por transferencia, OXXO o cripto.</li>
+              <li>Todo se coordina por WhatsApp con un agente.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="info">
+    <div class="container">
+      <h2>Información básica (pública)</h2>
+      <p>
+        No mostramos precios detallados ni productos específicos en la página pública. Para ver el catálogo
+        completo de recargas de videojuegos, diamantes, UC, V-Bucks y streaming, es necesario registrarse
+        y acceder como revendedor.
+      </p>
+      <div class="cards" style="margin-top:1rem;">
+        <article class="card">
+          <h3>Recargas de juegos</h3>
+          <p>Monedas y créditos para juegos como Free Fire, PUBG, Fortnite, COD Mobile, Roblox, GTA V PC, etc.</p>
+        </article>
+        <article class="card">
+          <h3>Servicios de streaming</h3>
+          <p>Perfiles y cuentas de streaming como Netflix, Disney+, Prime Video, Spotify y más.</p>
+        </article>
+        <article class="card">
+          <h3>Atención manual</h3>
+          <p>Detrás del panel hay personas reales. Las recargas se validan y confirman siempre por WhatsApp.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer id="contacto">
+  <div class="container">
+    KaliVentas · Panel de recargas para revendedores · Atención por WhatsApp: +52 56 4880 4810
+  </div>
+</footer>
+</body>
+</html>

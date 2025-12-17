@@ -1,0 +1,114 @@
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const axios = require("axios");
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+const PORT = process.env.PORT || 4000;
+
+// --- Helpers ---
+function smmClient() {
+  const baseURL = process.env.SMM_API_URL;
+  const key = process.env.SMM_API_KEY;
+
+  if (!baseURL || !key) {
+    throw new Error("Config de SMM incompleta. Revisa SMM_API_URL y SMM_API_KEY.");
+  }
+
+  return { baseURL, key };
+}
+
+// --- Rutas básicas ---
+app.get("/api/health", (req, res) => {
+  res.json({ ok: true, message: "KaliVentas backend online" });
+});
+
+// --- SmmProdigyX: crear orden ---
+app.post("/api/smm/order", async (req, res) => {
+  try {
+    const { serviceId, link, quantity } = req.body || {};
+
+    if (!serviceId || !link || !quantity) {
+      return res.status(400).json({ ok: false, error: "Falta serviceId, link o quantity" });
+    }
+
+    const { baseURL, key } = smmClient();
+
+    // La mayoría de paneles SMM usan form-data o x-www-form-urlencoded:
+    const payload = new URLSearchParams({
+      key,
+      action: "add",
+      service: String(serviceId),
+      link,
+      quantity: String(quantity)
+    });
+
+    const smmRes = await axios.post(baseURL, payload.toString(), {
+      headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    });
+
+    res.json({
+      ok: true,
+      provider: "SmmProdigyX",
+      data: smmRes.data
+    });
+  } catch (err) {
+    console.error("Error /api/smm/order:", err.response?.data || err.message);
+    res.status(500).json({
+      ok: false,
+      error: "Error llamando a SmmProdigyX",
+      detail: err.response?.data || err.message
+    });
+  }
+});
+
+// --- SmmProdigyX: listar servicios (ejemplo) ---
+app.get("/api/smm/services", async (req, res) => {
+  try {
+    const { baseURL, key } = smmClient();
+
+    const payload = new URLSearchParams({
+      key,
+      action: "services"
+    });
+
+    const smmRes = await axios.post(baseURL, payload.toString(), {
+      headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    });
+
+    res.json({ ok: true, provider: "SmmProdigyX", data: smmRes.data });
+  } catch (err) {
+    console.error("Error /api/smm/services:", err.response?.data || err.message);
+    res.status(500).json({
+      ok: false,
+      error: "Error obteniendo servicios",
+      detail: err.response?.data || err.message
+    });
+  }
+});
+
+// --- ComidaMaster (placeholder) ---
+app.get("/api/comida/info", async (req, res) => {
+  try {
+    const baseURL = process.env.COMIDA_API_URL;
+    if (!baseURL) {
+      return res.status(500).json({ ok: false, error: "COMIDA_API_URL no configurada" });
+    }
+
+    // No sabemos aún sus endpoints, así que solo devolvemos la base:
+    res.json({
+      ok: true,
+      provider: "ComidaMaster",
+      baseURL
+    });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`KaliVentas backend escuchando en http://localhost:${PORT}`);
+});
