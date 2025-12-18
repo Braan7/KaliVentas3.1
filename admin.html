@@ -1,0 +1,3968 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>KaliVentas - Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg:#020617;
+      --surface:#020617;
+      --surface-soft:#020617;
+      --primary:#4f46e5;
+      --accent:#22c55e;
+      --text:#f9fafb;
+      --muted:#9ca3af;
+      --border:#1f2937;
+      --danger:#f97373;
+    }
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
+    body{
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:radial-gradient(circle at top,#020617 0,#000 60%);
+      color:var(--text);
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+    a{color:inherit;text-decoration:none;}
+    header{
+      border-bottom:1px solid rgba(15,23,42,.95);
+      background:rgba(2,6,23,.96);
+      backdrop-filter:blur(14px);
+      position:sticky;
+      top:0;
+      z-index:20;
+    }
+    .topbar{
+      max-width:1100px;
+      margin:0 auto;
+      padding:.7rem 1.4rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:1rem;
+    }
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:.6rem;
+    }
+    .logo-icon{
+      width:30px;height:30px;border-radius:999px;
+      background:radial-gradient(circle at 30% 0,#a855f7,#4338ca);
+      display:flex;align-items:center;justify-content:center;
+      font-weight:800;font-size:.85rem;
+      box-shadow:0 0 12px rgba(79,70,229,.9);
+    }
+    .logo-text span:first-child{
+      font-weight:600;font-size:.95rem;letter-spacing:.04em;
+    }
+    .logo-text span:last-child{
+      font-size:.7rem;text-transform:uppercase;color:var(--muted);letter-spacing:.16em;
+    }
+    .user-chip{
+      font-size:.78rem;
+      color:var(--muted);
+    }
+    .user-chip strong{color:var(--text);}
+    .btn-top{
+      border-radius:999px;
+      padding:.35rem .75rem;
+      border:1px solid rgba(148,163,184,.7);
+      font-size:.78rem;
+      background:transparent;
+      color:var(--text);
+      cursor:pointer;
+    }
+    .btn-top:hover{
+      background:rgba(15,23,42,.9);
+    }
+    .layout{
+      display:grid;
+      grid-template-columns:260px minmax(0,1fr);
+      max-width:1100px;
+      width:100%;
+      margin:0 auto;
+      padding:1.3rem 1.4rem 1.8rem;
+      gap:1.4rem;
+      flex:1;
+    }
+    .sidebar{
+      background:rgba(15,23,42,.98);
+      border-radius:18px;
+      border:1px solid rgba(31,41,55,.95);
+      padding:1rem .9rem;
+      font-size:.84rem;
+      position:relative;
+    }
+    .sidebar-title{
+      font-size:.8rem;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      color:var(--muted);
+      margin-bottom:.4rem;
+    }
+    .menu-group-label{
+      font-size:.78rem;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      color:var(--muted);
+      margin:.8rem 0 .25rem;
+    }
+    .menu-item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:.4rem;
+      padding:.35rem .55rem;
+      border-radius:999px;
+      cursor:pointer;
+      color:var(--muted);
+      border:1px solid transparent;
+      font-size:.82rem;
+    }
+    .menu-item span.sub{
+      font-size:.72rem;
+      color:var(--muted);
+      display:block;
+    }
+    .menu-item:hover{
+      background:rgba(15,23,42,.9);
+      color:var(--text);
+      border-color:rgba(51,65,85,.9);
+    }
+    .menu-item.active{
+      background:radial-gradient(circle at 0% 0%,rgba(79,70,229,.4),rgba(15,23,42,.98));
+      border-color:rgba(79,70,229,.9);
+      color:var(--text);
+      box-shadow:0 0 14px rgba(79,70,229,.7);
+    }
+    .menu-item-dot{
+      width:7px;height:7px;border-radius:999px;
+      background:radial-gradient(circle at 30% 0,#22c55e,#16a34a);
+      box-shadow:0 0 6px rgba(34,197,94,.9);
+    }
+    .hamburger{
+      display:none;
+      width:34px;
+      height:34px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.6);
+      background:rgba(15,23,42,.9);
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+    }
+    .hamburger-lines{
+      width:16px;
+      height:12px;
+      position:relative;
+    }
+    .hamburger-lines span{
+      position:absolute;
+      left:0;
+      right:0;
+      height:2px;
+      border-radius:999px;
+      background:rgba(226,232,240,.95);
+      transition:.18s ease;
+    }
+    .hamburger-lines span:nth-child(1){top:0;}
+    .hamburger-lines span:nth-child(2){top:5px;}
+    .hamburger-lines span:nth-child(3){top:10px;}
+    .hamburger.open .hamburger-lines span:nth-child(1){
+      transform:translateY(5px) rotate(45deg);
+    }
+    .hamburger.open .hamburger-lines span:nth-child(2){
+      opacity:0;
+    }
+    .hamburger.open .hamburger-lines span:nth-child(3){
+      transform:translateY(-5px) rotate(-45deg);
+    }
+    .sidebar-overlay{
+      display:none;
+    }
+    .content{
+      background:radial-gradient(circle at 0% 0%,rgba(79,70,229,.18),rgba(15,23,42,.98));
+      border-radius:20px;
+      border:1px solid rgba(31,41,55,.95);
+      box-shadow:0 20px 45px rgba(15,23,42,.95);
+      padding:1.3rem 1.2rem 1.4rem;
+      font-size:.86rem;
+    }
+    .section-tag{
+      font-size:.78rem;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      color:var(--muted);
+      margin-bottom:.2rem;
+    }
+    h1{
+      font-size:1.3rem;
+      margin-bottom:.15rem;
+    }
+    .section-sub{
+      font-size:.86rem;
+      color:var(--muted);
+      margin-bottom:1rem;
+    }
+    .section-sub strong{
+      color:#e5e7eb;
+    }
+    .pill-inline{
+      display:inline-flex;
+      align-items:center;
+      gap:.3rem;
+      border-radius:999px;
+      padding:.25rem .55rem;
+      border:1px solid rgba(148,163,184,.5);
+      font-size:.75rem;
+      color:var(--muted);
+      margin-bottom:.6rem;
+    }
+    .pill-dot{
+      width:7px;height:7px;border-radius:999px;
+      background:radial-gradient(circle at 30% 0,#22c55e,#16a34a);
+      box-shadow:0 0 6px rgba(34,197,94,.9);
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);
+      gap:1.2rem;
+    }
+    .field{
+      background:rgba(15,23,42,.92);
+      border-radius:12px;
+      border:1px solid rgba(31,41,55,.95);
+      padding:.45rem .7rem;
+      display:flex;
+      align-items:center;
+      gap:.4rem;
+      margin-bottom:.3rem;
+    }
+    .field-icon{
+      font-size:.9rem;
+      opacity:.85;
+    }
+    .field input{
+      background:transparent;
+      border:none;
+      outline:none;
+      color:var(--text);
+      font-size:.9rem;
+      width:100%;
+    }
+    .field input::placeholder{color:#64748b;}
+    .products-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.7rem;
+      margin-top:.3rem;
+    }
+    .card{
+      background:rgba(15,23,42,.96);
+      border-radius:14px;
+      border:1px solid rgba(31,41,55,.95);
+      padding:.75rem .75rem .7rem;
+      font-size:.82rem;
+    }
+    .card h3{
+      font-size:.9rem;
+      margin-bottom:.15rem;
+    }
+    .card p{
+      font-size:.8rem;
+      color:var(--muted);
+    }
+    .btn{
+      border-radius:999px;
+      padding:.35rem .7rem;
+      border:none;
+      background:linear-gradient(135deg,#4f46e5,#6366f1,#22c55e);
+      color:#fff;
+      font-size:.78rem;
+      font-weight:600;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:.25rem;
+      box-shadow:0 0 13px rgba(79,70,229,.85);
+    }
+    .btn-alt{
+      background:transparent;
+      border:1px solid rgba(148,163,184,.7);
+      box-shadow:none;
+    }
+    .btn-small{
+      padding:.3rem .6rem;
+      font-size:.76rem;
+      box-shadow:none;
+    }
+    .status{
+      font-size:.78rem;
+      color:var(--muted);
+      min-height:1em;
+      margin-top:.25rem;
+    }
+    .status.err{color:var(--danger);}
+    .status.ok{color:var(--accent);}
+    footer{
+      border-top:1px solid rgba(15,23,42,.95);
+      padding:.9rem 1.4rem 1rem;
+      font-size:.78rem;
+      color:var(--muted);
+      text-align:center;
+      margin-top:auto;
+    }
+    @media (max-width:880px){
+      .layout{
+        grid-template-columns:minmax(0,1fr);
+        padding:1.1rem 1.1rem 1.4rem;
+      }
+      .sidebar{
+        position:fixed;
+        inset:0 0 auto 0;
+        max-width:260px;
+        width:80%;
+        transform:translateX(-100%);
+        transition:.2s ease;
+        z-index:30;
+      }
+      .sidebar.open{
+        transform:translateX(0);
+      }
+      .sidebar-overlay{
+        display:block;
+        position:fixed;
+        inset:0;
+        background:rgba(15,23,42,.85);
+        backdrop-filter:blur(6px);
+        opacity:0;
+        pointer-events:none;
+        transition:.2s ease;
+        z-index:25;
+      }
+      .sidebar-overlay.open{
+        opacity:1;
+        pointer-events:auto;
+      }
+      .hamburger{
+        display:flex;
+      }
+      .layout{gap:.9rem;}
+      .grid{
+        grid-template-columns:minmax(0,1fr);
+      }
+      .products-grid{
+        grid-template-columns:minmax(0,1fr);
+      }
+    }
+  
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 0.9rem;
+    margin-bottom: 1rem;
+  }
+  .dash-card {
+    padding: 0.8rem 0.9rem;
+  }
+  .dash-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 0.25rem;
+  }
+  .dash-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+  .dash-hint {
+    font-size: 0.76rem;
+    color: var(--muted);
+  }
+  .dash-list {
+    font-size: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    margin-bottom: 0.3rem;
+  }
+  .dash-order-item {
+    opacity: 0.92;
+  }
+  @media (max-width: 768px) {
+    .dashboard-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+
+
+    /* Sidebar estilo gaming tipo captura */
+    .sidebar{
+      position:relative;
+      background:radial-gradient(circle at top,#020617 0,#020617 55%);
+      border-radius:24px;
+      border:1px solid rgba(15,23,42,1);
+      padding:0.6rem 0.2rem 0.6rem 0.6rem;
+      overflow:hidden;
+    }
+    .sidebar-glow{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:radial-gradient(circle at top left,rgba(56,189,248,.18),transparent 55%);
+      opacity:0.9;
+    }
+    .sidebar-inner{
+      position:relative;
+      z-index:1;
+      max-height:calc(100vh - 6rem);
+      overflow-y:auto;
+      padding-right:0.55rem;
+    }
+    .sidebar-inner::-webkit-scrollbar{
+      width:4px;
+    }
+    .sidebar-inner::-webkit-scrollbar-track{
+      background:transparent;
+    }
+    .sidebar-inner::-webkit-scrollbar-thumb{
+      border-radius:999px;
+      background:linear-gradient(to bottom,#22d3ee,#e11d48);
+    }
+    .sidebar-head{
+      padding:0.4rem 0.2rem 0.6rem 0.1rem;
+    }
+    .sidebar-brand{
+      display:flex;
+      align-items:center;
+      gap:0.55rem;
+    }
+    .sidebar-logo-circle{
+      width:32px;
+      height:32px;
+      border-radius:999px;
+      background:radial-gradient(circle at 30% 0,#22d3ee,#1d4ed8);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:0.78rem;
+      font-weight:700;
+      color:white;
+      box-shadow:0 0 16px rgba(56,189,248,.7);
+    }
+    .sidebar-brand-text{
+      display:flex;
+      flex-direction:column;
+      gap:0;
+    }
+    .sidebar-brand-text .brand-name{
+      font-size:0.82rem;
+      letter-spacing:0.08em;
+      text-transform:uppercase;
+    }
+    .sidebar-brand-text .brand-tag{
+      font-size:0.7rem;
+      color:var(--muted);
+    }
+    .sidebar-section-title{
+      font-size:0.72rem;
+      text-transform:uppercase;
+      letter-spacing:0.16em;
+      color:var(--muted);
+      margin:0.5rem 0.4rem 0.35rem;
+    }
+    .sidebar-section-title.muted{
+      margin-top:0.8rem;
+      opacity:0.9;
+    }
+    .menu-item{
+      display:flex;
+      align-items:center;
+      gap:0.45rem;
+      padding:0.35rem 0.45rem;
+      margin:0.08rem 0.25rem;
+      border-radius:999px;
+      cursor:pointer;
+      color:var(--muted);
+      border:1px solid transparent;
+      font-size:0.8rem;
+      transition:all .18s ease-out;
+    }
+    .menu-icon{
+      width:30px;
+      height:30px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:radial-gradient(circle at 30% 0,rgba(56,189,248,.9),rgba(30,64,175,.9));
+      box-shadow:0 0 10px rgba(56,189,248,.7);
+      font-size:0.9rem;
+      flex-shrink:0;
+    }
+    .menu-text{
+      display:flex;
+      flex-direction:column;
+      gap:0;
+      flex:1;
+      min-width:0;
+    }
+    .menu-label{
+      font-size:0.8rem;
+      font-weight:500;
+      white-space:nowrap;
+      text-overflow:ellipsis;
+      overflow:hidden;
+    }
+    .menu-item span.sub{
+      font-size:0.7rem;
+      color:var(--muted);
+      white-space:nowrap;
+      text-overflow:ellipsis;
+      overflow:hidden;
+    }
+    .menu-item:hover{
+      background:radial-gradient(circle at left,rgba(56,189,248,.24),rgba(15,23,42,.98));
+      color:#e5e7eb;
+    }
+    .menu-item.active{
+      background:radial-gradient(circle at left,rgba(79,70,229,.55),rgba(15,23,42,.98));
+      border-color:rgba(79,70,229,.95);
+      color:#f9fafb;
+      box-shadow:0 0 18px rgba(79,70,229,.9);
+    }
+    .menu-item-dot{
+      width:6px;
+      height:6px;
+      border-radius:999px;
+      background:radial-gradient(circle at 30% 0,#22c55e,#16a34a);
+      box-shadow:0 0 8px rgba(34,197,94,.9);
+      flex-shrink:0;
+    }
+    @media (max-width:960px){
+      .sidebar{
+        position:fixed;
+        z-index:30;
+        top:64px;
+        left:0.75rem;
+        bottom:0.75rem;
+        width:230px;
+        transform:translateX(-120%);
+        transition:transform .18s ease-out,box-shadow .18s ease-out;
+        box-shadow:0 0 0 transparent;
+      }
+      .sidebar.open{
+        transform:translateX(0);
+        box-shadow:0 25px 90px rgba(15,23,42,.95);
+      }
+      .sidebar-inner{
+        max-height:calc(100vh - 7.5rem);
+      }
+      .sidebar-glow{
+        opacity:1;
+      }
+    }
+
+
+
+    /* Bloque de perfil tipo tarjeta gamer */
+    .profile-layout{
+      margin-top:1rem;
+      display:grid;
+      grid-template-columns:minmax(220px,260px) minmax(0,1fr);
+      gap:1rem;
+      align-items:flex-start;
+    }
+    .profile-card{
+      padding:1.2rem 1rem;
+      background:radial-gradient(circle at top,#020617,#020617 55%);
+      box-shadow:0 0 0 1px rgba(15,23,42,1),0 18px 60px rgba(15,23,42,.95);
+      text-align:center;
+    }
+    .profile-avatar{
+      width:76px;
+      height:76px;
+      border-radius:999px;
+      margin:0 auto 0.6rem;
+      background:radial-gradient(circle at 30% 0,#22d3ee,#6366f1);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 0 26px rgba(56,189,248,.9);
+    }
+    .profile-avatar-icon{
+      font-size:2.1rem;
+    }
+    .profile-name{
+      font-size:1.05rem;
+      font-weight:600;
+      letter-spacing:0.06em;
+      text-transform:uppercase;
+    }
+    .profile-role{
+      font-size:0.78rem;
+      text-transform:uppercase;
+      letter-spacing:0.16em;
+      color:var(--muted);
+      margin-top:0.15rem;
+    }
+    .profile-divider{
+      height:1px;
+      background:linear-gradient(to right,transparent,rgba(148,163,184,.7),transparent);
+      margin:0.8rem 0 0.4rem;
+    }
+    .profile-divider.soft{
+      opacity:.5;
+      margin-top:0.6rem;
+    }
+    .profile-row{
+      display:flex;
+      align-items:center;
+      gap:0.45rem;
+      font-size:0.8rem;
+      color:var(--muted);
+      justify-content:flex-start;
+    }
+    .profile-row-icon{
+      width:22px;
+      height:22px;
+      border-radius:999px;
+      background:rgba(15,23,42,1);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:0.76rem;
+      flex-shrink:0;
+    }
+    .profile-row-text{
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .profile-tagline{
+      font-size:0.76rem;
+      color:var(--muted);
+      text-align:left;
+    }
+    .profile-main{
+      display:flex;
+      flex-direction:column;
+      gap:0.9rem;
+    }
+    .profile-balance{
+      padding:1rem 1.1rem;
+    }
+    .profile-balance-label{
+      font-size:0.82rem;
+      text-transform:uppercase;
+      letter-spacing:0.16em;
+      color:var(--muted);
+      margin-bottom:0.25rem;
+    }
+    .profile-balance-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:0.75rem;
+      margin-bottom:0.6rem;
+    }
+    .profile-balance-amount{
+      font-size:1.6rem;
+      font-weight:700;
+      text-shadow:0 0 16px rgba(56,189,248,.8);
+      color:#a5b4fc;
+    }
+    .profile-balance-chip{
+      font-size:0.7rem;
+      padding:0.2rem 0.6rem;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.7);
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:0.12em;
+    }
+    .profile-balance-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:0.5rem;
+      margin-bottom:0.4rem;
+    }
+    .profile-balance-hint{
+      font-size:0.76rem;
+      color:var(--muted);
+    }
+    .profile-bonus{
+      padding:0.9rem 1.1rem 1rem;
+      background:radial-gradient(circle at top left,rgba(234,179,8,.18),rgba(15,23,42,1));
+      border-color:rgba(202,138,4,.7);
+    }
+    .profile-bonus-header{
+      display:flex;
+      align-items:center;
+      gap:0.4rem;
+      margin-bottom:0.2rem;
+    }
+    .profile-bonus-icon{
+      width:26px;
+      height:26px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:radial-gradient(circle at 30% 0,#fbbf24,#f97316);
+      box-shadow:0 0 10px rgba(251,191,36,.9);
+      font-size:0.9rem;
+    }
+    .profile-bonus-title{
+      font-size:0.86rem;
+      text-transform:uppercase;
+      letter-spacing:0.16em;
+    }
+    .profile-bonus-amount{
+      font-size:1.2rem;
+      font-weight:600;
+      margin-top:0.2rem;
+    }
+    .profile-bonus-tag{
+      font-size:0.74rem;
+      color:var(--muted);
+      margin-bottom:0.35rem;
+    }
+    .profile-bonus-text{
+      font-size:0.78rem;
+      color:var(--muted);
+    }
+    @media (max-width:960px){
+      .profile-layout{
+        grid-template-columns:1fr;
+      }
+      .profile-card{
+        order:1;
+      }
+      .profile-main{
+        order:2;
+      }
+    }
+
+
+    .profile-row.id-row .profile-row-text strong{
+      letter-spacing:0.06em;
+      text-transform:uppercase;
+    }
+
+
+
+    .rank-section{
+      margin-top:1.8rem;
+    }
+    .rank-title-main{
+      font-size:1rem;
+      margin-bottom:0.25rem;
+    }
+    .rank-sub{
+      font-size:0.8rem;
+      color:var(--muted);
+      max-width:560px;
+      margin-bottom:0.9rem;
+    }
+    .rank-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+      gap:0.9rem;
+    }
+    .rank-card{
+      position:relative;
+      border-radius:20px;
+      padding:0.85rem 0.9rem 0.9rem;
+      background:radial-gradient(circle at top,#020617,#020617);
+      border:1px solid rgba(15,23,42,1);
+      box-shadow:0 0 0 rgba(0,0,0,0);
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      gap:0.25rem;
+      min-height:150px;
+    }
+    .rank-icon{
+      width:38px;
+      height:38px;
+      border-radius:14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.1rem;
+      background:radial-gradient(circle at 30% 0,#22d3ee,#1d4ed8);
+      box-shadow:0 0 18px rgba(56,189,248,.7);
+      margin-bottom:0.25rem;
+    }
+    .rank-name{
+      font-size:0.9rem;
+      font-weight:600;
+    }
+    .rank-range{
+      font-size:0.78rem;
+      color:var(--muted);
+    }
+    .rank-discount{
+      font-size:0.8rem;
+      margin-top:0.2rem;
+      color:#22c55e;
+      font-weight:500;
+    }
+    .rank-btn{
+      margin-top:auto;
+      font-size:0.75rem;
+      border-radius:999px;
+      padding:0.32rem 0.7rem;
+      border:none;
+      outline:none;
+      background:rgba(15,23,42,.9);
+      color:var(--muted);
+      display:flex;
+      align-items:center;
+      gap:0.3rem;
+      cursor:default;
+    }
+    .rank-btn-active{
+      background:linear-gradient(to right,#22d3ee,#0ea5e9,#6366f1);
+      color:white;
+      box-shadow:0 0 18px rgba(59,130,246,.9);
+      cursor:default;
+    }
+    .rank-card.rank-current{
+      border-color:rgba(59,130,246,1);
+      box-shadow:0 0 24px rgba(37,99,235,.72);
+    }
+    .rank-card.rank-locked{
+      opacity:0.9;
+    }
+    @media (max-width:768px){
+      .rank-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+
+
+    .leader-prize-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:0.9rem;
+      margin:1.2rem 0 0.9rem;
+    }
+    .leader-prize-card{
+      border-radius:24px;
+      padding:0.9rem 1rem;
+      background:radial-gradient(circle at top,#020617,#020617);
+      border:1px solid rgba(15,23,42,1);
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      gap:0.35rem;
+      box-shadow:0 0 0 rgba(0,0,0,0);
+    }
+    .leader-prize-card.daily{
+      box-shadow:0 0 22px rgba(16,185,129,.6);
+      border-color:rgba(16,185,129,.9);
+    }
+    .leader-prize-card.weekly{
+      box-shadow:0 0 22px rgba(56,189,248,.6);
+      border-color:rgba(56,189,248,.9);
+    }
+    .leader-prize-card.monthly{
+      box-shadow:0 0 22px rgba(236,72,153,.7);
+      border-color:rgba(236,72,153,.9);
+    }
+    .leader-icon{
+      width:40px;
+      height:40px;
+      border-radius:16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.1rem;
+      background:radial-gradient(circle at 30% 0,#22d3ee,#1d4ed8);
+      margin-bottom:0.15rem;
+    }
+    .leader-amount{
+      font-size:1.4rem;
+      font-weight:700;
+    }
+    .leader-caption{
+      font-size:0.78rem;
+      text-transform:uppercase;
+      letter-spacing:0.12em;
+      color:var(--muted);
+    }
+    .leader-timers-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+      gap:0.9rem;
+      margin:0.4rem 0 1.2rem;
+    }
+    .leader-timer-card{
+      border-radius:22px;
+      padding:0.8rem 1rem;
+      background:radial-gradient(circle at top,#020617,#020617);
+      border:1px solid rgba(15,23,42,1);
+      text-align:center;
+    }
+    .leader-timer-label{
+      font-size:0.8rem;
+      margin-bottom:0.4rem;
+    }
+    .leader-timer-time{
+      font-size:1.3rem;
+      font-weight:700;
+      letter-spacing:0.16em;
+    }
+    .leader-timer-sub{
+      font-size:0.72rem;
+      color:var(--muted);
+      margin-top:0.3rem;
+    }
+    .leader-tabs{
+      display:flex;
+      flex-wrap:wrap;
+      gap:0.4rem;
+      margin-bottom:0.9rem;
+    }
+    .leader-tab{
+      border-radius:999px;
+      border:1px solid rgba(37,99,235,.6);
+      padding:0.28rem 0.9rem;
+      font-size:0.78rem;
+      background:transparent;
+      color:var(--muted);
+      cursor:default;
+    }
+    .leader-tab.active{
+      background:linear-gradient(to right,#22d3ee,#6366f1);
+      color:white;
+      box-shadow:0 0 14px rgba(59,130,246,.8);
+    }
+    .leader-board-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:1rem;
+    }
+    .leader-board-card{
+      border-radius:24px;
+      padding:1rem 1.1rem 1rem;
+      background:radial-gradient(circle at top,#020617,#020617);
+      border:1px solid rgba(15,23,42,1);
+    }
+    .leader-board-card.alt{
+      border-color:rgba(236,72,153,.7);
+    }
+    .leader-board-header{
+      display:flex;
+      align-items:center;
+      gap:0.45rem;
+      margin-bottom:0.25rem;
+    }
+    .leader-board-icon{
+      width:26px;
+      height:26px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:radial-gradient(circle at 30% 0,#22d3ee,#1d4ed8);
+      font-size:0.9rem;
+    }
+    .leader-board-title{
+      font-size:0.92rem;
+      font-weight:600;
+    }
+    .leader-board-sub{
+      font-size:0.78rem;
+      color:var(--muted);
+      margin-bottom:0.65rem;
+    }
+    .leader-list{
+      display:flex;
+      flex-direction:column;
+      gap:0.35rem;
+    }
+    .leader-row{
+      display:flex;
+      align-items:center;
+      gap:0.4rem;
+      padding:0.35rem 0.45rem;
+      border-radius:999px;
+      background:rgba(15,23,42,.95);
+    }
+    .leader-pos{
+      width:22px;
+      height:22px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:0.72rem;
+      font-weight:600;
+      color:black;
+      flex-shrink:0;
+    }
+    .leader-pos.pos-1{
+      background:radial-gradient(circle at 30% 0,#facc15,#f97316);
+    }
+    .leader-pos.pos-2{
+      background:radial-gradient(circle at 30% 0,#e5e7eb,#9ca3af);
+    }
+    .leader-pos.pos-3{
+      background:radial-gradient(circle at 30% 0,#f97316,#b45309);
+    }
+    .leader-user-avatar{
+      width:26px;
+      height:26px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:0.75rem;
+      font-weight:600;
+      background:radial-gradient(circle at 30% 0,#22d3ee,#ec4899);
+      flex-shrink:0;
+    }
+    .leader-user-info{
+      display:flex;
+      flex-direction:column;
+      gap:0;
+      flex:1;
+      min-width:0;
+    }
+    .leader-user-name{
+      font-size:0.8rem;
+      font-weight:500;
+    }
+    .leader-user-meta{
+      font-size:0.7rem;
+      color:var(--muted);
+    }
+    .leader-amount-inline{
+      font-size:0.86rem;
+      font-weight:600;
+      color:#22c55e;
+    }
+    .leader-amount-inline.pink{
+      color:#fb7185;
+    }
+    @media (max-width:768px){
+      .leader-board-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+
+    .pay-methods-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+      gap:1rem;
+      margin-top:1rem;
+    }
+    .pay-card{
+      border-radius:26px;
+      padding:1.1rem 1.2rem 1.2rem;
+      background:#020617;
+      border:1px solid rgba(30,64,175,.7);
+      display:flex;
+      flex-direction:column;
+      gap:0.45rem;
+      box-shadow:0 0 0 rgba(0,0,0,0);
+    }
+    .pay-icon{
+      width:52px;
+      height:52px;
+      border-radius:20px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.5rem;
+      margin-bottom:0.3rem;
+      background:radial-gradient(circle at 30% 0,#22d3ee,#6366f1);
+      box-shadow:0 0 24px rgba(59,130,246,.7);
+    }
+    .pay-title{
+      font-size:1rem;
+      font-weight:600;
+    }
+    .pay-sub{
+      font-size:0.82rem;
+      color:var(--muted);
+    }
+    .pay-data-main{
+      margin-top:0.4rem;
+      font-size:1rem;
+      font-weight:700;
+      letter-spacing:0.1em;
+      word-break:break-all;
+    }
+    .pay-data-label{
+      margin-top:0.35rem;
+      font-size:0.78rem;
+      text-transform:uppercase;
+      letter-spacing:0.12em;
+      color:var(--muted);
+    }
+    .pay-data-small{
+      font-size:0.8rem;
+      color:var(--muted);
+    }
+    .pay-data-small,
+    .pay-data-small{
+      word-break:break-word;
+    }
+    .pay-stori{
+      border-color:rgba(56,189,248,.85);
+      box-shadow:0 0 20px rgba(56,189,248,.7);
+    }
+    .pay-oxxo{
+      border-color:rgba(234,179,8,.9);
+      box-shadow:0 0 20px rgba(234,179,8,.65);
+    }
+    .pay-binance{
+      border-color:rgba(250,204,21,.9);
+      box-shadow:0 0 20px rgba(250,204,21,.65);
+    }
+    .pay-ltc{
+      border-color:rgba(96,165,250,.9);
+      box-shadow:0 0 20px rgba(96,165,250,.65);
+    }
+    @media (max-width:640px){
+      .pay-methods-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+
+    .intl-grid{
+      margin-top:1.3rem;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:1rem;
+    }
+    .intl-card{
+      border-radius:26px;
+      padding:1.2rem 1.3rem 1.25rem;
+      background:radial-gradient(circle at top,#020617,#020617);
+      border:1px solid rgba(30,64,175,.8);
+      display:flex;
+      flex-direction:column;
+      gap:0.6rem;
+    }
+    .intl-withdraw-card{
+      border-color:rgba(249,115,22,.9);
+      box-shadow:0 0 24px rgba(249,115,22,.6);
+    }
+    .intl-title-row{
+      display:flex;
+      align-items:center;
+      gap:0.7rem;
+    }
+    .intl-icon{
+      width:46px;
+      height:46px;
+      border-radius:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.4rem;
+      background:radial-gradient(circle at 30% 0,#22d3ee,#6366f1);
+      box-shadow:0 0 20px rgba(59,130,246,.8);
+      flex-shrink:0;
+    }
+    .intl-icon.bank{
+      background:radial-gradient(circle at 30% 0,#f97316,#facc15);
+      box-shadow:0 0 22px rgba(248,113,22,.85);
+    }
+    .intl-title{
+      font-size:1.02rem;
+      font-weight:600;
+    }
+    .intl-sub{
+      font-size:0.8rem;
+      color:var(--muted);
+    }
+    .intl-text{
+      font-size:0.82rem;
+      color:var(--muted);
+    }
+    .intl-list{
+      margin:0;
+      padding-left:1.1rem;
+      font-size:0.8rem;
+      color:var(--muted);
+    }
+    .intl-list li + li{
+      margin-top:0.2rem;
+    }
+    .intl-badge{
+      align-self:flex-start;
+      margin-top:0.3rem;
+      padding:0.2rem 0.7rem;
+      border-radius:999px;
+      font-size:0.72rem;
+      text-transform:uppercase;
+      letter-spacing:0.14em;
+      border:1px solid rgba(148,163,184,.9);
+      color:rgba(148,163,184,1);
+    }
+    .wd-balance-card{
+      margin-top:0.3rem;
+      padding:0.8rem 0.9rem;
+      border-radius:18px;
+      background:rgba(15,23,42,.9);
+      border:1px solid rgba(55,65,81,.9);
+      display:flex;
+      flex-direction:column;
+      gap:0.25rem;
+    }
+    .wd-balance-label{
+      font-size:0.82rem;
+      color:var(--muted);
+    }
+    .wd-balance-amount{
+      font-size:1.4rem;
+      font-weight:700;
+      color:#22c55e;
+    }
+    .wd-balance-meta{
+      font-size:0.8rem;
+    }
+    .wd-pill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:0.1rem 0.5rem;
+      border-radius:999px;
+      font-size:0.72rem;
+      background:rgba(30,64,175,.8);
+      box-shadow:0 0 16px rgba(30,64,175,.8);
+    }
+    .wd-balance-info{
+      font-size:0.78rem;
+      color:var(--muted);
+    }
+    .wd-block-title{
+      margin-top:0.85rem;
+      font-size:0.82rem;
+      font-weight:600;
+    }
+    .wd-methods{
+      margin-top:0.45rem;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+      gap:0.6rem;
+    }
+    .wd-method{
+      border-radius:18px;
+      padding:0.7rem 0.8rem;
+      border:1px solid rgba(31,41,55,.9);
+      background:rgba(15,23,42,.95);
+      display:flex;
+      flex-direction:column;
+      gap:0.1rem;
+    }
+    .wd-binance{
+      border-color:rgba(250,204,21,.9);
+    }
+    .wd-paypal{
+      border-color:rgba(59,130,246,.9);
+    }
+    .wd-method-name{
+      font-size:0.9rem;
+      font-weight:600;
+    }
+    .wd-method-sub{
+      font-size:0.78rem;
+      color:var(--muted);
+    }
+    .wd-select{
+      margin-top:0.45rem;
+      border-radius:16px;
+      padding:0.65rem 0.8rem;
+      border:1px solid rgba(55,65,81,.9);
+      background:rgba(15,23,42,.95);
+    }
+    .wd-select-placeholder{
+      font-size:0.8rem;
+      color:rgba(148,163,184,1);
+    }
+    .wd-warning{
+      margin-top:0.25rem;
+      font-size:0.74rem;
+      color:#facc15;
+    }
+    .wd-input{
+      margin-top:0.45rem;
+      border-radius:16px;
+      padding:0.65rem 0.8rem;
+      border:1px solid rgba(55,65,81,.9);
+      background:rgba(15,23,42,.95);
+    }
+    .wd-placeholder{
+      font-size:0.8rem;
+      color:rgba(148,163,184,1);
+    }
+    .wd-btn{
+      margin-top:1rem;
+      width:100%;
+      justify-content:center;
+      background:linear-gradient(to right,#f59e0b,#f97316);
+    }
+    .wd-note{
+      margin-top:0.4rem;
+      font-size:0.74rem;
+      color:var(--muted);
+    }
+    @media (max-width:768px){
+      .intl-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+
+    .orders-summary{
+      margin-top:1.1rem;
+      margin-bottom:0.8rem;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:0.6rem;
+    }
+    .orders-summary-item{
+      border-radius:18px;
+      padding:0.55rem 0.75rem;
+      background:rgba(15,23,42,.9);
+      border:1px solid rgba(30,64,175,.7);
+      display:flex;
+      flex-direction:column;
+      gap:0.15rem;
+    }
+    .orders-summary-label{
+      font-size:0.76rem;
+      color:var(--muted);
+    }
+    .orders-summary-value{
+      font-size:1.05rem;
+      font-weight:600;
+    }
+    .orders-table{
+      margin-top:0.5rem;
+      border-radius:20px;
+      border:1px solid rgba(30,64,175,.7);
+      overflow:hidden;
+    }
+    .orders-head,
+    .orders-row{
+      display:grid;
+      grid-template-columns:40px 130px 120px minmax(100px,140px) minmax(120px,1fr) 90px 110px;
+      gap:0.4rem;
+      padding:0.5rem 0.9rem;
+      align-items:center;
+      font-size:0.78rem;
+    }
+    .orders-head{
+      background:rgba(15,23,42,1);
+      font-weight:600;
+      font-size:0.8rem;
+    }
+    .orders-row:nth-child(odd){
+      background:rgba(15,23,42,.85);
+    }
+    .orders-row:nth-child(even){
+      background:rgba(15,23,42,.7);
+    }
+    .orders-row span:last-child{
+      justify-self:flex-start;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:0.18rem 0.6rem;
+      border-radius:999px;
+      font-size:0.7rem;
+      text-transform:uppercase;
+      letter-spacing:0.12em;
+    }
+    .badge-done{
+      background:rgba(22,163,74,.2);
+      color:#22c55e;
+      border:1px solid rgba(22,163,74,.9);
+    }
+    .badge-pending{
+      background:rgba(234,179,8,.15);
+      color:#eab308;
+      border:1px solid rgba(234,179,8,.85);
+    }
+    .badge-cancel{
+      background:rgba(248,113,113,.18);
+      color:#f97373;
+      border:1px solid rgba(248,113,113,.85);
+    }
+    @media (max-width:900px){
+      .orders-head,
+      .orders-row{
+        grid-template-columns:30px 110px 100px minmax(80px,120px) minmax(80px,1fr) 70px 90px;
+      }
+    }
+    @media (max-width:720px){
+      .orders-head,
+      .orders-row{
+        grid-template-columns:30px 105px minmax(80px,1fr) 70px 90px;
+        grid-template-areas:
+          "idx date user amount status";
+      }
+    }
+
+
+    .smm-grid{
+      margin-top:1.3rem;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:1rem;
+    }
+    .smm-card{
+      border-radius:26px;
+      padding:1.2rem 1.3rem 1.25rem;
+      background:radial-gradient(circle at top,#020617,#020617);
+      border:1px solid rgba(30,64,175,.8);
+      display:flex;
+      flex-direction:column;
+      gap:0.65rem;
+    }
+    .smm-title-row{
+      display:flex;
+      align-items:center;
+      gap:0.7rem;
+    }
+    .smm-icon{
+      width:46px;
+      height:46px;
+      border-radius:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.4rem;
+      background:radial-gradient(circle at 30% 0,#22d3ee,#6366f1);
+      box-shadow:0 0 20px rgba(59,130,246,.8);
+      flex-shrink:0;
+    }
+    .smm-icon.code{
+      background:radial-gradient(circle at 30% 0,#f97316,#facc15);
+      box-shadow:0 0 20px rgba(248,113,22,.8);
+    }
+    .smm-title{
+      font-size:1.02rem;
+      font-weight:600;
+    }
+    .smm-sub{
+      font-size:0.8rem;
+      color:var(--muted);
+    }
+    .smm-field{
+      display:flex;
+      flex-direction:column;
+      gap:0.15rem;
+    }
+    .smm-label{
+      font-size:0.78rem;
+      text-transform:uppercase;
+      letter-spacing:0.12em;
+      color:var(--muted);
+    }
+    .smm-value{
+      font-size:0.86rem;
+      word-break:break-all;
+    }
+    .smm-key{
+      font-family:monospace;
+    }
+    .smm-hint{
+      font-size:0.74rem;
+      color:var(--muted);
+    }
+    .smm-code{
+      padding:0.7rem 0.8rem;
+      border-radius:16px;
+      background:#020617;
+      border:1px solid rgba(31,41,55,.9);
+      font-size:0.78rem;
+      overflow:auto;
+      white-space:pre-wrap;
+    }
+    .smm-note{
+      font-size:0.78rem;
+      color:var(--muted);
+    }
+    .smm-text{
+      font-size:0.82rem;
+      color:var(--muted);
+    }
+    @media (max-width:768px){
+      .smm-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+
+    .admin-grid{
+      margin-top:1.4rem;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:1rem;
+    }
+    .admin-card{
+      border-radius:26px;
+      padding:1.1rem 1.2rem 1.2rem;
+      background:radial-gradient(circle at top,#020617,#020617);
+      border:1px solid rgba(30,64,175,.8);
+      display:flex;
+      flex-direction:column;
+      gap:0.55rem;
+    }
+    .admin-summary{
+      grid-column:1/-1;
+    }
+    .admin-summary-grid{
+      margin-top:0.4rem;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+      gap:0.6rem;
+    }
+    .admin-summary-item{
+      border-radius:18px;
+      padding:0.6rem 0.7rem;
+      background:rgba(15,23,42,.95);
+      border:1px solid rgba(51,65,85,.9);
+      display:flex;
+      flex-direction:column;
+      gap:0.15rem;
+    }
+    .admin-summary-label{
+      font-size:0.78rem;
+      color:var(--muted);
+    }
+    .admin-summary-value{
+      font-size:1.1rem;
+      font-weight:600;
+    }
+    .admin-card-title{
+      font-size:0.9rem;
+      font-weight:600;
+    }
+    .admin-card-title-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:0.6rem;
+    }
+    .admin-card-title-main{
+      font-size:0.95rem;
+      font-weight:600;
+    }
+    .admin-pill{
+      padding:0.2rem 0.7rem;
+      border-radius:999px;
+      font-size:0.72rem;
+      text-transform:uppercase;
+      letter-spacing:0.14em;
+      border:1px solid rgba(56,189,248,.9);
+      color:rgba(56,189,248,1);
+    }
+    .admin-pill.violet{
+      border-color:rgba(168,85,247,.9);
+      color:rgba(216,180,254,1);
+    }
+    .admin-pill.orange{
+      border-color:rgba(249,115,22,.9);
+      color:rgba(253,186,116,1);
+    }
+    .admin-card-sub{
+      font-size:0.8rem;
+      color:var(--muted);
+    }
+    .admin-form{
+      margin-top:0.5rem;
+      display:flex;
+      flex-direction:column;
+      gap:0.4rem;
+    }
+    .admin-form-row{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+      gap:0.5rem;
+    }
+    .admin-form-row label{
+      display:flex;
+      flex-direction:column;
+      gap:0.18rem;
+      font-size:0.78rem;
+    }
+    .admin-form-row input,
+    .admin-form-row select{
+      border-radius:999px;
+      border:1px solid rgba(51,65,85,.9);
+      background:rgba(15,23,42,.95);
+      padding:0.4rem 0.7rem;
+      font-size:0.8rem;
+      color:inherit;
+      outline:none;
+    }
+    .admin-form-row input::placeholder{
+      color:rgba(148,163,184,1);
+    }
+    .admin-full{
+      grid-column:1/-1;
+    }
+    .admin-actions-row{
+      align-items:center;
+    }
+    .admin-switch-label{
+      display:inline-flex;
+      align-items:center;
+      gap:0.35rem;
+      font-size:0.78rem;
+    }
+    .admin-switch-label input[type="checkbox"]{
+      width:14px;
+      height:14px;
+    }
+    .admin-btn-add{
+      justify-self:flex-end;
+    }
+    .admin-table-wrapper{
+      margin-top:0.7rem;
+      border-radius:20px;
+      border:1px solid rgba(30,64,175,.8);
+      overflow:hidden;
+      font-size:0.78rem;
+    }
+    .admin-table-head,
+    .admin-table-row{
+      display:grid;
+      grid-template-columns:90px minmax(120px,1.5fr) minmax(100px,1.2fr) 80px 70px 90px;
+      gap:0.3rem;
+      padding:0.45rem 0.8rem;
+      align-items:center;
+    }
+    .admin-table-head{
+      background:rgba(15,23,42,1);
+      font-weight:600;
+      font-size:0.8rem;
+    }
+    .admin-table-row:nth-child(odd){
+      background:rgba(15,23,42,.9);
+    }
+    .admin-table-row:nth-child(even){
+      background:rgba(15,23,42,.75);
+    }
+    .admin-users .admin-table-head,
+    .admin-users .admin-table-row{
+      grid-template-columns:minmax(120px,1.4fr) minmax(120px,1.4fr) 90px 90px;
+    }
+    .admin-requests-list{
+      margin-top:0.6rem;
+      display:flex;
+      flex-direction:column;
+      gap:0.5rem;
+    }
+    .admin-request-item{
+      border-radius:18px;
+      padding:0.6rem 0.7rem;
+      background:rgba(15,23,42,.95);
+      border:1px solid rgba(51,65,85,.9);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:0.6rem;
+      flex-wrap:wrap;
+    }
+    .admin-request-user{
+      font-size:0.82rem;
+      font-weight:600;
+    }
+    .admin-request-detail{
+      font-size:0.78rem;
+      color:var(--muted);
+    }
+    .admin-request-actions{
+      display:flex;
+      gap:0.4rem;
+      flex-wrap:wrap;
+    }
+    .admin-approve{
+      background:linear-gradient(to right,#22c55e,#16a34a);
+    }
+    .admin-reject{
+      background:linear-gradient(to right,#ef4444,#f97316);
+    }
+    @media (max-width:900px){
+      .admin-table-head,
+      .admin-table-row{
+        grid-template-columns:80px minmax(120px,1.3fr) minmax(100px,1.1fr) 70px 60px 80px;
+      }
+    }
+    @media (max-width:720px){
+      .admin-grid{
+        grid-template-columns:1fr;
+      }
+      .admin-table-head,
+      .admin-table-row{
+        grid-template-columns:80px minmax(120px,1.4fr) minmax(80px,1.1fr) 70px;
+        grid-template-areas:"cat name price status";
+      }
+    }
+
+
+    .lock-overlay{
+      position:fixed;
+      inset:0;
+      background:radial-gradient(circle at top,#020617,#020617);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+      padding:1.5rem;
+    }
+    .lock-card{
+      max-width:420px;
+      width:100%;
+      border-radius:26px;
+      padding:1.5rem 1.6rem 1.4rem;
+      background:#020617;
+      border:1px solid rgba(56,189,248,.7);
+      box-shadow:0 0 30px rgba(56,189,248,.6);
+      display:flex;
+      flex-direction:column;
+      gap:0.7rem;
+    }
+    .lock-logo{
+      font-size:0.9rem;
+      letter-spacing:0.12em;
+      text-transform:uppercase;
+      color:rgba(148,163,184,1);
+    }
+    .lock-logo span{
+      color:#38bdf8;
+    }
+    .lock-card h1{
+      margin:0;
+      font-size:1.3rem;
+    }
+    .lock-text{
+      font-size:0.85rem;
+      color:var(--muted);
+    }
+    .lock-form{
+      margin-top:0.4rem;
+      display:flex;
+      flex-direction:column;
+      gap:0.6rem;
+    }
+    .lock-label{
+      display:flex;
+      flex-direction:column;
+      gap:0.25rem;
+      font-size:0.8rem;
+    }
+    .lock-label input{
+      border-radius:999px;
+      border:1px solid rgba(51,65,85,.9);
+      background:rgba(15,23,42,.95);
+      padding:0.5rem 0.9rem;
+      font-size:0.85rem;
+      color:inherit;
+      outline:none;
+    }
+    .lock-label input::placeholder{
+      color:rgba(148,163,184,1);
+    }
+    .lock-btn{
+      width:100%;
+      justify-content:center;
+    }
+    .lock-error{
+      min-height:18px;
+      font-size:0.78rem;
+      color:#f97373;
+    }
+    .lock-hint{
+      margin-top:0.2rem;
+      font-size:0.72rem;
+      color:var(--muted);
+    }
+    @media (max-width:480px){
+      .lock-card{
+        padding:1.2rem 1.1rem 1.2rem;
+      }
+    }
+
+</style>
+</head>
+
+<body>
+  <div id="admin-lock-overlay" class="lock-overlay">
+    <div class="lock-card">
+      <div class="lock-logo">Kali<span>Ventas</span> · Admin</div>
+      <h1>Acceso administrador</h1>
+      <p class="lock-text">
+        Esta sección es solo para el dueño del panel. Ingresa la contraseña de administrador
+        para continuar.
+      </p>
+
+      <form id="admin-lock-form" class="lock-form">
+        <label class="lock-label">
+          Contraseña
+          <input type="password" id="admin-lock-input" autocomplete="off" placeholder="Escribe tu clave de admin" />
+        </label>
+        <button type="submit" class="btn lock-btn">Entrar al panel admin</button>
+        <div id="admin-lock-error" class="lock-error"></div>
+      </form>
+
+      <p class="lock-hint">
+        Consejo: no compartas este enlace ni esta contraseña con personas que no conozcas.
+      </p>
+    </div>
+  </div>
+
+<header>
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:.75rem;">
+      <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menú">
+        <div class="hamburger-lines">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </button>
+      <a href="index.html" class="logo">
+        <div class="logo-icon">KV</div>
+        <div class="logo-text">
+          <span>KaliVentas</span>
+          <span>Panel de recargas</span>
+        </div>
+      </a>
+    </div>
+    <div style="display:flex;align-items:center;gap:.6rem;">
+      <div class="user-chip">
+        Sesión simulada para <strong>revendedor</strong>. Catálogo visible solo aquí.
+      </div>
+      <button class="btn-top" onclick="window.location.href='login.html'">Cerrar panel</button>
+    </div>
+  </div>
+</header>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<main class="layout">
+  
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-glow"></div>
+    <div class="sidebar-inner">
+      <div class="sidebar-head">
+        <div class="sidebar-brand">
+          <div class="sidebar-logo-circle">KV</div>
+          <div class="sidebar-brand-text">
+            <span class="brand-name">KaliVentas</span>
+            <span class="brand-tag">Panel revendedores</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-section-title">GENERAL</div>
+
+      <div class="menu-item active" data-section="perfil">
+        <div class="menu-icon">
+          <span>🏠</span>
+        </div>
+        <div class="menu-text">
+          <div class="menu-label">Inicio</div>
+          <span class="sub">Resumen de tu cuenta</span>
+        </div>
+        <div class="menu-item-dot"></div>
+      </div>
+
+      <div class="menu-item" data-section="ff">
+        <div class="menu-icon">
+          <span>🎮</span>
+        </div>
+        <div class="menu-text">
+          <div class="menu-label">Recargas videojuegos</div>
+          <span class="sub">Free Fire, PUBG, Fortnite, CODM</span>
+        </div>
+        <div class="menu-item-dot"></div>
+      </div>
+
+      <div class="menu-item" data-section="streaming">
+        <div class="menu-icon">
+          <span>📺</span>
+        </div>
+        <div class="menu-text">
+          <div class="menu-label">Streaming</div>
+          <span class="sub">Netflix, Disney+, Spotify, etc.</span>
+        </div>
+        <div class="menu-item-dot"></div>
+      </div>
+
+      <div class="menu-item" data-section="saldo">
+        <div class="menu-icon">
+          <span>💳</span>
+        </div>
+        <div class="menu-text">
+          <div class="menu-label">Métodos de pago</div>
+          <span class="sub">Stori, OXXO, Binance, LTC</span>
+        </div>
+        <div class="menu-item-dot"></div>
+      </div>
+
+      <div class="sidebar-section-title muted">MI CUENTA</div>
+
+      <div class="menu-item" data-section="perfil">
+        <div class="menu-icon">
+          <span>📊</span>
+        </div>
+        <div class="menu-text">
+          <div class="menu-label">Mi dashboard</div>
+          <span class="sub">Resumen rápido y últimos pedidos</span>
+        </div>
+        <div class="menu-item-dot"></div>
+      </div>
+
+      <div class="menu-item" data-section="saldo">
+        <div class="menu-icon">
+          <span>🪙</span>
+        </div>
+        <div class="menu-text">
+          <div class="menu-label">Recargar saldo</div>
+          <span class="sub">Formulario para mandar comprobante</span>
+        </div>
+        <div class="menu-item-dot"></div>
+      </div>
+
+      <div class="menu-item" data-section="intl">
+        <div class="menu-icon">
+          <span>🌎</span>
+        </div>
+        <div class="menu-text">
+          <div class="menu-label">Recarga internacional</div>
+          <span class="sub">Saldo global y retiros</span>
+        </div>
+        <div class="menu-item-dot"></div>
+      </div>
+
+      <div class="menu-item" data-section="orders">
+        <div class="menu-icon">
+          <span>🧾</span>
+        </div>
+        <div class="menu-text">
+          <div class="menu-label">Mis compras</div>
+          <span class="sub">Historial ilustrativo por ahora</span>
+        </div>
+        <div class="menu-item-dot"></div>
+      </div>
+
+      <div class="menu-item" data-section="rango">
+        <div class="menu-icon">
+          <span>🏅</span>
+        </div>
+        <div class="menu-text">
+          <div class="menu-label">Mi rango</div>
+          <span class="sub">Niveles y descuentos en USD</span>
+        </div>
+        <div class="menu-item-dot"></div>
+      </div>
+
+      <div class="menu-item" data-section="ranking">
+        <div class="menu-icon">
+          <span>🏆</span>
+        </div>
+        <div class="menu-text">
+          <div class="menu-label">Mi ranking</div>
+          <span class="sub">Top recargas y top gastos</span>
+        </div>
+        <div class="menu-item-dot"></div>
+      </div>
+    
+      <div class="sidebar-section-title">OTROS</div>
+
+      <div class="menu-item" data-section="smm">
+        <div class="menu-icon">
+          <span>📡</span>
+        </div>
+        <div class="menu-text">
+          <div class="menu-label">SmmProdigyX</div>
+          <span class="sub">API externa de redes sociales</span>
+        </div>
+        <div class="menu-item-dot"></div>
+      </div>
+
+      <div class="menu-item" data-section="comida">
+        <div class="menu-icon">
+          <span>🍔</span>
+        </div>
+        <div class="menu-text">
+          <div class="menu-label">ComidaMaster</div>
+          <span class="sub">Integración futura de pedidos</span>
+        </div>
+        <div class="menu-item-dot"></div>
+      </div>
+
+      <div class="sidebar-section-title">ADMIN</div>
+
+      <div class="menu-item" data-section="admin">
+        <div class="menu-icon">
+          <span>🛠️</span>
+        </div>
+        <div class="menu-text">
+          <div class="menu-label">Panel admin</div>
+          <span class="sub">Gestionar productos, usuarios y pedidos</span>
+        </div>
+        <div class="menu-item-dot"></div>
+      </div>
+</div>
+  </aside>
+
+
+  
+  <section class="content" id="section-perfil">
+    <div class="section-tag">Mi cuenta</div>
+    <h1>Bienvenido a tu panel, revendedor</h1>
+    <p class="section-sub">
+      Administra tu perfil, revisa tu saldo y accede rápido a las acciones más usadas.
+      Toda recarga y movimiento se confirma siempre por <strong>WhatsApp oficial de KaliVentas</strong>.
+    </p>
+
+    <div class="profile-layout">
+      <aside class="card profile-card">
+        <div class="profile-avatar">
+          <span class="profile-avatar-icon">🎮</span>
+        </div>
+        <div class="profile-name">Braan7</div>
+        <div class="profile-role">ADMIN · GAMER</div>
+
+        <div class="profile-row id-row">
+          <span class="profile-row-icon">🆔</span>
+          <span class="profile-row-text">ID revendedor: <strong>#KALI001</strong></span>
+        </div>
+
+        <div class="profile-divider"></div>
+
+        <div class="profile-row">
+          <span class="profile-row-icon">✉️</span>
+          <span class="profile-row-text">correo@kaliventas.com</span>
+        </div>
+        <div class="profile-row">
+          <span class="profile-row-icon">📱</span>
+          <span class="profile-row-text">+52 56 4880 4810</span>
+        </div>
+
+        <div class="profile-divider soft"></div>
+
+        <div class="profile-tagline">
+          Panel exclusivo para revendedores de confianza.
+        </div>
+      </aside>
+
+      <div class="profile-main">
+        <article class="card profile-balance">
+          <div class="profile-balance-label">Saldo normal</div>
+          <div class="profile-balance-row">
+            <span class="profile-balance-amount">$0.00 MXN</span>
+            <span class="profile-balance-chip">Referencia visual</span>
+          </div>
+          <div class="profile-balance-actions">
+            <button class="btn btn-small" type="button" onclick="document.querySelector('[data-section=\'saldo\']')?.click();">
+              ➕ Recargar saldo
+            </button>
+            <button class="btn-outline btn-small" type="button" onclick="document.querySelector('[data-section=\'ff\']')?.click();">
+              🛒 Ver productos
+            </button>
+          </div>
+          <div class="profile-balance-hint">
+            El saldo real se confirma cuando envías tu comprobante y recibes respuesta por WhatsApp.
+          </div>
+        </article>
+
+        <article class="card profile-bonus">
+          <div class="profile-bonus-header">
+            <span class="profile-bonus-icon">🎁</span>
+            <span class="profile-bonus-title">Saldo bonus</span>
+          </div>
+          <div class="profile-bonus-amount">$0.00 MXN</div>
+          <div class="profile-bonus-tag">Solo productos elegibles</div>
+          <p class="profile-bonus-text">
+            Este bloque está listo para usar en el futuro si decides manejar promos, puntos o saldo extra por volumen.
+          </p>
+        </article>
+      </div>
+    </div>
+
+    
+  
+    <div class="dashboard-grid">
+      <article class="dash-card dash-saldo">
+        <div class="dash-icon">👛</div>
+        <div class="dash-title">Saldo disponible</div>
+        <div class="dash-amount">$0.00 MXN</div>
+        <button class="btn btn-small dash-btn" type="button" onclick="document.querySelector('[data-section=\'saldo\']')?.click();">
+          💳 Recargar saldo
+        </button>
+      </article>
+
+      <article class="dash-card">
+        <div class="dash-icon">🛍️</div>
+        <div class="dash-title">Mis compras</div>
+        <div class="dash-counter">0</div>
+        <div class="dash-sub">Ver todas (ilustrativo)</div>
+      </article>
+
+      <article class="dash-card">
+        <div class="dash-icon">⚙️</div>
+        <div class="dash-title">Ajustes</div>
+        <div class="dash-sub">Configurar más adelante</div>
+      </article>
+
+      <article class="dash-card">
+        <div class="dash-icon">💬</div>
+        <div class="dash-title">WhatsApp</div>
+        <div class="dash-sub">Número actual: +52 56 4880 4810</div>
+        <div class="dash-sub small">Cambiar más adelante</div>
+      </article>
+
+      <article class="dash-card">
+        <div class="dash-icon">🎵</div>
+        <div class="dash-title">TikTok</div>
+        <div class="dash-sub">Historial de clips (ilustrativo)</div>
+      </article>
+
+      <article class="dash-card">
+        <div class="dash-icon">👤</div>
+        <div class="dash-title">Perfil</div>
+        <div class="dash-sub">Editar datos más adelante</div>
+      </article>
+    </div>
+</section>
+
+<section class="content" id="section-ff" style="display:none;">
+    <div class="section-tag">Recargas de videojuegos</div>
+    <h1>Free Fire</h1>
+    <p class="section-sub">
+      <strong>Recargas de diamantes por ID - PIN</strong><br/>
+      Completa los datos del jugador, elige uno o varios paquetes y genera tu pedido. Solo se procesan pedidos
+      si tu cuenta de revendedor tiene saldo suficiente en KaliVentas.
+    </p>
+
+
+    <div class="dashboard-grid">
+      <article class="card dash-card">
+        <div class="dash-label">Saldo estimado</div>
+        <div class="dash-value" id="dash-saldo">$-- MXN</div>
+        <div style="margin:.4rem 0 .3rem;display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;">
+          <input id="dash-saldo-input" type="number" min="0" step="1" placeholder="Escribe tu saldo" style="flex:1;min-width:120px;border-radius:999px;border:1px solid rgba(148,163,184,.5);background:transparent;padding:.25rem .55rem;font-size:.8rem;color:var(--text);" />
+          <button class="btn btn-small" type="button" id="dash-saldo-save">Actualizar</button>
+        </div>
+        <div class="dash-hint">Este saldo se guarda solo en este navegador. El saldo real siempre se confirma por WhatsApp.</div>
+      </article>
+
+      <article class="card dash-card">
+        <div class="dash-label">Últimos pedidos (vista rápida)</div>
+        <div class="dash-list" id="dash-orders">
+          <!-- Se llenará automáticamente con los últimos pedidos hechos desde este navegador -->
+        </div>
+        <div class="dash-hint">Esta lista se arma automáticamente con los pedidos que generes desde este panel en este navegador.</div>
+      </article>
+
+      <article class="card dash-card">
+        <div class="dash-label">Recordatorio rápido</div>
+        <div class="dash-list">
+          <div class="dash-order-item">• Todas las recargas se pagan con saldo del panel.</div>
+          <div class="dash-order-item">• Envía siempre el ID, nombre y región del jugador.</div>
+          <div class="dash-order-item">• Adjunta comprobante cuando agregues saldo.</div>
+        </div>
+      </article>
+    </div>
+
+
+    <div class="pill-inline">
+      <span class="pill-dot"></span>
+      <span>Este panel solo prepara el pedido, la confirmación final es por WhatsApp.</span>
+    </div>
+
+    <div class="grid" style="margin-top:.9rem;">
+      <div>
+        <div style="font-size:.86rem;color:var(--muted);margin-bottom:.6rem;">
+          Escribe el <strong>ID</strong> y el <strong>nombre del jugador</strong> tal como aparecen dentro del juego.
+          Cualquier error en estos datos puede afectar la recarga.
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.7rem;">
+          <div>
+            <label for="ff-id">ID del jugador</label>
+            <div class="field">
+              <span class="field-icon">🆔</span>
+              <input id="ff-id" type="text" placeholder="Ej. 123456789" />
+            </div>
+          </div>
+          <div>
+            <label for="ff-name">Nombre del jugador</label>
+            <div class="field">
+              <span class="field-icon">👤</span>
+              <input id="ff-name" type="text" placeholder="Nombre tal como aparece en Free Fire" />
+            </div>
+          </div>
+          <div>
+            <label for="ff-region">Región / servidor</label>
+            <div class="field">
+              <span class="field-icon">🌎</span>
+              <input id="ff-region" type="text" placeholder="Ej. LATAM, Brasil, etc." />
+            </div>
+          </div>
+          <div>
+            <label for="ff-note">Nota para KaliVentas (opcional)</label>
+            <div class="field">
+              <span class="field-icon">💬</span>
+              <input id="ff-note" type="text" placeholder="Ej. Promo, urgente, horario de entrega, etc." />
+            </div>
+          </div>
+          <button class="btn" type="button" id="ff-cart-whatsapp">Enviar carrito por WhatsApp</button>
+          <div class="status" id="ff-cart-status"></div>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size:.86rem;color:var(--muted);margin-bottom:.5rem;">
+          Paquetes disponibles de diamantes (precios en MXN). Puedes agregar varios al carrito antes de enviar tu pedido.
+        </div>
+        
+<div class="products-grid">
+          <article class="card">
+            <h3>Selecciona el paquete de diamantes</h3>
+            <p style="font-size:.84rem;color:var(--muted);margin-bottom:.5rem;">
+              Elige un paquete de diamantes desde la lista y usa los botones para agregar al carrito o comprar al momento.
+            </p>
+
+            <div style="display:flex;flex-direction:column;gap:.6rem;">
+              <div>
+                <label for="ff-pack-select" style="font-size:.8rem;color:var(--muted);display:block;margin-bottom:.2rem;">
+                  Paquete de diamantes
+                </label>
+                <div class="field">
+                  <span class="field-icon">💎</span>
+                  <select id="ff-pack-select" style="background:transparent;border:none;outline:none;color:var(--text);font-size:.88rem;width:100%;">
+                    <option value="">Selecciona un paquete</option>
+                    <option value="110" data-precio="17">110 diamantes - $17 MXN</option>
+                    <option value="341" data-precio="56">341 diamantes - $56 MXN</option>
+                    <option value="572" data-precio="85">572 diamantes - $85 MXN</option>
+                    <option value="1166" data-precio="175">1166 diamantes - $175 MXN</option>
+                    <option value="2398" data-precio="300">2398 diamantes - $300 MXN</option>
+                    <option value="6160" data-precio="710">6160 diamantes - $710 MXN</option>
+                    <option value="12320" data-precio="1420">12,320 diamantes - $1,420 MXN</option>
+                    <option value="18480" data-precio="2130">18,480 diamantes - $2,130 MXN</option>
+                    <option value="24640" data-precio="2920">24,640 diamantes - $2,920 MXN</option>
+                    <option value="30800" data-precio="3650">30,800 diamantes - $3,650 MXN</option>
+                    <option value="49280" data-precio="5680">49,280 diamantes - $5,680 MXN</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style="display:flex;flex-wrap:wrap;gap:.5rem;">
+                <button class="btn btn-small btn-alt" type="button" id="ff-add-cart">Agregar al carrito</button>
+                <button class="btn btn-small" type="button" id="ff-buy-now">Comprar ahora</button>
+              </div>
+
+              <div style="font-size:.78rem;color:var(--muted);margin-top:.2rem;">
+                Nota: las recargas de diamantes solo se pagan con <strong>saldo disponible en tu panel</strong>.
+              </div>
+            </div>
+          </article>
+        </div>
+</div>
+      </div>
+    </div>
+
+    <div class="rank-section" id="rank-section">
+      <h2 class="rank-title-main">Mi rango como revendedor</h2>
+      <p class="rank-sub">
+        Estos rangos son ilustrativos y se basan en <strong>volumen de compras en USD</strong>. Más adelante puedes
+        conectarlos a tu historial real para activar descuentos automáticos.
+      </p>
+
+      <div class="rank-grid">
+        <article class="rank-card rank-current">
+          <div class="rank-icon">👤</div>
+          <div class="rank-name">Usuario</div>
+          <div class="rank-range">$0.00 – $99.99 USD</div>
+          <div class="rank-discount">0% descuento</div>
+          <button class="rank-btn rank-btn-active" type="button">Nivel actual</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">⭐</div>
+          <div class="rank-name">VIP</div>
+          <div class="rank-range">$100.00 – $249.99 USD</div>
+          <div class="rank-discount">5% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">🚀</div>
+          <div class="rank-name">Premium</div>
+          <div class="rank-range">$250.00 – $499.99 USD</div>
+          <div class="rank-discount">10% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">💎</div>
+          <div class="rank-name">Diamond</div>
+          <div class="rank-range">$500.00 – $999.99 USD</div>
+          <div class="rank-discount">15% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">👑</div>
+          <div class="rank-name">Deluxe</div>
+          <div class="rank-range">$1,000.00 – $4,999.99 USD</div>
+          <div class="rank-discount">20% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">🔥</div>
+          <div class="rank-name">Elite</div>
+          <div class="rank-range">$5,000.00+ USD</div>
+          <div class="rank-discount">30% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+      </div>
+    </div>
+  </section>
+  
+  <section class="content" id="section-pubg" style="display:none;">
+    <div class="section-tag">Recargas de videojuegos</div>
+    <h1>PUBG Mobile</h1>
+    <p class="section-sub">
+      <strong>Recargas de UC</strong><br/>
+      Completa el ID/usuario del jugador, elige un paquete de UC y genera tu pedido. Solo se procesan pedidos
+      si tu cuenta de revendedor tiene saldo suficiente en KaliVentas.
+    </p>
+
+    <div class="pill-inline">
+      <span class="pill-dot"></span>
+      <span>Las recargas se validan manualmente por WhatsApp con el equipo de KaliVentas.</span>
+    </div>
+
+    <div class="grid" style="margin-top:.9rem;">
+      <div>
+        <div style="font-size:.86rem;color:var(--muted);margin-bottom:.6rem;">
+          Escribe el <strong>ID o usuario</strong>, el <strong>nombre del jugador</strong> y la <strong>región</strong> tal como aparecen en PUBG Mobile.
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.7rem;">
+          <div>
+            <label for="pubg-id">ID / usuario del jugador</label>
+            <div class="field">
+              <span class="field-icon">🆔</span>
+              <input id="pubg-id" type="text" placeholder="ID o usuario de PUBG Mobile" />
+            </div>
+          </div>
+          <div>
+            <label for="pubg-name">Nombre del jugador</label>
+            <div class="field">
+              <span class="field-icon">👤</span>
+              <input id="pubg-name" type="text" placeholder="Nombre tal como aparece en el juego" />
+            </div>
+          </div>
+          <div>
+            <label for="pubg-region">Región / servidor</label>
+            <div class="field">
+              <span class="field-icon">🌎</span>
+              <input id="pubg-region" type="text" placeholder="Ej. Global, Asia, LATAM, etc." />
+            </div>
+          </div>
+          <div>
+            <label for="pubg-note">Nota para KaliVentas (opcional)</label>
+            <div class="field">
+              <span class="field-icon">💬</span>
+              <input id="pubg-note" type="text" placeholder="Ej. Servidor, clan, horario, etc." />
+            </div>
+          </div>
+          <div class="status" id="pubg-status"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <h3>Selecciona el paquete de UC</h3>
+          <p style="font-size:.84rem;color:var(--muted);margin-bottom:.5rem;">
+            Elige un paquete de UC desde la lista y genera tu pedido para PUBG Mobile.
+          </p>
+
+          <div style="display:flex;flex-direction:column;gap:.6rem;">
+            <div>
+              <label for="pubg-pack-select" style="font-size:.8rem;color:var(--muted);display:block;margin-bottom:.2rem;">
+                Paquete de UC
+              </label>
+              <div class="field">
+                <span class="field-icon">💠</span>
+                <select id="pubg-pack-select" style="background:transparent;border:none;outline:none;color:var(--text);font-size:.88rem;width:100%;">
+                  <option value="">Selecciona un paquete</option>
+                  <option value="60 UC" data-precio="20">60 UC - $20 MXN</option>
+                  <option value="325 UC" data-precio="90">325 UC - $90 MXN</option>
+                  <option value="660 UC" data-precio="175">660 UC - $175 MXN</option>
+                  <option value="1800 UC" data-precio="430">1800 UC - $430 MXN</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-wrap:wrap;gap:.5rem;">
+              <button class="btn btn-small" type="button" id="pubg-buy">Comprar ahora</button>
+            </div>
+
+            <div style="font-size:.78rem;color:var(--muted);margin-top:.2rem;">
+              Nota: estas recargas solo se pagan con <strong>saldo disponible en tu panel</strong>.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rank-section" id="rank-section">
+      <h2 class="rank-title-main">Mi rango como revendedor</h2>
+      <p class="rank-sub">
+        Estos rangos son ilustrativos y se basan en <strong>volumen de compras en USD</strong>. Más adelante puedes
+        conectarlos a tu historial real para activar descuentos automáticos.
+      </p>
+
+      <div class="rank-grid">
+        <article class="rank-card rank-current">
+          <div class="rank-icon">👤</div>
+          <div class="rank-name">Usuario</div>
+          <div class="rank-range">$0.00 – $99.99 USD</div>
+          <div class="rank-discount">0% descuento</div>
+          <button class="rank-btn rank-btn-active" type="button">Nivel actual</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">⭐</div>
+          <div class="rank-name">VIP</div>
+          <div class="rank-range">$100.00 – $249.99 USD</div>
+          <div class="rank-discount">5% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">🚀</div>
+          <div class="rank-name">Premium</div>
+          <div class="rank-range">$250.00 – $499.99 USD</div>
+          <div class="rank-discount">10% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">💎</div>
+          <div class="rank-name">Diamond</div>
+          <div class="rank-range">$500.00 – $999.99 USD</div>
+          <div class="rank-discount">15% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">👑</div>
+          <div class="rank-name">Deluxe</div>
+          <div class="rank-range">$1,000.00 – $4,999.99 USD</div>
+          <div class="rank-discount">20% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">🔥</div>
+          <div class="rank-name">Elite</div>
+          <div class="rank-range">$5,000.00+ USD</div>
+          <div class="rank-discount">30% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+      </div>
+    </div>
+  </section>
+
+
+  
+  <section class="content" id="section-fortnite" style="display:none;">
+    <div class="section-tag">Recargas de videojuegos</div>
+    <h1>Fortnite</h1>
+    <p class="section-sub">
+      <strong>Recargas de V-Bucks</strong><br/>
+      Completa los datos de la cuenta de Fortnite, elige un paquete de V-Bucks y genera tu pedido para KaliVentas.
+    </p>
+
+    <div class="pill-inline">
+      <span class="pill-dot"></span>
+      <span>Ideal para vender pases de batalla y cosméticos a tus clientes.</span>
+    </div>
+
+    <div class="grid" style="margin-top:.9rem;">
+      <div>
+        <div style="font-size:.86rem;color:var(--muted);margin-bottom:.6rem;">
+          Usa el <strong>correo o usuario de Epic Games</strong>, el <strong>nombre del jugador</strong> y la <strong>región / plataforma</strong> tal como se usan en Fortnite.
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.7rem;">
+          <div>
+            <label for="fortnite-id">Correo / usuario de Epic Games</label>
+            <div class="field">
+              <span class="field-icon">📧</span>
+              <input id="fortnite-id" type="text" placeholder="Correo o usuario de Epic Games" />
+            </div>
+          </div>
+          <div>
+            <label for="fortnite-name">Nombre del jugador</label>
+            <div class="field">
+              <span class="field-icon">👤</span>
+              <input id="fortnite-name" type="text" placeholder="Nombre dentro de Fortnite" />
+            </div>
+          </div>
+          <div>
+            <label for="fortnite-region">Región / plataforma</label>
+            <div class="field">
+              <span class="field-icon">🌎</span>
+              <input id="fortnite-region" type="text" placeholder="Ej. PC, PS, Xbox, región, etc." />
+            </div>
+          </div>
+          <div>
+            <label for="fortnite-note">Nota para KaliVentas (opcional)</label>
+            <div class="field">
+              <span class="field-icon">💬</span>
+              <input id="fortnite-note" type="text" placeholder="Ej. Plataforma principal, idioma, etc." />
+            </div>
+          </div>
+          <div class="status" id="fortnite-status"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <h3>Selecciona el paquete de V-Bucks</h3>
+          <p style="font-size:.84rem;color:var(--muted);margin-bottom:.5rem;">
+            Elige un paquete de V-Bucks y genera un pedido con los datos del jugador.
+          </p>
+
+          <div style="display:flex;flex-direction:column;gap:.6rem;">
+            <div>
+              <label for="fortnite-pack-select" style="font-size:.8rem;color:var(--muted);display:block;margin-bottom:.2rem;">
+                Paquete de V-Bucks
+              </label>
+              <div class="field">
+                <span class="field-icon">✨</span>
+                <select id="fortnite-pack-select" style="background:transparent;border:none;outline:none;color:var(--text);font-size:.88rem;width:100%;">
+                  <option value="">Selecciona un paquete</option>
+                  <option value="1,000 V-Bucks" data-precio="190">1,000 V-Bucks - $190 MXN</option>
+                  <option value="2,800 V-Bucks" data-precio="520">2,800 V-Bucks - $520 MXN</option>
+                  <option value="5,000 V-Bucks" data-precio="860">5,000 V-Bucks - $860 MXN</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-wrap:wrap;gap:.5rem;">
+              <button class="btn btn-small" type="button" id="fortnite-buy">Comprar ahora</button>
+            </div>
+
+            <div style="font-size:.78rem;color:var(--muted);margin-top:.2rem;">
+              Nota: estas recargas solo se pagan con <strong>saldo disponible en tu panel</strong>.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rank-section" id="rank-section">
+      <h2 class="rank-title-main">Mi rango como revendedor</h2>
+      <p class="rank-sub">
+        Estos rangos son ilustrativos y se basan en <strong>volumen de compras en USD</strong>. Más adelante puedes
+        conectarlos a tu historial real para activar descuentos automáticos.
+      </p>
+
+      <div class="rank-grid">
+        <article class="rank-card rank-current">
+          <div class="rank-icon">👤</div>
+          <div class="rank-name">Usuario</div>
+          <div class="rank-range">$0.00 – $99.99 USD</div>
+          <div class="rank-discount">0% descuento</div>
+          <button class="rank-btn rank-btn-active" type="button">Nivel actual</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">⭐</div>
+          <div class="rank-name">VIP</div>
+          <div class="rank-range">$100.00 – $249.99 USD</div>
+          <div class="rank-discount">5% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">🚀</div>
+          <div class="rank-name">Premium</div>
+          <div class="rank-range">$250.00 – $499.99 USD</div>
+          <div class="rank-discount">10% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">💎</div>
+          <div class="rank-name">Diamond</div>
+          <div class="rank-range">$500.00 – $999.99 USD</div>
+          <div class="rank-discount">15% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">👑</div>
+          <div class="rank-name">Deluxe</div>
+          <div class="rank-range">$1,000.00 – $4,999.99 USD</div>
+          <div class="rank-discount">20% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">🔥</div>
+          <div class="rank-name">Elite</div>
+          <div class="rank-range">$5,000.00+ USD</div>
+          <div class="rank-discount">30% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+      </div>
+    </div>
+  </section>
+
+
+  
+  <section class="content" id="section-codm" style="display:none;">
+    <div class="section-tag">Recargas de videojuegos</div>
+    <h1>Call of Duty Mobile</h1>
+    <p class="section-sub">
+      <strong>Recargas de CP</strong><br/>
+      Completa los datos del jugador, elige un paquete de CP y genera tu pedido para KaliVentas.
+    </p>
+
+    <div class="pill-inline">
+      <span class="pill-dot"></span>
+      <span>Pensado para jugadores que compran pases de batalla, operadores y skins seguido.</span>
+    </div>
+
+    <div class="grid" style="margin-top:.9rem;">
+      <div>
+        <div style="font-size:.86rem;color:var(--muted);margin-bottom:.6rem;">
+          Asegúrate de que el <strong>ID / usuario</strong>, el <strong>nombre</strong> y la <strong>región</strong> coincidan con los datos dentro de COD Mobile.
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.7rem;">
+          <div>
+            <label for="codm-id">ID / usuario del jugador</label>
+            <div class="field">
+              <span class="field-icon">🆔</span>
+              <input id="codm-id" type="text" placeholder="ID o usuario de COD Mobile" />
+            </div>
+          </div>
+          <div>
+            <label for="codm-name">Nombre del jugador</label>
+            <div class="field">
+              <span class="field-icon">👤</span>
+              <input id="codm-name" type="text" placeholder="Nombre dentro de COD Mobile" />
+            </div>
+          </div>
+          <div>
+            <label for="codm-region">Región / servidor</label>
+            <div class="field">
+              <span class="field-icon">🌎</span>
+              <input id="codm-region" type="text" placeholder="Ej. LATAM, Global, etc." />
+            </div>
+          </div>
+          <div>
+            <label for="codm-note">Nota para KaliVentas (opcional)</label>
+            <div class="field">
+              <span class="field-icon">💬</span>
+              <input id="codm-note" type="text" placeholder="Ej. Modo de juego, preferencia, etc." />
+            </div>
+          </div>
+          <div class="status" id="codm-status"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <h3>Selecciona el paquete de CP</h3>
+          <p style="font-size:.84rem;color:var(--muted);margin-bottom:.5rem;">
+            Elige un paquete de CP y genera un pedido con los datos del jugador.
+          </p>
+
+          <div style="display:flex;flex-direction:column;gap:.6rem;">
+            <div>
+              <label for="codm-pack-select" style="font-size:.8rem;color:var(--muted);display:block;margin-bottom:.2rem;">
+                Paquete de CP
+              </label>
+              <div class="field">
+                <span class="field-icon">🔥</span>
+                <select id="codm-pack-select" style="background:transparent;border:none;outline:none;color:var(--text);font-size:.88rem;width:100%;">
+                  <option value="">Selecciona un paquete</option>
+                  <option value="80 CP" data-precio="25">80 CP - $25 MXN</option>
+                  <option value="420 CP" data-precio="120">420 CP - $120 MXN</option>
+                  <option value="880 CP" data-precio="230">880 CP - $230 MXN</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-wrap:wrap;gap:.5rem;">
+              <button class="btn btn-small" type="button" id="codm-buy">Comprar ahora</button>
+            </div>
+
+            <div style="font-size:.78rem;color:var(--muted);margin-top:.2rem;">
+              Nota: estas recargas solo se pagan con <strong>saldo disponible en tu panel</strong>.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rank-section" id="rank-section">
+      <h2 class="rank-title-main">Mi rango como revendedor</h2>
+      <p class="rank-sub">
+        Estos rangos son ilustrativos y se basan en <strong>volumen de compras en USD</strong>. Más adelante puedes
+        conectarlos a tu historial real para activar descuentos automáticos.
+      </p>
+
+      <div class="rank-grid">
+        <article class="rank-card rank-current">
+          <div class="rank-icon">👤</div>
+          <div class="rank-name">Usuario</div>
+          <div class="rank-range">$0.00 – $99.99 USD</div>
+          <div class="rank-discount">0% descuento</div>
+          <button class="rank-btn rank-btn-active" type="button">Nivel actual</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">⭐</div>
+          <div class="rank-name">VIP</div>
+          <div class="rank-range">$100.00 – $249.99 USD</div>
+          <div class="rank-discount">5% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">🚀</div>
+          <div class="rank-name">Premium</div>
+          <div class="rank-range">$250.00 – $499.99 USD</div>
+          <div class="rank-discount">10% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">💎</div>
+          <div class="rank-name">Diamond</div>
+          <div class="rank-range">$500.00 – $999.99 USD</div>
+          <div class="rank-discount">15% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">👑</div>
+          <div class="rank-name">Deluxe</div>
+          <div class="rank-range">$1,000.00 – $4,999.99 USD</div>
+          <div class="rank-discount">20% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">🔥</div>
+          <div class="rank-name">Elite</div>
+          <div class="rank-range">$5,000.00+ USD</div>
+          <div class="rank-discount">30% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  
+  <section class="content" id="section-streaming" style="display:none;">
+    <div class="section-tag">Servicios de streaming</div>
+    <h1>Streaming</h1>
+    <p class="section-sub">
+      <strong>Servicios de streaming para revender</strong><br/>
+      Usa esta sección para armar pedidos de streaming (Netflix, Disney+, Prime Video, Spotify, etc.) para tus clientes.
+      Solo se procesan pedidos si tu cuenta de revendedor tiene saldo disponible.
+    </p>
+
+    <div class="pill-inline">
+      <span class="pill-dot"></span>
+      <span>Los precios mostrados son de referencia. KaliVentas confirmará el monto final por WhatsApp.</span>
+    </div>
+
+    <div class="grid" style="margin-top:.9rem;">
+      <div>
+        <div style="font-size:.86rem;color:var(--muted);margin-bottom:.6rem;">
+          Rellena los datos del cliente (correo, país/región y una nota si hace falta) y luego elige un plan.
+          El panel generará un mensaje listo para enviarlo por WhatsApp.
+        </div>
+
+        <div class="products-grid">
+          <article class="card svc-block" data-service="Netflix">
+            <h3>Netflix · Perfiles y cuentas</h3>
+            <p>Perfiles compartidos o cuentas completas para familias, amigos o clientes frecuentes.</p>
+            <div style="margin-top:.6rem;">
+              <label>Correo / usuario del cliente</label>
+              <div class="field">
+                <span class="field-icon">📧</span>
+                <input type="email" class="svc-email" placeholder="Correo del cliente para Netflix" />
+              </div>
+              <label>País / región</label>
+              <div class="field">
+                <span class="field-icon">🌎</span>
+                <input type="text" class="svc-country" placeholder="Ej. México, Argentina..." />
+              </div>
+              <label>Nota (opcional)</label>
+              <div class="field">
+                <span class="field-icon">💬</span>
+                <input type="text" class="svc-note" placeholder="Perfil nuevo, cuenta existente, idioma, etc." />
+              </div>
+            </div>
+            <div style="margin-top:.5rem;display:flex;flex-direction:column;gap:.35rem;">
+              <button class="btn btn-small svc-pack" type="button" data-plan="Perfil compartido 1 mes" data-precio="75">
+                Perfil compartido 1 mes - $75 MXN
+              </button>
+              <button class="btn btn-small svc-pack" type="button" data-plan="Perfil compartido 3 meses" data-precio="210">
+                Perfil compartido 3 meses - $210 MXN
+              </button>
+              <button class="btn btn-small svc-pack" type="button" data-plan="Cuenta completa 1 mes" data-precio="220">
+                Cuenta completa 1 mes - $220 MXN
+              </button>
+            </div>
+            <div class="status svc-status"></div>
+          </article>
+
+          <article class="card svc-block" data-service="Disney+">
+            <h3>Disney+ · Cuentas por tiempo</h3>
+            <p>Contenido familiar de Disney, Pixar, Marvel y Star Wars para tus clientes.</p>
+            <div style="margin-top:.6rem;">
+              <label>Correo / usuario del cliente</label>
+              <div class="field">
+                <span class="field-icon">📧</span>
+                <input type="email" class="svc-email" placeholder="Correo del cliente para Disney+" />
+              </div>
+              <label>País / región</label>
+              <div class="field">
+                <span class="field-icon">🌎</span>
+                <input type="text" class="svc-country" placeholder="Ej. México, Chile..." />
+              </div>
+              <label>Nota (opcional)</label>
+              <div class="field">
+                <span class="field-icon">💬</span>
+                <input type="text" class="svc-note" placeholder="Perfil infantil, idioma, etc." />
+              </div>
+            </div>
+            <div style="margin-top:.5rem;display:flex;flex-direction:column;gap:.35rem;">
+              <button class="btn btn-small svc-pack" type="button" data-plan="Cuenta 1 mes" data-precio="120">
+                Cuenta 1 mes - $120 MXN
+              </button>
+              <button class="btn btn-small svc-pack" type="button" data-plan="Cuenta 3 meses" data-precio="330">
+                Cuenta 3 meses - $330 MXN
+              </button>
+            </div>
+            <div class="status svc-status"></div>
+          </article>
+
+          <article class="card svc-block" data-service="Prime Video">
+            <h3>Prime Video · Cuentas individuales</h3>
+            <p>Series, películas y contenido exclusivo de Amazon Prime Video.</p>
+            <div style="margin-top:.6rem;">
+              <label>Correo / usuario del cliente</label>
+              <div class="field">
+                <span class="field-icon">📧</span>
+                <input type="email" class="svc-email" placeholder="Correo del cliente para Prime Video" />
+              </div>
+              <label>País / región</label>
+              <div class="field">
+                <span class="field-icon">🌎</span>
+                <input type="text" class="svc-country" placeholder="Ej. México" />
+              </div>
+              <label>Nota (opcional)</label>
+              <div class="field">
+                <span class="field-icon">💬</span>
+                <input type="text" class="svc-note" placeholder="Cuenta nueva, vincular a Amazon, etc." />
+              </div>
+            </div>
+            <div style="margin-top:.5rem;display:flex;flex-direction:column;gap:.35rem;">
+              <button class="btn btn-small svc-pack" type="button" data-plan="Cuenta 1 mes" data-precio="90">
+                Cuenta 1 mes - $90 MXN
+              </button>
+              <button class="btn btn-small svc-pack" type="button" data-plan="Cuenta 3 meses" data-precio="250">
+                Cuenta 3 meses - $250 MXN
+              </button>
+            </div>
+            <div class="status svc-status"></div>
+          </article>
+
+          <article class="card svc-block" data-service="Spotify Premium">
+            <h3>Spotify Premium · Cuentas y perfiles</h3>
+            <p>Ideal para estudiantes, creadores de contenido y clientes que escuchan música diario.</p>
+            <div style="margin-top:.6rem;">
+              <label>Correo / usuario del cliente</label>
+              <div class="field">
+                <span class="field-icon">📧</span>
+                <input type="email" class="svc-email" placeholder="Correo del cliente para Spotify" />
+              </div>
+              <label>País / región</label>
+              <div class="field">
+                <span class="field-icon">🌎</span>
+                <input type="text" class="svc-country" placeholder="Ej. México" />
+              </div>
+              <label>Nota (opcional)</label>
+              <div class="field">
+                <span class="field-icon">💬</span>
+                <input type="text" class="svc-note" placeholder="Plan individual, dúo, familiar, etc." />
+              </div>
+            </div>
+            <div style="margin-top:.5rem;display:flex;flex-direction:column;gap:.35rem;">
+              <button class="btn btn-small svc-pack" type="button" data-plan="Cuenta individual 1 mes" data-precio="80">
+                Cuenta individual 1 mes - $80 MXN
+              </button>
+              <button class="btn btn-small svc-pack" type="button" data-plan="Cuenta dúo 1 mes" data-precio="120">
+                Cuenta dúo 1 mes - $120 MXN
+              </button>
+            <
+          <article class="card" id="smmprodigyx-card">
+            <h3>SMMPRODIGYX · API externa</h3>
+            <p style="font-size:.84rem;color:var(--muted);margin-bottom:.6rem;">
+              Este bloque es solo de uso interno para ti como administrador. Aquí tienes un apoyo rápido para trabajar
+              con la API de <strong>SMMPRODIGYX</strong> y generar un ejemplo de petición para crear pedidos desde tu panel.
+            </p>
+
+            <div style="font-size:.82rem;color:var(--muted);margin-bottom:.5rem;">
+              <div><strong>ApiUrl:</strong> <span class="copy-text" data-copy="https://smmprodigyx.xyz/api/v2">https://smmprodigyx.xyz/api/v2</span></div>
+              <div><strong>ApiKey:</strong> <span class="copy-text" data-copy="a3e75bf6756a55afab039649ca5a0307">a3e75bf6••••••••••••••••••••••307</span></div>
+              <div style="margin-top:.2rem;">(En producción, lo ideal es que esta ApiKey esté guardada en tu backend y no expuesta en público.)</div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:.6rem;">
+              <div>
+                <label style="font-size:.8rem;color:var(--muted);display:block;margin-bottom:.2rem;">ID del servicio (service)</label>
+                <div class="field">
+                  <span class="field-icon">📌</span>
+                  <input id="smm-service" type="text" placeholder="Ej. 1234 (ID del servicio en SMMPRODIGYX)" />
+                </div>
+              </div>
+
+              <div>
+                <label style="font-size:.8rem;color:var(--muted);display:block;margin-bottom:.2rem;">Link / usuario (link)</label>
+                <div class="field">
+                  <span class="field-icon">🔗</span>
+                  <input id="smm-link" type="text" placeholder="Link o usuario objetivo" />
+                </div>
+              </div>
+
+              <div>
+                <label style="font-size:.8rem;color:var(--muted);display:block;margin-bottom:.2rem;">Cantidad (quantity)</label>
+                <div class="field">
+                  <span class="field-icon">➕</span>
+                  <input id="smm-qty" type="number" min="1" step="1" placeholder="Ej. 1000" />
+                </div>
+              </div>
+
+              <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.4rem;">
+                <button class="btn btn-small" type="button" id="smm-generate-curl">Generar ejemplo (cURL)</button>
+                <button class="btn btn-small btn-alt" type="button" id="smm-copy-curl">Copiar ejemplo</button>
+              </div>
+
+              <div style="margin-top:.4rem;">
+                <label style="font-size:.8rem;color:var(--muted);display:block;margin-bottom:.2rem;">Ejemplo de petición API:</label>
+                <pre id="smm-curl-output" style="background:rgba(15,23,42,.92);border-radius:12px;border:1px solid rgba(31,41,55,.95);padding:.7rem .8rem;font-size:.8rem;white-space:pre-wrap;word-break:break-word;min-height:3.2rem;">
+curl -X POST "https://smmprodigyx.xyz/api/v2"   -d "key=TU_API_KEY_AQUI"   -d "action=add"   -d "service=ID_DEL_SERVICIO"   -d "link=LINK_AQUI"   -d "quantity=CANTIDAD_AQUI"
+                </pre>
+              </div>
+
+              <div class="status" id="smm-curl-status"></div>
+            </div>
+          </article>
+
+
+/div>
+            <div class="status svc-status"></div>
+          </article>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size:.86rem;color:var(--muted);">
+          Al seleccionar un plan, se abrirá WhatsApp con un mensaje que incluye todos los datos del cliente,
+          el servicio elegido y una confirmación de que tienes saldo como revendedor. KaliVentas validará y
+          confirmará el pedido de manera manual.
+        </div>
+      </div>
+    </div>
+
+    <div class="rank-section" id="rank-section">
+      <h2 class="rank-title-main">Mi rango como revendedor</h2>
+      <p class="rank-sub">
+        Estos rangos son ilustrativos y se basan en <strong>volumen de compras en USD</strong>. Más adelante puedes
+        conectarlos a tu historial real para activar descuentos automáticos.
+      </p>
+
+      <div class="rank-grid">
+        <article class="rank-card rank-current">
+          <div class="rank-icon">👤</div>
+          <div class="rank-name">Usuario</div>
+          <div class="rank-range">$0.00 – $99.99 USD</div>
+          <div class="rank-discount">0% descuento</div>
+          <button class="rank-btn rank-btn-active" type="button">Nivel actual</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">⭐</div>
+          <div class="rank-name">VIP</div>
+          <div class="rank-range">$100.00 – $249.99 USD</div>
+          <div class="rank-discount">5% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">🚀</div>
+          <div class="rank-name">Premium</div>
+          <div class="rank-range">$250.00 – $499.99 USD</div>
+          <div class="rank-discount">10% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">💎</div>
+          <div class="rank-name">Diamond</div>
+          <div class="rank-range">$500.00 – $999.99 USD</div>
+          <div class="rank-discount">15% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">👑</div>
+          <div class="rank-name">Deluxe</div>
+          <div class="rank-range">$1,000.00 – $4,999.99 USD</div>
+          <div class="rank-discount">20% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">🔥</div>
+          <div class="rank-name">Elite</div>
+          <div class="rank-range">$5,000.00+ USD</div>
+          <div class="rank-discount">30% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="content" id="section-saldo" style="display:none;">
+  <div class="section-tag">Saldo / Depósitos</div>
+  <h1>Métodos de pago</h1>
+  <p class="section-sub">
+    <strong>Datos de depósito solo para revendedores de KaliVentas.</strong><br/>
+    Elige un método, realiza tu pago y envía tu comprobante por WhatsApp para que un agente confirme tu saldo.
+  </p>
+
+  <div class="pill-inline" style="margin-bottom:1.2rem;">
+    <span class="pill-dot"></span>
+    <span>Recuerda: el mínimo sugerido para recargas es de <strong>$200 MXN</strong>.</span>
+  </div>
+
+  <div class="pay-methods-grid">
+    <article class="pay-card pay-stori">
+      <div class="pay-icon">🏦</div>
+      <div class="pay-title">Transferencia MX (Stori)</div>
+      <div class="pay-sub">Transferencia bancaria dentro de México a tarjeta Stori.</div>
+      <div class="pay-data-main">6461 8040 2332 9646 86</div>
+      <div class="pay-data-label">Tarjeta a nombre de:</div>
+      <div class="pay-data-small">Matiana Rubi · Banco Stori</div>
+    </article>
+
+    <article class="pay-card pay-oxxo">
+      <div class="pay-icon">🧾</div>
+      <div class="pay-title">Depósito OXXO</div>
+      <div class="pay-sub">Depósitos en efectivo en tiendas OXXO de todo México.</div>
+      <div class="pay-data-main">2242 1701 8069 2308</div>
+      <div class="pay-data-label">Número de tarjeta para depósito:</div>
+      <div class="pay-data-small">En el ticket adjunta tu comprobante por WhatsApp.</div>
+    </article>
+
+    <article class="pay-card pay-binance">
+      <div class="pay-icon">🟡</div>
+      <div class="pay-title">Binance USDT (TRC20)</div>
+      <div class="pay-sub">Envío de USDT por red TRC20 usando Binance.</div>
+      <div class="pay-data-main">TKkrmoStfuqpjP6C8oooJPqcuKchn8Gbdf</div>
+      <div class="pay-data-label">Wallet USDT (TRC20):</div>
+      <div class="pay-data-small">ID Binance: 1106987175</div>
+    </article>
+
+    <article class="pay-card pay-ltc">
+      <div class="pay-icon">⚡</div>
+      <div class="pay-title">Litecoin (LTC)</div>
+      <div class="pay-sub">Pago rápido en criptomoneda Litecoin.</div>
+      <div class="pay-data-main">LYxnZA4b2TFbBopARSj29Md7J1gfsuGAhS</div>
+      <div class="pay-data-label">Dirección LTC:</div>
+      <div class="pay-data-small">Envía el hash del pago junto con tu comprobante.</div>
+    </article>
+  </div>
+
+  <p class="section-sub" style="margin-top:1.2rem;font-size:.8rem;">
+    Formato sugerido para mandar comprobante por WhatsApp:<br/>
+    <strong>Banco / método · Monto · Hora · Nombre · Últimos 4 dígitos / hash · Comprobante adjunto.</strong>
+  </p>
+</section>
+
+  <section class="content" id="section-intl" style="display:none;">
+    <div class="section-tag">Recargas internacionales</div>
+    <h1>Recarga internacional &amp; retiros</h1>
+    <p class="section-sub">
+      Pensado para cuando manejes <strong>saldos en USD o plataformas globales</strong>. De momento es ilustrativo,
+      pero ya te deja explicar a tus revendedores cómo funcionarán las recargas internacionales y los retiros.
+    </p>
+
+    <div class="intl-grid">
+      <!-- Card: Recargar saldo internacional -->
+      <article class="intl-card">
+        <div class="intl-title-row">
+          <div class="intl-icon">💳</div>
+          <div>
+            <div class="intl-title">Recargar saldo internacional</div>
+            <div class="intl-sub">Próximamente · bancos globales y wallets digitales</div>
+          </div>
+        </div>
+        <p class="intl-text">
+          Aquí podrás agregar métodos como bancos internacionales, PayPal, Wise u otros procesadores.
+          Por ahora solo muestra esta tarjeta informativa para que tus revendedores sepan que el módulo
+          está en construcción.
+        </p>
+        <ul class="intl-list">
+          <li>Monto mínimo sugerido para recarga: <strong>$10.00 USD</strong>.</li>
+          <li>Confirma siempre por WhatsApp antes de enviar montos grandes.</li>
+        </ul>
+        <div class="intl-badge">En construcción</div>
+      </article>
+
+      <!-- Card: Retirar ganancias -->
+      <article class="intl-card intl-withdraw-card">
+        <div class="intl-title-row">
+          <div class="intl-icon bank">🏦</div>
+          <div>
+            <div class="intl-title">Retirar ganancias</div>
+            <div class="intl-sub">Panel ilustrativo para retiros en USD</div>
+          </div>
+        </div>
+
+        <div class="wd-balance-card">
+          <div class="wd-balance-label">Saldo disponible:</div>
+          <div class="wd-balance-amount">$0.00 USD</div>
+          <div class="wd-balance-meta">
+            Nivel: <span class="wd-pill">Usuario</span>
+          </div>
+          <div class="wd-balance-info">
+            Comisión de retiro: <strong>50%</strong> (fija para todos) · Mínimo: <strong>$10 USD</strong>
+          </div>
+        </div>
+
+        <div class="wd-block-title">Método de retiro:</div>
+        <div class="wd-methods">
+          <div class="wd-method wd-binance">
+            <div class="wd-method-name">Binance</div>
+            <div class="wd-method-sub">Pay / ID</div>
+          </div>
+          <div class="wd-method wd-paypal">
+            <div class="wd-method-name">PayPal</div>
+            <div class="wd-method-sub">Email</div>
+          </div>
+        </div>
+
+        <div class="wd-block-title">Selecciona un método de pago</div>
+        <div class="wd-select">
+          <span class="wd-select-placeholder">Selecciona un método primero</span>
+        </div>
+        <div class="wd-warning">Selecciona un método de pago para continuar (ilustrativo).</div>
+
+        <div class="wd-block-title">Monto a retirar (USD):</div>
+        <div class="wd-input">
+          <span class="wd-placeholder">Mínimo: $10.00</span>
+        </div>
+
+        <button class="btn wd-btn" type="button">
+          🚀 Solicitar retiro
+        </button>
+        <div class="wd-note">
+          Este módulo aún no está conectado a una base de datos real. Úsalo para explicar a tus revendedores
+          cómo funcionará el flujo de retiros cuando lo actives.
+        </div>
+      </article>
+    </div>
+  </section><section class="content" id="section-orders" style="display:none;">
+  <div class="section-tag">Mis compras</div>
+  <h1>Historial de compras</h1>
+  <p class="section-sub">
+    Aquí podrás revisar <strong>todas las compras que han hecho tus usuarios</strong> usando tu panel.
+    Por ahora los datos son ilustrativos, pero esta vista ya está lista para conectarse a una base de datos
+    o a tu API en el futuro.
+  </p>
+
+  <div class="orders-summary">
+    <div class="orders-summary-item">
+      <span class="orders-summary-label">Compras totales (ejemplo)</span>
+      <span class="orders-summary-value">26</span>
+    </div>
+    <div class="orders-summary-item">
+      <span class="orders-summary-label">Últimas 24 horas</span>
+      <span class="orders-summary-value">5</span>
+    </div>
+    <div class="orders-summary-item">
+      <span class="orders-summary-label">Monto total estimado</span>
+      <span class="orders-summary-value">$123.45 USD</span>
+    </div>
+  </div>
+
+  <div class="orders-table">
+    <div class="orders-head">
+      <span>#</span>
+      <span>Fecha</span>
+      <span>Usuario</span>
+      <span>Producto</span>
+      <span>Detalle</span>
+      <span>Monto</span>
+      <span>Estado</span>
+    </div>
+
+    <div class="orders-row">
+      <span>1</span>
+      <span>11/12/2025 · 15:32</span>
+      <span>@GamerPRO</span>
+      <span>Free Fire</span>
+      <span>310 diamantes por ID</span>
+      <span>$5.20 USD</span>
+      <span class="badge badge-done">Completado</span>
+    </div>
+
+    <div class="orders-row">
+      <span>2</span>
+      <span>11/12/2025 · 14:10</span>
+      <span>@StreamerYT</span>
+      <span>Netflix</span>
+      <span>Perfil 1 mes</span>
+      <span>$3.00 USD</span>
+      <span class="badge badge-pending">Pendiente</span>
+    </div>
+
+    <div class="orders-row">
+      <span>3</span>
+      <span>10/12/2025 · 21:48</span>
+      <span>@MobilePlayer</span>
+      <span>PUBG</span>
+      <span>UC recarga x ID</span>
+      <span>$9.99 USD</span>
+      <span class="badge badge-cancel">Cancelado</span>
+    </div>
+
+    <div class="orders-row">
+      <span>4</span>
+      <span>10/12/2025 · 18:05</span>
+      <span>@ClienteMX</span>
+      <span>Saldo panel</span>
+      <span>Recarga $200 MXN</span>
+      <span>$11.50 USD</span>
+      <span class="badge badge-done">Completado</span>
+    </div>
+  </div>
+
+  <p class="section-sub" style="margin-top:1rem;font-size:.8rem;">
+    En una integración real, este historial se llenaría con las órdenes de tu base de datos
+    (ID de orden, usuario, método de pago, monto, estado, etc.).
+  </p>
+</section>
+
+
+
+  
+  <section class="content" id="section-admin" style="display:none;">
+    <div class="section-tag">Admin</div>
+    <h1>Panel administrador</h1>
+    <p class="section-sub">
+      Desde aquí puedes <strong>administrar tu panel de KaliVentas</strong>:
+      agregar o quitar productos, gestionar revendedores y llevar control de solicitudes.
+      Por ahora funciona a nivel visual y con datos locales (solo en este navegador),
+      pero más adelante se puede conectar a una base de datos real o backend.
+    </p>
+
+    <div class="admin-grid">
+      <article class="admin-card admin-summary">
+        <div class="admin-card-title">Resumen rápido</div>
+        <div class="admin-summary-grid">
+          <div class="admin-summary-item">
+            <div class="admin-summary-label">Productos registrados</div>
+            <div class="admin-summary-value" id="admin-total-products">3</div>
+          </div>
+          <div class="admin-summary-item">
+            <div class="admin-summary-label">Revendedores activos</div>
+            <div class="admin-summary-value" id="admin-total-users">2</div>
+          </div>
+          <div class="admin-summary-item">
+            <div class="admin-summary-label">Solicitudes pendientes</div>
+            <div class="admin-summary-value" id="admin-total-requests">1</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="admin-card admin-products">
+        <div class="admin-card-title-row">
+          <div class="admin-pill">Productos</div>
+          <div class="admin-card-title-main">Gestión de productos</div>
+        </div>
+        <p class="admin-card-sub">
+          Crea, edita o desactiva productos de videojuegos, streaming u otros servicios.
+          Los cambios en esta versión son locales (solo para pruebas en tu navegador).
+        </p>
+
+        <form class="admin-form" id="admin-product-form">
+          <div class="admin-form-row">
+            <label>
+              Categoría
+              <select name="categoria" required>
+                <option value="Videojuego">Videojuego</option>
+                <option value="Streaming">Streaming</option>
+                <option value="Internacional">Internacional</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </label>
+            <label>
+              Nombre del producto
+              <input type="text" name="nombre" placeholder="Ej. Diamantes Free Fire 310" required />
+            </label>
+          </div>
+
+          <div class="admin-form-row">
+            <label>
+              Tipo / Juego
+              <input type="text" name="tipo" placeholder="Ej. Free Fire, Netflix, PUBG" />
+            </label>
+            <label>
+              Precio de referencia
+              <input type="number" min="0" step="0.01" name="precio" placeholder="Ej. 85.00" />
+            </label>
+            <label>
+              Moneda
+              <select name="moneda">
+                <option value="MXN">MXN</option>
+                <option value="USD">USD</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="admin-form-row">
+            <label class="admin-full">
+              Nota interna (opcional)
+              <input type="text" name="nota" placeholder="Ej. Solo usuarios VIP / precio se actualiza diario" />
+            </label>
+          </div>
+
+          <div class="admin-form-row admin-actions-row">
+            <label class="admin-switch-label">
+              <input type="checkbox" name="activo" checked />
+              <span>Producto activo</span>
+            </label>
+            <button type="submit" class="btn btn-small admin-btn-add">+ Agregar producto</button>
+          </div>
+        </form>
+
+        <div class="admin-table-wrapper">
+          <div class="admin-table-head">
+            <span>Cat.</span>
+            <span>Nombre</span>
+            <span>Tipo</span>
+            <span>Precio</span>
+            <span>Moneda</span>
+            <span>Estado</span>
+          </div>
+          <div class="admin-table-body" id="admin-products-body">
+            <div class="admin-table-row">
+              <span>Videojuego</span>
+              <span>Diamantes Free Fire 310</span>
+              <span>Free Fire</span>
+              <span>$85.00</span>
+              <span>MXN</span>
+              <span class="badge badge-done">Activo</span>
+            </div>
+            <div class="admin-table-row">
+              <span>Streaming</span>
+              <span>Netflix perfil 1 mes</span>
+              <span>Netflix</span>
+              <span>$3.00</span>
+              <span>USD</span>
+              <span class="badge badge-done">Activo</span>
+            </div>
+            <div class="admin-table-row">
+              <span>Videojuego</span>
+              <span>UC PUBG paquete base</span>
+              <span>PUBG</span>
+              <span>$9.99</span>
+              <span>USD</span>
+              <span class="badge badge-pending">Revisar</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="admin-card admin-users">
+        <div class="admin-card-title-row">
+          <div class="admin-pill violet">Revendedores</div>
+          <div class="admin-card-title-main">Gestión de usuarios</div>
+        </div>
+        <p class="admin-card-sub">
+          Agrega nuevos revendedores, actualiza su rango o marca cuentas como suspendidas.
+          Ideal para llevar un control rápido desde el panel.
+        </p>
+
+        <form class="admin-form" id="admin-user-form">
+          <div class="admin-form-row">
+            <label>
+              Nombre
+              <input type="text" name="nombre" placeholder="Ej. Juan Pérez" required />
+            </label>
+            <label>
+              Usuario
+              <input type="text" name="usuario" placeholder="Ej. @kaliventas01" required />
+            </label>
+          </div>
+          <div class="admin-form-row">
+            <label>
+              WhatsApp
+              <input type="text" name="whatsapp" placeholder="+52 56 0000 0000" />
+            </label>
+            <label>
+              Rango
+              <select name="rango">
+                <option value="Usuario">Usuario</option>
+                <option value="VIP">VIP</option>
+                <option value="Premium">Premium</option>
+                <option value="Diamond">Diamond</option>
+                <option value="Deluxe">Deluxe</option>
+                <option value="Elite">Elite</option>
+              </select>
+            </label>
+            <label>
+              Estado
+              <select name="estado">
+                <option value="Activo">Activo</option>
+                <option value="Suspendido">Suspendido</option>
+              </select>
+            </label>
+          </div>
+          <div class="admin-form-row admin-actions-row">
+            <button type="submit" class="btn btn-small admin-btn-add">+ Agregar revendedor</button>
+          </div>
+        </form>
+
+        <div class="admin-table-wrapper">
+          <div class="admin-table-head">
+            <span>Usuario</span>
+            <span>WhatsApp</span>
+            <span>Rango</span>
+            <span>Estado</span>
+          </div>
+          <div class="admin-table-body" id="admin-users-body">
+            <div class="admin-table-row">
+              <span>@GamerPRO</span>
+              <span>+52 56 1111 2222</span>
+              <span class="badge badge-done">VIP</span>
+              <span class="badge badge-done">Activo</span>
+            </div>
+            <div class="admin-table-row">
+              <span>@ClienteMX</span>
+              <span>+52 55 3333 4444</span>
+              <span class="badge badge-pending">Usuario</span>
+              <span class="badge badge-done">Activo</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="admin-card admin-requests">
+        <div class="admin-card-title-row">
+          <div class="admin-pill orange">Solicitudes</div>
+          <div class="admin-card-title-main">Aprobación rápida</div>
+        </div>
+        <p class="admin-card-sub">
+          Lista ilustrativa de solicitudes recientes para aprobar o rechazar:
+          recargas de saldo, compras u otros movimientos. Más adelante se puede
+          conectar a tus pedidos reales.
+        </p>
+
+        <div class="admin-requests-list" id="admin-requests-list">
+          <div class="admin-request-item">
+            <div class="admin-request-main">
+              <div class="admin-request-user">@GamerPRO</div>
+              <div class="admin-request-detail">Recarga saldo · $200 MXN · OXXO</div>
+            </div>
+            <div class="admin-request-actions">
+              <button type="button" class="btn btn-small admin-approve">Aprobar</button>
+              <button type="button" class="btn btn-small admin-reject">Rechazar</button>
+            </div>
+          </div>
+
+          <div class="admin-request-item">
+            <div class="admin-request-main">
+              <div class="admin-request-user">@StreamerYT</div>
+              <div class="admin-request-detail">Compra Netflix 1 mes · $3 USD</div>
+            </div>
+            <div class="admin-request-actions">
+              <button type="button" class="btn btn-small admin-approve">Aprobar</button>
+              <button type="button" class="btn btn-small admin-reject">Rechazar</button>
+            </div>
+          </div>
+
+          <div class="admin-request-item">
+            <div class="admin-request-main">
+              <div class="admin-request-user">@MobilePlayer</div>
+              <div class="admin-request-detail">Diamantes Free Fire 310 · $85 MXN</div>
+            </div>
+            <div class="admin-request-actions">
+              <button type="button" class="btn btn-small admin-approve">Aprobar</button>
+              <button type="button" class="btn btn-small admin-reject">Rechazar</button>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+<section class="content" id="section-smm" style="display:none;">
+    <div class="section-tag">Otros servicios</div>
+    <h1>Integración con SmmProdigyX</h1>
+    <p class="section-sub">
+      Este apartado es para documentar y preparar la conexión de tu panel con
+      <strong>SMMPRODIGYX</strong>, tu proveedor externo de servicios SMM.
+      Por seguridad, lo ideal es usar la API key solo desde un backend (Node, PHP, etc.)
+      y no dejarla expuesta directamente en el HTML público.
+    </p>
+
+    <div class="smm-grid">
+      <article class="smm-card">
+        <div class="smm-title-row">
+          <div class="smm-icon">📡</div>
+          <div>
+            <div class="smm-title">Datos principales de la API</div>
+            <div class="smm-sub">Información que necesitas para conectarte</div>
+          </div>
+        </div>
+
+        <div class="smm-field">
+          <div class="smm-label">API URL</div>
+          <div class="smm-value">https://smmprodigyx.xyz/api/v2</div>
+        </div>
+
+        <div class="smm-field">
+          <div class="smm-label">API KEY (privada)</div>
+          <div class="smm-value smm-key">a3e75bf6756a55afab039649ca5a0307</div>
+          <div class="smm-hint">
+            No compartas esta clave en capturas ni videos públicos. Si vas a subir este panel
+            a internet, considera mover la clave a tu backend.
+          </div>
+        </div>
+      </article>
+
+      <article class="smm-card">
+        <div class="smm-title-row">
+          <div class="smm-icon code">⚙️</div>
+          <div>
+            <div class="smm-title">Ejemplo de uso (Node / backend)</div>
+            <div class="smm-sub">Petición ilustrativa para crear o consultar órdenes</div>
+          </div>
+        </div>
+
+        <pre class="smm-code"><code>POST https://smmprodigyx.xyz/api/v2
+Content-Type: application/json
+
+{
+  "key": "a3e75bf6756a55afab039649ca5a0307",
+  "action": "add",
+  "service": 1,
+  "link": "https://tiktok.com/@cliente",
+  "quantity": 1000
+}</code></pre>
+
+        <p class="smm-note">
+          En el futuro puedes hacer que tu panel envíe las órdenes a esta API desde tu propio backend,
+          usando este mismo formato de petición.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section class="content" id="section-comida" style="display:none;">
+    <div class="section-tag">Otros servicios</div>
+    <h1>Integración con ComidaMaster</h1>
+    <p class="section-sub">
+      Esta sección está pensada para conectar tu panel con <strong>ComidaMaster</strong>,
+      por ejemplo para manejar pedidos de comida o créditos de otra plataforma.
+    </p>
+
+    <div class="smm-grid">
+      <article class="smm-card">
+        <div class="smm-title-row">
+          <div class="smm-icon">🍔</div>
+          <div>
+            <div class="smm-title">API base pública</div>
+            <div class="smm-sub">URL que te proporciona el panel</div>
+          </div>
+        </div>
+
+        <div class="smm-field">
+          <div class="smm-label">API URL</div>
+          <div class="smm-value">https://comidamaster.net/public</div>
+        </div>
+
+        <p class="smm-note">
+          Cuando ComidaMaster te entregue la documentación completa (endpoints, parámetros,
+          API key, etc.), aquí podemos agregar ejemplos de peticiones para consultar pedidos,
+          saldos o crear nuevas órdenes desde KaliVentas.
+        </p>
+      </article>
+
+      <article class="smm-card">
+        <div class="smm-title-row">
+          <div class="smm-icon code">🧩</div>
+          <div>
+            <div class="smm-title">Pendiente de integración</div>
+            <div class="smm-sub">Espacio reservado para tu futura API</div>
+          </div>
+        </div>
+
+        <p class="smm-text">
+          Por ahora este bloque solo sirve como recordatorio visual de que tienes este otro panel
+          disponible. Más adelante se puede conectar con un backend que consuma la API de
+          ComidaMaster y la muestre aquí mismo en tu panel KaliVentas.
+        </p>
+      </article>
+    </div>
+  </section>
+
+<section class="content" id="section-rango" style="display:none;">
+    <div class="section-tag">Mi rango</div>
+    <h1>Mi rango como revendedor</h1>
+    <p class="section-sub">
+      Tus niveles como revendedor están pensados según <strong>volumen de compras en USD</strong>. Más adelante
+      podremos conectar estos niveles a tu BD real para activar descuentos automáticos.
+    </p>
+
+    <div class="rank-section" id="rank-section">
+      <h2 class="rank-title-main">Mi rango como revendedor</h2>
+      <p class="rank-sub">
+        Estos rangos son ilustrativos y se basan en <strong>volumen de compras en USD</strong>. Más adelante puedes
+        conectarlos a tu historial real para activar descuentos automáticos.
+      </p>
+
+      <div class="rank-grid">
+        <article class="rank-card rank-current">
+          <div class="rank-icon">👤</div>
+          <div class="rank-name">Usuario</div>
+          <div class="rank-range">$0.00 – $99.99 USD</div>
+          <div class="rank-discount">0% descuento</div>
+          <button class="rank-btn rank-btn-active" type="button">Nivel actual</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">⭐</div>
+          <div class="rank-name">VIP</div>
+          <div class="rank-range">$100.00 – $249.99 USD</div>
+          <div class="rank-discount">5% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">🚀</div>
+          <div class="rank-name">Premium</div>
+          <div class="rank-range">$250.00 – $499.99 USD</div>
+          <div class="rank-discount">10% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">💎</div>
+          <div class="rank-name">Diamond</div>
+          <div class="rank-range">$500.00 – $999.99 USD</div>
+          <div class="rank-discount">15% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">👑</div>
+          <div class="rank-name">Deluxe</div>
+          <div class="rank-range">$1,000.00 – $4,999.99 USD</div>
+          <div class="rank-discount">20% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+
+        <article class="rank-card rank-locked">
+          <div class="rank-icon">🔥</div>
+          <div class="rank-name">Elite</div>
+          <div class="rank-range">$5,000.00+ USD</div>
+          <div class="rank-discount">30% descuento</div>
+          <button class="rank-btn" type="button">Bloqueado</button>
+        </article>
+      </div>
+    </div>
+  </section>
+  <section class="content" id="section-ranking" style="display:none;">
+    <div class="section-tag">Mi ranking</div>
+    <h1>Premios y top recargas</h1>
+    <p class="section-sub">
+      Vista ilustrativa de <strong>premios diarios, semanales y mensuales</strong> para los mejores revendedores,
+      así como un pequeño top de recargas y gastos del día. Más adelante se puede conectar a datos reales.
+    </p>
+
+    <div class="leader-prize-grid">
+      <article class="leader-prize-card daily">
+        <div class="leader-icon">⭐</div>
+        <div class="leader-amount">$3</div>
+        <div class="leader-caption">Premio top 1 diario</div>
+      </article>
+
+      <article class="leader-prize-card weekly">
+        <div class="leader-icon">👑</div>
+        <div class="leader-amount">$20</div>
+        <div class="leader-caption">Premio top 1 semanal</div>
+      </article>
+
+      <article class="leader-prize-card monthly">
+        <div class="leader-icon">💎</div>
+        <div class="leader-amount">$50</div>
+        <div class="leader-caption">Premio top 1 mensual</div>
+      </article>
+    </div>
+
+    <div class="leader-timers-grid">
+      <article class="leader-timer-card">
+        <div class="leader-timer-label">⏱ Premio diario ($3)</div>
+        <div class="leader-timer-time">08 : 59 : 27</div>
+        <div class="leader-timer-sub">hrs · min · seg · hasta medianoche</div>
+      </article>
+
+      <article class="leader-timer-card">
+        <div class="leader-timer-label">⏱ Premio semanal ($20)</div>
+        <div class="leader-timer-time">03 : 08 : 59</div>
+        <div class="leader-timer-sub">días · hrs · min · hasta domingo</div>
+      </article>
+
+      <article class="leader-timer-card">
+        <div class="leader-timer-label">⏱ Premio mensual ($50)</div>
+        <div class="leader-timer-time">20 : 08 : 59</div>
+        <div class="leader-timer-sub">días · hrs · min · hasta fin de mes</div>
+      </article>
+    </div>
+
+    <div class="leader-tabs">
+      <button class="leader-tab active" type="button">Diario ($3)</button>
+      <button class="leader-tab" type="button">Semanal ($20)</button>
+      <button class="leader-tab" type="button">Mensual ($50)</button>
+    </div>
+
+    <div class="leader-board-grid">
+      <article class="leader-board-card">
+        <div class="leader-board-header">
+          <span class="leader-board-icon">💸</span>
+          <span class="leader-board-title">Top recargas - Hoy</span>
+        </div>
+        <div class="leader-board-sub">Ejemplo de los revendedores que más saldo han recargado hoy.</div>
+
+        <div class="leader-list">
+          <div class="leader-row">
+            <span class="leader-pos pos-1">1</span>
+            <span class="leader-user-avatar">S</span>
+            <div class="leader-user-info">
+              <div class="leader-user-name">SAG</div>
+              <div class="leader-user-meta">1 recarga</div>
+            </div>
+            <span class="leader-amount-inline">$10.00</span>
+          </div>
+          <div class="leader-row">
+            <span class="leader-pos pos-2">2</span>
+            <span class="leader-user-avatar">I</span>
+            <div class="leader-user-info">
+              <div class="leader-user-name">ITACHI11</div>
+              <div class="leader-user-meta">1 recarga</div>
+            </div>
+            <span class="leader-amount-inline">$10.00</span>
+          </div>
+          <div class="leader-row">
+            <span class="leader-pos pos-3">3</span>
+            <span class="leader-user-avatar">D</span>
+            <div class="leader-user-info">
+              <div class="leader-user-name">Diogo</div>
+              <div class="leader-user-meta">1 recarga</div>
+            </div>
+            <span class="leader-amount-inline">$10.00</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="leader-board-card alt">
+        <div class="leader-board-header">
+          <span class="leader-board-icon">🛒</span>
+          <span class="leader-board-title">Top gastos - Hoy</span>
+        </div>
+        <div class="leader-board-sub">Ejemplo de las cuentas que más han consumido saldo hoy.</div>
+
+        <div class="leader-list">
+          <div class="leader-row">
+            <span class="leader-pos pos-1">1</span>
+            <span class="leader-user-avatar">Y</span>
+            <div class="leader-user-info">
+              <div class="leader-user-name">yankarlosss</div>
+              <div class="leader-user-meta">1 compra</div>
+            </div>
+            <span class="leader-amount-inline pink">$8.00</span>
+          </div>
+          <div class="leader-row">
+            <span class="leader-pos pos-2">2</span>
+            <span class="leader-user-avatar">M</span>
+            <div class="leader-user-info">
+              <div class="leader-user-name">MrFresaYT</div>
+              <div class="leader-user-meta">3 compras</div>
+            </div>
+            <span class="leader-amount-inline pink">$6.24</span>
+          </div>
+          <div class="leader-row">
+            <span class="leader-pos pos-3">3</span>
+            <span class="leader-user-avatar">I</span>
+            <div class="leader-user-info">
+              <div class="leader-user-name">ITACHI11</div>
+              <div class="leader-user-meta">1 compra</div>
+            </div>
+            <span class="leader-amount-inline pink">$6.00</span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  // 1) HAMBURGUESA / SIDEBAR
+  const sidebar = document.getElementById("sidebar");
+  const hamburger = document.getElementById("hamburger");
+
+  function closeSidebar() {
+    if (sidebar) sidebar.classList.remove("open");
+  }
+
+  if (hamburger && sidebar) {
+    hamburger.addEventListener("click", function () {
+      sidebar.classList.toggle("open");
+    });
+  }
+
+  // 2) MAPA DE SECCIONES
+  const sections = {
+    perfil:    document.getElementById("section-perfil"),
+    rango:     document.getElementById("section-rango"),
+    ff:        document.getElementById("section-ff"),
+    pubg:      document.getElementById("section-pubg"),
+    fortnite:  document.getElementById("section-fortnite"),
+    codm:      document.getElementById("section-codm"),
+    streaming: document.getElementById("section-streaming"),
+    saldo:     document.getElementById("section-saldo"),
+    intl:      document.getElementById("section-intl"),
+    orders:    document.getElementById("section-orders"),
+    smm:       document.getElementById("section-smm"),
+    comida:    document.getElementById("section-comida"),
+    admin:     document.getElementById("section-admin"),
+    ranking:   document.getElementById("section-ranking")
+  };
+
+  function showSection(key) {
+    Object.keys(sections).forEach(function (k) {
+      const sec = sections[k];
+      if (!sec) return;
+      sec.style.display = k === key ? "block" : "none";
+    });
+  }
+
+  // 3) MENÚ LATERAL
+  const menuItems = document.querySelectorAll(".menu-item");
+
+  if (menuItems && menuItems.length) {
+    menuItems.forEach(function (item) {
+      item.addEventListener("click", function () {
+        menuItems.forEach(function (i) {
+          i.classList.remove("active");
+        });
+        item.classList.add("active");
+
+        const key = item.getAttribute("data-section") || "perfil";
+        showSection(key);
+        closeSidebar();
+      });
+    });
+  }
+
+  // 4) PSEUDO-LOGIN ADMIN
+  const ADMIN_PASSWORD = "KaliAdmin2025"; // cámbiala por la clave que tú quieras
+  const lockOverlay = document.getElementById("admin-lock-overlay");
+  const lockForm = document.getElementById("admin-lock-form");
+  const lockInput = document.getElementById("admin-lock-input");
+  const lockError = document.getElementById("admin-lock-error");
+
+  function applyLockState() {
+    const token = localStorage.getItem("kali_admin_ok");
+    if (token === "1") {
+      if (lockOverlay) lockOverlay.style.display = "none";
+      return true;
+    } else {
+      if (lockOverlay) lockOverlay.style.display = "flex";
+      return false;
+    }
+  }
+
+  applyLockState();
+
+  if (lockForm) {
+    lockForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const value = (lockInput && lockInput.value) ? lockInput.value.trim() : "";
+      if (value === ADMIN_PASSWORD) {
+        localStorage.setItem("kali_admin_ok", "1");
+        if (lockOverlay) lockOverlay.style.display = "none";
+        if (lockError) lockError.textContent = "";
+      } else {
+        if (lockError) lockError.textContent = "Contraseña incorrecta";
+        if (lockInput) {
+          lockInput.value = "";
+          lockInput.focus();
+        }
+      }
+    });
+  }
+
+  // 5) SECCIÓN INICIAL
+  showSection("admin");
+  const adminItem = document.querySelector('.menu-item[data-section="admin"]');
+  if (adminItem) {
+    adminItem.classList.add("active");
+  } else if (menuItems && menuItems.length) {
+    menuItems[0].classList.add("active");
+  }
+});
+</script>
+</body>
+</html>
