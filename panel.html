@@ -1790,6 +1790,52 @@
       }
     }
 
+
+    .home-products{
+      margin-top:1.6rem;
+      display:flex;
+      flex-direction:column;
+      gap:0.6rem;
+    }
+    .home-products-title{
+      font-size:1rem;
+      font-weight:600;
+    }
+    .home-products-sub{
+      font-size:0.8rem;
+      color:var(--muted);
+      max-width:640px;
+    }
+    .home-products-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+      gap:0.9rem;
+    }
+    .home-product-card{
+      border-radius:24px;
+      padding:0.9rem 1rem;
+      background:radial-gradient(circle at top left,#020617,#020617);
+      border:1px solid rgba(37,99,235,.85);
+      display:flex;
+      flex-direction:column;
+      gap:0.4rem;
+    }
+    .home-product-icon{
+      font-size:1.3rem;
+    }
+    .home-product-name{
+      font-weight:600;
+      font-size:0.9rem;
+    }
+    .home-product-sub{
+      font-size:0.78rem;
+      color:var(--muted);
+    }
+    .home-product-link{
+      margin-top:0.4rem;
+      align-self:flex-start;
+    }
+
 </style>
 </head>
 <body>
@@ -1993,23 +2039,29 @@
         <div class="profile-avatar">
           <span class="profile-avatar-icon">🎮</span>
         </div>
-        <div class="profile-name">Braan7</div>
-        <div class="profile-role">ADMIN · GAMER</div>
+        
+        <div class="profile-name" id="perfil-name">Braan7</div>
+        <div class="profile-role" id="perfil-role">ADMIN · GAMER</div>
 
         <div class="profile-row id-row">
           <span class="profile-row-icon">🆔</span>
-          <span class="profile-row-text">ID revendedor: <strong>#KALI001</strong></span>
+          <span class="profile-row-text">ID revendedor: <strong id="perfil-id">#KALI001</strong></span>
         </div>
 
         <div class="profile-divider"></div>
 
         <div class="profile-row">
+          <span class="profile-row-icon">🏬</span>
+          <span class="profile-row-text" id="perfil-store">Tienda demo</span>
+        </div>
+
+        <div class="profile-row">
           <span class="profile-row-icon">✉️</span>
-          <span class="profile-row-text">correo@kaliventas.com</span>
+          <span class="profile-row-text" id="perfil-email">correo@kaliventas.com</span>
         </div>
         <div class="profile-row">
           <span class="profile-row-icon">📱</span>
-          <span class="profile-row-text">+52 56 4880 4810</span>
+          <span class="profile-row-text" id="perfil-phone">+52 56 4880 4810</span>
         </div>
 
         <div class="profile-divider soft"></div>
@@ -2017,13 +2069,7 @@
         <div class="profile-tagline">
           Panel exclusivo para revendedores de confianza.
         </div>
-      </aside>
 
-      <div class="profile-main">
-        <article class="card profile-balance">
-          <div class="profile-balance-label">Saldo normal</div>
-          <div class="profile-balance-row">
-            <span class="profile-balance-amount">$0.00 MXN</span>
             <span class="profile-balance-chip">Referencia visual</span>
           </div>
           <div class="profile-balance-actions">
@@ -2096,6 +2142,37 @@
         <div class="dash-title">Perfil</div>
         <div class="dash-sub">Editar datos más adelante</div>
       </article>
+    </div>
+
+    <div class="home-products">
+      <h2 class="home-products-title">Productos destacados</h2>
+      <p class="home-products-sub">
+        Accesos rápidos a algunos de tus productos más usados. Puedes entrar directo a la sección
+        correspondiente del panel para crear pedidos.
+      </p>
+
+      <div class="home-products-grid">
+        <article class="home-product-card" data-section-target="ff">
+          <div class="home-product-icon">🔥</div>
+          <div class="home-product-name">Diamantes Free Fire</div>
+          <div class="home-product-sub">Recargas por ID · Paquetes desde 110 hasta 12,320 💎</div>
+          <button type="button" class="btn btn-small home-product-link">Ver recargas FF</button>
+        </article>
+
+        <article class="home-product-card" data-section-target="streaming">
+          <div class="home-product-icon">🎬</div>
+          <div class="home-product-name">Streaming</div>
+          <div class="home-product-sub">Perfiles de Netflix, Disney+, Spotify y más para revender.</div>
+          <button type="button" class="btn btn-small home-product-link">Ver streaming</button>
+        </article>
+
+        <article class="home-product-card" data-section-target="intl">
+          <div class="home-product-icon">🌎</div>
+          <div class="home-product-name">Recarga internacional</div>
+          <div class="home-product-sub">Saldo global y retiros con soporte por WhatsApp.</div>
+          <button type="button" class="btn btn-small home-product-link">Ver recarga internacional</button>
+        </article>
+      </div>
     </div>
 </section>
 
@@ -3520,75 +3597,65 @@ Content-Type: application/json
             <span class="leader-user-avatar">S</span>
             <div class="leader-user-info">
               <div class="leader-user-name">SAG</div>
-              <div class="leader-user-meta">1 recarga</div>
-            </div>
-            <span class="leader-amount-inline">$10.00</span>
-          </div>
-          <div class="leader-row">
-            <span class="leader-pos pos-2">2</span>
-            <span class="leader-user-avatar">I</span>
-            <div class="leader-user-info">
-              <div class="leader-user-name">ITACHI11</div>
-              <div class="leader-user-meta">1 recarga</div>
-            </div>
-            <span class="leader-amount-inline">$10.00</span>
-          </div>
-          <div class="leader-row">
-            <span class="leader-pos pos-3">3</span>
-            <span class="leader-user-avatar">D</span>
-            <div class="leader-user-info">
-              <div class="leader-user-name">Diogo</div>
-              <div class="leader-user-meta">1 recarga</div>
-            </div>
-            <span class="leader-amount-inline">$10.00</span>
-          </div>
-        </div>
-      </article>
-
-      <article class="leader-board-card alt">
-        <div class="leader-board-header">
-          <span class="leader-board-icon">🛒</span>
-          <span class="leader-board-title">Top gastos - Hoy</span>
-        </div>
-        <div class="leader-board-sub">Ejemplo de las cuentas que más han consumido saldo hoy.</div>
-
-        <div class="leader-list">
-          <div class="leader-row">
-            <span class="leader-pos pos-1">1</span>
-            <span class="leader-user-avatar">Y</span>
-            <div class="leader-user-info">
-              <div class="leader-user-name">yankarlosss</div>
-              <div class="leader-user-meta">1 compra</div>
-            </div>
-            <span class="leader-amount-inline pink">$8.00</span>
-          </div>
-          <div class="leader-row">
-            <span class="leader-pos pos-2">2</span>
-            <span class="leader-user-avatar">M</span>
-            <div class="leader-user-info">
-              <div class="leader-user-name">MrFresaYT</div>
-              <div class="leader-user-meta">3 compras</div>
-            </div>
-            <span class="leader-amount-inline pink">$6.24</span>
-          </div>
-          <div class="leader-row">
-            <span class="leader-pos pos-3">3</span>
-            <span class="leader-user-avatar">I</span>
-            <div class="leader-user-info">
-              <div class="leader-user-name">ITACHI11</div>
-              <div class="leader-user-meta">1 compra</div>
-            </div>
-            <span class="leader-amount-inline pink">$6.00</span>
-          </div>
-        </div>
-      </article>
-    </div>
-  </section>
-
-
-<script>
+              <div class="leader-user-meta">1 re<script>
 document.addEventListener("DOMContentLoaded", function () {
-  // 1) HAMBURGUESA / SIDEBAR
+  
+  // 0) DATOS DE USUARIO (LOCALSTORAGE)
+  function getKaliUsers() {
+    try {
+      const raw = localStorage.getItem("kaliventas_users");
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      console.error("Error leyendo usuarios locales", e);
+      return [];
+    }
+  }
+
+  function getCurrentUserEmail() {
+    try {
+      return localStorage.getItem("kaliventas_current_user_email") || "";
+    } catch (e) {
+      return "";
+    }
+  }
+
+  function findCurrentUser() {
+    const email = (getCurrentUserEmail() || "").toLowerCase();
+    if (!email) return null;
+    const users = getKaliUsers();
+    return users.find(u => (u.email || "").toLowerCase() === email) || null;
+  }
+
+  function applyUserToUI(user) {
+    if (!user) return;
+
+    const nameEl  = document.getElementById("perfil-name");
+    const roleEl  = document.getElementById("perfil-role");
+    const idEl    = document.getElementById("perfil-id");
+    const mailEl  = document.getElementById("perfil-email");
+    const phoneEl = document.getElementById("perfil-phone");
+    const storeEl = document.getElementById("perfil-store");
+
+    if (nameEl)  nameEl.textContent  = user.name || "Revendedor KaliVentas";
+    if (mailEl)  mailEl.textContent  = user.email || "";
+    if (phoneEl) phoneEl.textContent = user.phone || "Sin número registrado";
+    if (storeEl) storeEl.textContent = user.store || "Sin tienda / alias";
+
+    if (roleEl) {
+      const tipo = user.type || "Revendedor";
+      roleEl.textContent = tipo ? ("REVENDEDOR · " + tipo.toUpperCase()) : "REVENDEDOR";
+    }
+
+    if (idEl) {
+      let idNum = user.id || Date.now();
+      let suffix = String(idNum).slice(-4);
+      while (suffix.length < 4) suffix = "0" + suffix;
+      idEl.textContent = "#KALI" + suffix;
+    }
+  }
+// 1) HAMBURGUESA / SIDEBAR
   const sidebar = document.getElementById("sidebar");
   const hamburger = document.getElementById("hamburger");
 
@@ -3611,6 +3678,111 @@ document.addEventListener("DOMContentLoaded", function () {
     fortnite:  document.getElementById("section-fortnite"),
     codm:      document.getElementById("section-codm"),
     streaming: document.getElementById("section-streaming"),
+    saldo:     document.getElementById("section-saldo"),
+    intl:      document.getElementById("section-intl"),
+    orders:    document.getElementById("section-orders"),
+    smm:       document.getElementById("section-smm"),
+    comida:    document.getElementById("section-comida"),
+    ranking:   document.getElementById("section-ranking")
+  };
+
+  function showSection(key) {
+    Object.keys(sections).forEach(function (k) {
+      const sec = sections[k];
+      if (!sec) return;
+      sec.style.display = k === key ? "block" : "none";
+    });
+  }
+
+  // 3) MENÚ LATERAL
+  const menuItems = document.querySelectorAll(".menu-item");
+
+  if (menuItems && menuItems.length) {
+    menuItems.forEach(function (item) {
+      item.addEventListener("click", function () {
+        menuItems.forEach(function (i) {
+          i.classList.remove("active");
+        });
+        item.classList.add("active");
+
+        const key = item.getAttribute("data-section") || "perfil";
+        showSection(key);
+        closeSidebar();
+      });
+    });
+  }
+
+  // 4) SECCIÓN INICIAL
+
+  // 5) FORMULARIO DE COMPROBANTE (SALDO → WHATSAPP)
+  const saldoForm = document.getElementById("saldo-comprobante-form");
+  if (saldoForm) {
+    saldoForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const metodo = document.getElementById("saldo-metodo")?.value || "";
+      const monto  = document.getElementById("saldo-monto")?.value || "";
+      const nombre = document.getElementById("saldo-nombre")?.value || "";
+      const ref    = document.getElementById("saldo-ref")?.value || "";
+      const numero = "525648804810";
+
+      if (!metodo || !monto || !nombre) {
+        alert("Por favor llena al menos método, monto y nombre.");
+        return;
+      }
+
+      let text = "Hola KaliVentas, te envío comprobante de depósito.\n\n";
+      text += "Banco / método: " + metodo + "\n";
+      text += "Monto: " + monto + "\n";
+      if (nombre) text += "Nombre / alias: " + nombre + "\n";
+      if (ref) text += "Últimos 4 dígitos / hash: " + ref + "\n";
+      text += "\nAdjunto mi comprobante en esta conversación de WhatsApp.";
+
+      
+      const url = "https://wa.me/" + numero + "?text=" + encodeURIComponent(text);
+      window.open(url, "_blank");
+    });
+  }
+
+  // 6) PRODUCTOS DESTACADOS EN INICIO → NAVEGAR A SECCIONES
+  const homeCards = document.querySelectorAll(".home-product-card, .home-product-link");
+  if (homeCards && homeCards.length) {
+    homeCards.forEach(function (el) {
+      el.addEventListener("click", function () {
+        const card = el.closest(".home-product-card");
+        if (!card) return;
+        const target = card.getAttribute("data-section-target");
+        if (!target) return;
+
+        const menuTarget = document.querySelector('.menu-item[data-section="' + target + '"]');
+        if (menuTarget) {
+          menuTarget.click();
+        } else {
+          showSection(target);
+        }
+      });
+    });
+  }
+
+  // 7) APLICAR USUARIO ACTUAL AL PERFIL
+  try {
+    const current = findCurrentUser();
+    if (current) {
+      applyUserToUI(current);
+    }
+  } catch (e) {
+    console.error("Error aplicando datos de usuario al panel", e);
+  }
+
+  // Sección inicial y estado del menú
+  showSection("perfil");
+  const perfilItem = document.querySelector('.menu-item[data-section="perfil"]');
+  if (perfilItem) {
+    perfilItem.classList.add("active");
+  } else if (menuItems && menuItems.length) {
+    menuItems[0].classList.add("active");
+  }
+});
+ng: document.getElementById("section-streaming"),
     saldo:     document.getElementById("section-saldo"),
     intl:      document.getElementById("section-intl"),
     orders:    document.getElementById("section-orders"),
