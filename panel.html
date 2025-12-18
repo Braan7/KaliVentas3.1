@@ -1727,6 +1727,69 @@
       }
     }
 
+
+    .saldo-comprobante-card{
+      margin-top:1.4rem;
+      border-radius:24px;
+      padding:1rem 1rem 1.1rem;
+      background:radial-gradient(circle at top,#020617,#020617);
+      border:1px solid rgba(30,64,175,.85);
+      display:flex;
+      flex-direction:column;
+      gap:0.55rem;
+    }
+    .saldo-comprobante-title{
+      font-size:0.96rem;
+      font-weight:600;
+    }
+    .saldo-comprobante-text{
+      font-size:0.8rem;
+      color:var(--muted);
+    }
+    .saldo-comprobante-form{
+      margin-top:0.4rem;
+      display:flex;
+      flex-direction:column;
+      gap:0.5rem;
+    }
+    .saldo-row{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+      gap:0.5rem;
+      font-size:0.8rem;
+    }
+    .saldo-row label{
+      display:flex;
+      flex-direction:column;
+      gap:0.18rem;
+    }
+    .saldo-row input,
+    .saldo-row select{
+      border-radius:999px;
+      border:1px solid rgba(51,65,85,.9);
+      background:rgba(15,23,42,.96);
+      padding:0.4rem 0.7rem;
+      font-size:0.8rem;
+      color:inherit;
+      outline:none;
+    }
+    .saldo-btn-whatsapp{
+      align-self:flex-start;
+      margin-top:0.2rem;
+      display:inline-flex;
+      align-items:center;
+      gap:0.4rem;
+      background:linear-gradient(to right,#22c55e,#16a34a);
+    }
+    .saldo-btn-whatsapp::before{
+      content:"🧾";
+    }
+    @media (max-width:768px){
+      .saldo-comprobante-card{
+        padding:0.9rem 0.85rem 1rem;
+      }
+    }
+
 </style>
 </head>
 <body>
@@ -2999,6 +3062,44 @@ curl -X POST "https://smmprodigyx.xyz/api/v2"   -d "key=TU_API_KEY_AQUI"   -d "a
     </article>
   </div>
 
+  <div class="saldo-comprobante-card">
+    <h2 class="saldo-comprobante-title">Enviar comprobante por WhatsApp</h2>
+    <p class="saldo-comprobante-text">
+      Completa estos datos y genera un mensaje listo para enviar al WhatsApp oficial de KaliVentas.
+    </p>
+    <form id="saldo-comprobante-form" class="saldo-comprobante-form">
+      <div class="saldo-row">
+        <label>
+          Banco / método
+          <select id="saldo-metodo">
+            <option value="Transferencia STORI">Transferencia STORI</option>
+            <option value="Depósito OXXO">Depósito OXXO</option>
+            <option value="Binance USDT (TRC20)">Binance USDT (TRC20)</option>
+            <option value="Litecoin (LTC)">Litecoin (LTC)</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </label>
+        <label>
+          Monto enviado
+          <input type="number" id="saldo-monto" placeholder="Ej. 200" min="0" step="0.01" />
+        </label>
+      </div>
+      <div class="saldo-row">
+        <label>
+          Nombre / alias
+          <input type="text" id="saldo-nombre" placeholder="Tu nombre o usuario" />
+        </label>
+        <label>
+          Últimos 4 dígitos / hash
+          <input type="text" id="saldo-ref" placeholder="Ej. 1234 / hash" />
+        </label>
+      </div>
+      <button type="submit" class="btn saldo-btn-whatsapp">
+        Enviar comprobante por WhatsApp
+      </button>
+    </form>
+  </div>
+
   <p class="section-sub" style="margin-top:1.2rem;font-size:.8rem;">
     Formato sugerido para mandar comprobante por WhatsApp:<br/>
     <strong>Banco / método · Monto · Hora · Nombre · Últimos 4 dígitos / hash · Comprobante adjunto.</strong>
@@ -3545,6 +3646,35 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // 4) SECCIÓN INICIAL
+
+  // 5) FORMULARIO DE COMPROBANTE (SALDO → WHATSAPP)
+  const saldoForm = document.getElementById("saldo-comprobante-form");
+  if (saldoForm) {
+    saldoForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const metodo = document.getElementById("saldo-metodo")?.value || "";
+      const monto  = document.getElementById("saldo-monto")?.value || "";
+      const nombre = document.getElementById("saldo-nombre")?.value || "";
+      const ref    = document.getElementById("saldo-ref")?.value || "";
+      const numero = "525648804810";
+
+      if (!metodo || !monto || !nombre) {
+        alert("Por favor llena al menos método, monto y nombre.");
+        return;
+      }
+
+      let text = "Hola KaliVentas, te envío comprobante de depósito.\n\n";
+      text += "Banco / método: " + metodo + "\n";
+      text += "Monto: " + monto + "\n";
+      if (nombre) text += "Nombre / alias: " + nombre + "\n";
+      if (ref) text += "Últimos 4 dígitos / hash: " + ref + "\n";
+      text += "\nAdjunto mi comprobante en esta conversación de WhatsApp.";
+
+      const url = "https://wa.me/" + numero + "?text=" + encodeURIComponent(text);
+      window.open(url, "_blank");
+    });
+  }
+
   showSection("perfil");
   const perfilItem = document.querySelector('.menu-item[data-section="perfil"]');
   if (perfilItem) {

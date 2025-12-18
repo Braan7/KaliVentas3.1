@@ -118,8 +118,8 @@
 
       <h1>Acceso de revendedor</h1>
       <p class="sub">
-        Este acceso está pensado para revendedores que ya trabajan con KaliVentas. La validación real
-        de tu cuenta y tu saldo se hace siempre por WhatsApp con el equipo.
+        Este acceso es para revendedores registrados en KaliVentas. Usa tu correo o usuario
+        para entrar directamente a tu panel de productos.
       </p>
 
       <form id="loginForm">
@@ -139,15 +139,15 @@
           </div>
         </div>
 
-        <button class="btn" type="submit">Contactar por WhatsApp</button>
-        <button class="btn btn-secondary" type="button" onclick="window.location.href='panel.html'">
-          Entrar al panel de productos
+        <button class="btn" type="submit">Entrar al panel</button>
+        <button class="btn btn-secondary" type="button" onclick="window.location.href='index.html'">
+          Volver al inicio
         </button>
       </form>
 
       <p class="info">
-        El panel te muestra el catálogo y los productos. La activación de recargas y servicios de streaming
-        se confirma siempre por WhatsApp con un agente.
+        Desde el panel puedes revisar el catálogo, tus productos y opciones de saldo. Para soporte o dudas
+        específicas, siempre podrás contactarnos por WhatsApp de forma manual si lo necesitas.
       </p>
 
       <div class="switch">
@@ -160,21 +160,68 @@
 
 <script>
   const loginForm = document.getElementById('loginForm');
-  const waBase = "https://wa.me/525648804810";
 
-  loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = document.getElementById('login-email').value.trim();
-    const extra = document.getElementById('login-extra').value.trim();
+  function getKaliUsers() {
+    try {
+      const raw = localStorage.getItem('kaliventas_users');
+      if (!raw) return [];
+      return JSON.parse(raw);
+    } catch (e) {
+      console.error('Error leyendo usuarios locales', e);
+      return [];
+    }
+  }
 
-    if (!email) return;
+  function saveKaliUsers(users) {
+    try {
+      localStorage.setItem('kaliventas_users', JSON.stringify(users));
+    } catch (e) {
+      console.error('Error guardando usuarios locales', e);
+    }
+  }
 
-    let text = "Hola KaliVentas, soy revendedor y quiero ayuda con mi cuenta.\n\n";
-    text += "Correo / usuario: " + email + "\n";
-    if (extra) text += "Comentario: " + extra + "\n";
+  if (loginForm) {
+    loginForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const identifier = document.getElementById('login-email').value.trim();
 
-    window.location.href = waBase + "?text=" + encodeURIComponent(text);
-  });
+      if (!identifier) {
+        alert('Por favor escribe tu correo o usuario.');
+        return;
+      }
+
+      let users = getKaliUsers();
+      let user = users.find(u => {
+        const em = (u.email || '').toLowerCase();
+        const us = (u.usuario || '').toLowerCase();
+        const id = identifier.toLowerCase();
+        return em === id || us === id;
+      });
+
+      if (!user) {
+        user = {
+          id: Date.now(),
+          name: 'Nuevo revendedor',
+          store: '',
+          email: identifier,
+          phone: '',
+          country: '',
+          type: '',
+          extra: '',
+          createdAt: new Date().toISOString()
+        };
+        users.push(user);
+        saveKaliUsers(users);
+      } else {
+        saveKaliUsers(users);
+      }
+
+      localStorage.setItem('kaliventas_current_user_email', user.email || identifier);
+
+      window.location.href = 'panel.html';
+    });
+  }
 </script>
+
 </body>
 </html>

@@ -113,8 +113,8 @@
 
       <h1>Quiero ser revendedor</h1>
       <p class="sub">
-        Llena tus datos básicos. Al final, te enviaremos a WhatsApp con toda la información
-        para que KaliVentas revise y active tu cuenta manualmente. El catálogo se ve dentro del panel.
+        Llena tus datos básicos. Crearemos tu cuenta de revendedor en este panel y podrás entrar
+        directo al catálogo de KaliVentas desde aquí.
       </p>
 
       <form id="regForm">
@@ -182,7 +182,7 @@
           </div>
         </div>
 
-        <button class="btn" type="submit">Enviar solicitud por WhatsApp</button>
+        <button class="btn" type="submit">Crear cuenta de revendedor</button>
       </form>
 
       <p class="info">
@@ -199,31 +199,76 @@
 
 <script>
   const regForm = document.getElementById('regForm');
-  const waBase = "https://wa.me/525648804810";
 
-  regForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('name').value.trim();
-    const store = document.getElementById('store').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const country = document.getElementById('country').value.trim();
-    const type = document.getElementById('type').value;
-    const extra = document.getElementById('extra').value.trim();
+  function getKaliUsers() {
+    try {
+      const raw = localStorage.getItem('kaliventas_users');
+      if (!raw) return [];
+      return JSON.parse(raw);
+    } catch (e) {
+      console.error('Error leyendo usuarios locales', e);
+      return [];
+    }
+  }
 
-    if (!name || !store || !email || !phone) return;
+  function saveKaliUsers(users) {
+    try {
+      localStorage.setItem('kaliventas_users', JSON.stringify(users));
+    } catch (e) {
+      console.error('Error guardando usuarios locales', e);
+    }
+  }
 
-    let text = "Hola KaliVentas, quiero registrarme como revendedor.\n\n";
-    text += "Nombre: " + name + "\n";
-    text += "Tienda/proyecto: " + store + "\n";
-    text += "Correo: " + email + "\n";
-    text += "WhatsApp: " + phone + "\n";
-    if (country) text += "País: " + country + "\n";
-    if (type) text += "Tipo de revendedor: " + type + "\n";
-    if (extra) text += "\nCómo pienso vender: " + extra + "\n";
+  if (regForm) {
+    regForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const name    = document.getElementById('name').value.trim();
+      const store   = document.getElementById('store').value.trim();
+      const email   = document.getElementById('email').value.trim();
+      const phone   = document.getElementById('phone').value.trim();
+      const country = document.getElementById('country').value.trim();
+      const type    = document.getElementById('type').value.trim();
+      const extra   = document.getElementById('extra').value.trim();
 
-    window.location.href = waBase + "?text=" + encodeURIComponent(text);
-  });
+      if (!name || !store || !email || !phone) {
+        alert('Por favor completa los campos obligatorios.');
+        return;
+      }
+
+      let users = getKaliUsers();
+      let existing = users.find(u => u.email && u.email.toLowerCase() === email.toLowerCase());
+
+      if (existing) {
+        existing.name = name;
+        existing.store = store;
+        existing.phone = phone;
+        existing.country = country;
+        existing.type = type;
+        existing.extra = extra;
+      } else {
+        const newUser = {
+          id: Date.now(),
+          name,
+          store,
+          email,
+          phone,
+          country,
+          type,
+          extra,
+          createdAt: new Date().toISOString()
+        };
+        users.push(newUser);
+        existing = newUser;
+      }
+
+      saveKaliUsers(users);
+      localStorage.setItem('kaliventas_current_user_email', email);
+
+      alert('Cuenta creada / actualizada correctamente. Te llevamos al panel.');
+      window.location.href = 'panel.html';
+    });
+  }
 </script>
+
 </body>
 </html>
