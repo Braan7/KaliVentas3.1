@@ -1750,7 +1750,7 @@
     </div>
     <div style="display:flex;align-items:center;gap:.6rem;">
       <div class="user-chip">
-        Sesión simulada para <strong>revendedor</strong>. Catálogo visible solo aquí.
+        Sesión activa de <strong>revendedor</strong>. Panel KaliVentas.
       </div>
       <button class="btn-top" onclick="window.location.href='login.html'">Cerrar panel</button>
     </div>
@@ -1912,19 +1912,7 @@
         <div class="menu-item-dot"></div>
       </div>
 
-      <div class="sidebar-section-title">ADMIN</div>
-
-      <div class="menu-item" data-section="admin">
-        <div class="menu-icon">
-          <span>🛠️</span>
-        </div>
-        <div class="menu-text">
-          <div class="menu-label">Panel admin</div>
-          <span class="sub">Gestionar productos, usuarios y pedidos</span>
-        </div>
-        <div class="menu-item-dot"></div>
       </div>
-</div>
   </aside>
 
 
@@ -3185,256 +3173,6 @@ curl -X POST "https://smmprodigyx.xyz/api/v2"   -d "key=TU_API_KEY_AQUI"   -d "a
 
 
   
-  <section class="content" id="section-admin" style="display:none;">
-    <div class="section-tag">Admin</div>
-    <h1>Panel administrador</h1>
-    <p class="section-sub">
-      Desde aquí puedes <strong>administrar tu panel de KaliVentas</strong>:
-      agregar o quitar productos, gestionar revendedores y llevar control de solicitudes.
-      Por ahora funciona a nivel visual y con datos locales (solo en este navegador),
-      pero más adelante se puede conectar a una base de datos real o backend.
-    </p>
-
-    <div class="admin-grid">
-      <article class="admin-card admin-summary">
-        <div class="admin-card-title">Resumen rápido</div>
-        <div class="admin-summary-grid">
-          <div class="admin-summary-item">
-            <div class="admin-summary-label">Productos registrados</div>
-            <div class="admin-summary-value" id="admin-total-products">3</div>
-          </div>
-          <div class="admin-summary-item">
-            <div class="admin-summary-label">Revendedores activos</div>
-            <div class="admin-summary-value" id="admin-total-users">2</div>
-          </div>
-          <div class="admin-summary-item">
-            <div class="admin-summary-label">Solicitudes pendientes</div>
-            <div class="admin-summary-value" id="admin-total-requests">1</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="admin-card admin-products">
-        <div class="admin-card-title-row">
-          <div class="admin-pill">Productos</div>
-          <div class="admin-card-title-main">Gestión de productos</div>
-        </div>
-        <p class="admin-card-sub">
-          Crea, edita o desactiva productos de videojuegos, streaming u otros servicios.
-          Los cambios en esta versión son locales (solo para pruebas en tu navegador).
-        </p>
-
-        <form class="admin-form" id="admin-product-form">
-          <div class="admin-form-row">
-            <label>
-              Categoría
-              <select name="categoria" required>
-                <option value="Videojuego">Videojuego</option>
-                <option value="Streaming">Streaming</option>
-                <option value="Internacional">Internacional</option>
-                <option value="Otro">Otro</option>
-              </select>
-            </label>
-            <label>
-              Nombre del producto
-              <input type="text" name="nombre" placeholder="Ej. Diamantes Free Fire 310" required />
-            </label>
-          </div>
-
-          <div class="admin-form-row">
-            <label>
-              Tipo / Juego
-              <input type="text" name="tipo" placeholder="Ej. Free Fire, Netflix, PUBG" />
-            </label>
-            <label>
-              Precio de referencia
-              <input type="number" min="0" step="0.01" name="precio" placeholder="Ej. 85.00" />
-            </label>
-            <label>
-              Moneda
-              <select name="moneda">
-                <option value="MXN">MXN</option>
-                <option value="USD">USD</option>
-              </select>
-            </label>
-          </div>
-
-          <div class="admin-form-row">
-            <label class="admin-full">
-              Nota interna (opcional)
-              <input type="text" name="nota" placeholder="Ej. Solo usuarios VIP / precio se actualiza diario" />
-            </label>
-          </div>
-
-          <div class="admin-form-row admin-actions-row">
-            <label class="admin-switch-label">
-              <input type="checkbox" name="activo" checked />
-              <span>Producto activo</span>
-            </label>
-            <button type="submit" class="btn btn-small admin-btn-add">+ Agregar producto</button>
-          </div>
-        </form>
-
-        <div class="admin-table-wrapper">
-          <div class="admin-table-head">
-            <span>Cat.</span>
-            <span>Nombre</span>
-            <span>Tipo</span>
-            <span>Precio</span>
-            <span>Moneda</span>
-            <span>Estado</span>
-          </div>
-          <div class="admin-table-body" id="admin-products-body">
-            <div class="admin-table-row">
-              <span>Videojuego</span>
-              <span>Diamantes Free Fire 310</span>
-              <span>Free Fire</span>
-              <span>$85.00</span>
-              <span>MXN</span>
-              <span class="badge badge-done">Activo</span>
-            </div>
-            <div class="admin-table-row">
-              <span>Streaming</span>
-              <span>Netflix perfil 1 mes</span>
-              <span>Netflix</span>
-              <span>$3.00</span>
-              <span>USD</span>
-              <span class="badge badge-done">Activo</span>
-            </div>
-            <div class="admin-table-row">
-              <span>Videojuego</span>
-              <span>UC PUBG paquete base</span>
-              <span>PUBG</span>
-              <span>$9.99</span>
-              <span>USD</span>
-              <span class="badge badge-pending">Revisar</span>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="admin-card admin-users">
-        <div class="admin-card-title-row">
-          <div class="admin-pill violet">Revendedores</div>
-          <div class="admin-card-title-main">Gestión de usuarios</div>
-        </div>
-        <p class="admin-card-sub">
-          Agrega nuevos revendedores, actualiza su rango o marca cuentas como suspendidas.
-          Ideal para llevar un control rápido desde el panel.
-        </p>
-
-        <form class="admin-form" id="admin-user-form">
-          <div class="admin-form-row">
-            <label>
-              Nombre
-              <input type="text" name="nombre" placeholder="Ej. Juan Pérez" required />
-            </label>
-            <label>
-              Usuario
-              <input type="text" name="usuario" placeholder="Ej. @kaliventas01" required />
-            </label>
-          </div>
-          <div class="admin-form-row">
-            <label>
-              WhatsApp
-              <input type="text" name="whatsapp" placeholder="+52 56 0000 0000" />
-            </label>
-            <label>
-              Rango
-              <select name="rango">
-                <option value="Usuario">Usuario</option>
-                <option value="VIP">VIP</option>
-                <option value="Premium">Premium</option>
-                <option value="Diamond">Diamond</option>
-                <option value="Deluxe">Deluxe</option>
-                <option value="Elite">Elite</option>
-              </select>
-            </label>
-            <label>
-              Estado
-              <select name="estado">
-                <option value="Activo">Activo</option>
-                <option value="Suspendido">Suspendido</option>
-              </select>
-            </label>
-          </div>
-          <div class="admin-form-row admin-actions-row">
-            <button type="submit" class="btn btn-small admin-btn-add">+ Agregar revendedor</button>
-          </div>
-        </form>
-
-        <div class="admin-table-wrapper">
-          <div class="admin-table-head">
-            <span>Usuario</span>
-            <span>WhatsApp</span>
-            <span>Rango</span>
-            <span>Estado</span>
-          </div>
-          <div class="admin-table-body" id="admin-users-body">
-            <div class="admin-table-row">
-              <span>@GamerPRO</span>
-              <span>+52 56 1111 2222</span>
-              <span class="badge badge-done">VIP</span>
-              <span class="badge badge-done">Activo</span>
-            </div>
-            <div class="admin-table-row">
-              <span>@ClienteMX</span>
-              <span>+52 55 3333 4444</span>
-              <span class="badge badge-pending">Usuario</span>
-              <span class="badge badge-done">Activo</span>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="admin-card admin-requests">
-        <div class="admin-card-title-row">
-          <div class="admin-pill orange">Solicitudes</div>
-          <div class="admin-card-title-main">Aprobación rápida</div>
-        </div>
-        <p class="admin-card-sub">
-          Lista ilustrativa de solicitudes recientes para aprobar o rechazar:
-          recargas de saldo, compras u otros movimientos. Más adelante se puede
-          conectar a tus pedidos reales.
-        </p>
-
-        <div class="admin-requests-list" id="admin-requests-list">
-          <div class="admin-request-item">
-            <div class="admin-request-main">
-              <div class="admin-request-user">@GamerPRO</div>
-              <div class="admin-request-detail">Recarga saldo · $200 MXN · OXXO</div>
-            </div>
-            <div class="admin-request-actions">
-              <button type="button" class="btn btn-small admin-approve">Aprobar</button>
-              <button type="button" class="btn btn-small admin-reject">Rechazar</button>
-            </div>
-          </div>
-
-          <div class="admin-request-item">
-            <div class="admin-request-main">
-              <div class="admin-request-user">@StreamerYT</div>
-              <div class="admin-request-detail">Compra Netflix 1 mes · $3 USD</div>
-            </div>
-            <div class="admin-request-actions">
-              <button type="button" class="btn btn-small admin-approve">Aprobar</button>
-              <button type="button" class="btn btn-small admin-reject">Rechazar</button>
-            </div>
-          </div>
-
-          <div class="admin-request-item">
-            <div class="admin-request-main">
-              <div class="admin-request-user">@MobilePlayer</div>
-              <div class="admin-request-detail">Diamantes Free Fire 310 · $85 MXN</div>
-            </div>
-            <div class="admin-request-actions">
-              <button type="button" class="btn btn-small admin-approve">Aprobar</button>
-              <button type="button" class="btn btn-small admin-reject">Rechazar</button>
-            </div>
-          </div>
-        </div>
-      </article>
-    </div>
-  </section>
 
 <section class="content" id="section-smm" style="display:none;">
     <div class="section-tag">Otros servicios</div>
@@ -3777,7 +3515,6 @@ document.addEventListener("DOMContentLoaded", function () {
     orders:    document.getElementById("section-orders"),
     smm:       document.getElementById("section-smm"),
     comida:    document.getElementById("section-comida"),
-    admin:     document.getElementById("section-admin"),
     ranking:   document.getElementById("section-ranking")
   };
 
