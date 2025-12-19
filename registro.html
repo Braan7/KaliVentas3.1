@@ -53,41 +53,18 @@
       font-weight:700;
       box-shadow:0 0 16px rgba(56,189,248,.8);
     }
-    .logo-text{
-      display:flex;
-      flex-direction:column;
-      line-height:1.1;
-    }
+    .logo-text{display:flex;flex-direction:column;line-height:1.1;}
     .logo-title{
       font-size:.9rem;
       font-weight:700;
       text-transform:uppercase;
       letter-spacing:.12em;
     }
-    .logo-sub{
-      font-size:.75rem;
-      color:var(--muted);
-    }
-    h1{
-      font-size:1.1rem;
-      margin-bottom:.2rem;
-    }
-    .subtitle{
-      font-size:.8rem;
-      color:var(--muted);
-      margin-bottom:.9rem;
-    }
-    form{
-      display:flex;
-      flex-direction:column;
-      gap:.55rem;
-    }
-    label{
-      font-size:.78rem;
-      display:flex;
-      flex-direction:column;
-      gap:.18rem;
-    }
+    .logo-sub{font-size:.75rem;color:var(--muted);}
+    h1{font-size:1.1rem;margin-bottom:.2rem;}
+    .subtitle{font-size:.8rem;color:var(--muted);margin-bottom:.9rem;}
+    form{display:flex;flex-direction:column;gap:.55rem;}
+    label{font-size:.78rem;display:flex;flex-direction:column;gap:.18rem;}
     input,select{
       width:100%;
       border-radius:var(--radius-pill);
@@ -102,11 +79,7 @@
       border-color:rgba(59,130,246,1);
       box-shadow:0 0 0 1px rgba(59,130,246,.9);
     }
-    .help{
-      font-size:.75rem;
-      color:var(--muted);
-      margin-top:.2rem;
-    }
+    .help{font-size:.75rem;color:var(--muted);margin-top:.2rem;}
     .btn{
       margin-top:.7rem;
       width:100%;
@@ -120,19 +93,14 @@
       color:#ecfeff;
       box-shadow:0 0 0 1px rgba(56,189,248,.7),0 0 18px rgba(56,189,248,.7);
     }
-    .btn:hover{
-      filter:brightness(1.05);
-    }
+    .btn:hover{filter:brightness(1.05);}
     .footer{
       margin-top:.85rem;
       font-size:.78rem;
       color:var(--muted);
       text-align:center;
     }
-    .footer a{
-      color:#38bdf8;
-      text-decoration:none;
-    }
+    .footer a{color:#38bdf8;text-decoration:none;}
   </style>
 </head>
 <body>
@@ -148,7 +116,7 @@
     <h1>Crea tu cuenta de revendedor</h1>
     <p class="subtitle">
       Usa datos reales para que tu panel se vea con tu nombre, tienda y WhatsApp.
-      El acceso es solo para ti; todo queda guardado en este navegador.
+      Todo se guarda en este navegador y se usa para mostrar tu información en el panel.
     </p>
 
     <form id="register-form">
@@ -182,9 +150,14 @@
         </select>
       </label>
 
+      <label>
+        Código admin (opcional)
+        <input type="password" id="reg-admin-code" placeholder="Solo tú lo conoces" />
+      </label>
+
       <p class="help">
-        Más adelante puedes conectar esto a una base de datos real. Por ahora se guarda
-        solo en este navegador y se usa para mostrar tu información en el panel.
+        Si escribes el código correcto de administrador, tu cuenta tendrá acceso
+        al panel de <strong>Admin</strong> (gestión interna). Nadie más verá ese apartado.
       </p>
 
       <button type="submit" class="btn">Crear cuenta y entrar al panel</button>
@@ -199,6 +172,9 @@
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       var form = document.getElementById("register-form");
+
+      // 👉 CAMBIA ESTE CÓDIGO SI QUIERES OTRO
+      var ADMIN_SECRET = "KALI-ADMIN-777";
 
       function getUsers() {
         try {
@@ -223,6 +199,7 @@
         var phone = document.getElementById("reg-phone").value.trim();
         var store = document.getElementById("reg-store").value.trim();
         var type  = document.getElementById("reg-type").value;
+        var adminCode = document.getElementById("reg-admin-code").value.trim();
 
         if (!name || !email || !phone) {
           alert("Por favor llena al menos nombre, correo y WhatsApp.");
@@ -238,16 +215,20 @@
           }
         }
 
+        var wantsAdmin = adminCode && adminCode === ADMIN_SECRET;
         var now = new Date().toISOString();
+
         if (existingIndex >= 0) {
-          // actualizar usuario existente
-          users[existingIndex].name  = name;
-          users[existingIndex].phone = phone;
-          users[existingIndex].store = store;
-          users[existingIndex].type  = type;
-          users[existingIndex].updatedAt = now;
+          var u = users[existingIndex];
+          u.name  = name;
+          u.phone = phone;
+          u.store = store;
+          u.type  = type;
+          if (adminCode) {
+            u.isAdmin = wantsAdmin;
+          }
+          u.updatedAt = now;
         } else {
-          // crear nuevo
           var newId = Date.now();
           users.push({
             id: newId,
@@ -256,15 +237,13 @@
             phone: phone,
             store: store,
             type: type,
+            isAdmin: wantsAdmin,
             createdAt: now
           });
         }
 
         saveUsers(users);
-        // guardar sesión actual
         localStorage.setItem("kaliventas_current_user_email", email);
-
-        // entrar directo al panel
         window.location.href = "panel.html";
       });
     });

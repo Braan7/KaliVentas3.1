@@ -5,1592 +5,1204 @@
   <title>KaliVentas | Panel de recargas</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    :root {
+    :root{
       --bg:#020617;
-      --surface:#020617;
-      --surface-soft:#020617;
+      --panel:#020617;
+      --sidebar:#020617;
+      --card:#020617;
       --primary:#4f46e5;
+      --primary-soft:#1d2455;
       --accent:#22c55e;
+      --accent-soft:#064e3b;
+      --danger:#f97373;
       --text:#f9fafb;
       --muted:#9ca3af;
       --border:#1f2937;
-      --danger:#f97316;
-      --danger-soft:rgba(248,113,113,.2);
       --radius-lg:26px;
-      --radius-md:20px;
+      --radius-md:18px;
       --radius-pill:999px;
     }
     *{box-sizing:border-box;margin:0;padding:0;}
     body{
+      min-height:100vh;
       font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;
       background:radial-gradient(circle at top,#020617 0,#000 60%);
       color:var(--text);
+      display:flex;
+    }
+    a{text-decoration:none;color:inherit;}
+
+    .layout{
+      display:flex;
+      width:100%;
       min-height:100vh;
+    }
+
+    /* SIDEBAR */
+    .sidebar{
+      width:270px;
+      background:radial-gradient(circle at top left,#020617 0,#020617 40%,#000 100%);
+      border-right:1px solid rgba(15,23,42,.95);
+      padding:1.1rem .9rem 1.6rem;
       display:flex;
       flex-direction:column;
-    }
-    a{color:inherit;text-decoration:none;}
-    header{
-      border-bottom:1px solid rgba(15,23,42,.95);
-      background:rgba(2,6,23,.96);
-      backdrop-filter:blur(14px);
       position:sticky;
       top:0;
-      z-index:20;
-    }
-    .topbar{
-      max-width:1200px;
-      margin:0 auto;
-      padding:.8rem 1.2rem;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:1rem;
+      max-height:100vh;
+      overflow-y:auto;
     }
     .brand{
       display:flex;
       align-items:center;
       gap:.6rem;
+      margin-bottom:1rem;
     }
-    .brand-logo{
-      width:32px;
-      height:32px;
-      border-radius:999px;
-      background:radial-gradient(circle at 30% 0,#38bdf8 0,#4f46e5 45%,#a855f7 100%);
-      display:flex;
-      align-items:center;
-      justify-content:center;
+    .brand-badge{
+      width:36px;height:36px;border-radius:999px;
+      background:radial-gradient(circle at 30% 0,#38bdf8 0,#4f46e5 40%,#a855f7 100%);
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 0 18px rgba(56,189,248,.9);
       font-weight:700;
-      font-size:.9rem;
-      box-shadow:0 0 12px rgba(56,189,248,.7);
     }
-    .brand-text{
-      display:flex;
-      flex-direction:column;
-      line-height:1.1;
-    }
+    .brand-text{display:flex;flex-direction:column;line-height:1.1;}
     .brand-title{
-      font-weight:700;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      font-size:.8rem;
+      font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;
     }
-    .brand-sub{
-      font-size:.7rem;
-      color:var(--muted);
-    }
-    .topbar-right{
-      display:flex;
-      align-items:center;
-      gap:.75rem;
-    }
-    .user-chip{
+    .brand-sub{font-size:.7rem;color:var(--muted);}
+    .sidebar-section-title{
       font-size:.75rem;
-      padding:.25rem .75rem;
-      border-radius:999px;
-      border:1px solid rgba(55,65,81,.9);
-      background:radial-gradient(circle at top left,rgba(56,189,248,.18),rgba(15,23,42,.95));
-      color:rgba(209,213,219,1);
-      display:flex;
-      align-items:center;
-      gap:.35rem;
-    }
-    .user-chip strong{
-      color:#f97316;
-      font-weight:600;
-    }
-    .topbar-btn{
-      font-size:.75rem;
-      padding:.3rem .9rem;
-      border-radius:999px;
-      border:1px solid rgba(248,113,113,.8);
-      background:radial-gradient(circle at top left,rgba(248,113,113,.25),rgba(15,23,42,1));
-      color:#fecaca;
-      cursor:pointer;
-    }
-    .topbar-btn:hover{
-      background:radial-gradient(circle at top left,rgba(248,113,113,.35),rgba(15,23,42,1));
-    }
-    .hamburger{
-      width:34px;
-      height:34px;
-      border-radius:999px;
-      border:1px solid rgba(55,65,81,.9);
-      background:rgba(15,23,42,.96);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      flex-direction:column;
-      gap:3px;
-      cursor:pointer;
-    }
-    .hamburger span{
-      width:16px;
-      height:2px;
-      border-radius:999px;
-      background:#e5e7eb;
-    }
-
-    .layout{
-      max-width:1200px;
-      margin:.8rem auto 1.5rem;
-      padding:0 1.2rem 1.5rem;
-      display:grid;
-      grid-template-columns:260px minmax(0,1fr);
-      gap:1.2rem;
-      align-items:start;
-    }
-    .sidebar{
-      position:sticky;
-      top:66px;
-      align-self:flex-start;
-      height:calc(100vh - 86px);
-      overflow:hidden;
-      border-radius:var(--radius-lg);
-      background:radial-gradient(circle at top,#020617 0,#020617 45%,#000 90%);
-      border:1px solid rgba(15,23,42,.95);
-      box-shadow:0 0 0 1px rgba(15,23,42,.9),0 22px 40px rgba(15,23,42,.85);
-      display:flex;
-      flex-direction:column;
-    }
-    .sidebar-header{
-      padding:.9rem .95rem .4rem;
-      border-bottom:1px solid rgba(15,23,42,.9);
-      display:flex;
-      flex-direction:column;
-      gap:.25rem;
-    }
-    .sidebar-header-title{
-      font-size:.8rem;
-      font-weight:600;
-      letter-spacing:.08em;
       text-transform:uppercase;
-      color:rgba(148,163,184,1);
-    }
-    .sidebar-header-sub{
-      font-size:.7rem;
+      letter-spacing:.15em;
       color:var(--muted);
-    }
-    .sidebar-scroll{
-      padding:.5rem .4rem .7rem;
-      overflow-y:auto;
-      scrollbar-width:thin;
-      scrollbar-color:rgba(56,189,248,.5) transparent;
-    }
-    .sidebar-scroll::-webkit-scrollbar{
-      width:4px;
-    }
-    .sidebar-scroll::-webkit-scrollbar-track{
-      background:transparent;
-    }
-    .sidebar-scroll::-webkit-scrollbar-thumb{
-      background:linear-gradient(to bottom,#22c55e,#0ea5e9,#a855f7);
-      border-radius:999px;
-    }
-    .menu-section-label{
-      font-size:.7rem;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-      color:rgba(148,163,184,.9);
-      margin:.35rem .4rem .1rem;
-    }
-    .menu-group{
-      margin-bottom:.35rem;
+      margin:1rem .25rem .35rem;
     }
     .menu-item{
-      position:relative;
       display:flex;
       align-items:center;
-      gap:.65rem;
-      padding:.55rem .7rem;
-      margin:.1rem 0;
-      border-radius:18px;
+      gap:.55rem;
+      padding:.45rem .55rem;
+      border-radius:var(--radius-md);
       cursor:pointer;
-      transition:background .16s ease,transform .12s ease,border .16s ease;
+      margin-bottom:.1rem;
+      transition:background .16s, box-shadow .16s, transform .08s;
     }
     .menu-item:hover{
-      background:radial-gradient(circle at left,#0f172a,#020617);
-      transform:translateX(1px);
+      background:rgba(15,23,42,.9);
+      box-shadow:0 0 0 1px rgba(79,70,229,.4);
     }
     .menu-item.active{
-      background:radial-gradient(circle at left,#1d2539,#020617 65%);
-      box-shadow:0 0 0 1px rgba(56,189,248,.55),0 0 18px rgba(56,189,248,.35);
+      background:linear-gradient(to right,#0ea5e9,#6366f1);
+      box-shadow:0 0 0 1px rgba(56,189,248,.8),0 0 18px rgba(56,189,248,.9);
+      transform:translateY(-1px);
     }
-    .menu-item.active .menu-icon{
-      background:radial-gradient(circle at top left,#22c55e,#0ea5e9);
-      box-shadow:0 0 14px rgba(56,189,248,.8);
-    }
-    .menu-item.active .menu-item-dot{
-      background:radial-gradient(circle at center,#22c55e,#0ea5e9);
-      box-shadow:0 0 12px rgba(56,189,248,.75);
-      transform:scale(1);
-    }
+    .menu-item.active .menu-label{color:#f9fafb;}
+    .menu-item.active .sub{color:#e5e7eb;}
     .menu-icon{
-      width:30px;
-      height:30px;
-      border-radius:999px;
-      background:radial-gradient(circle at top,#111827,#020617);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:1rem;
-      flex-shrink:0;
-      color:#e5e7eb;
-      box-shadow:0 0 0 1px rgba(31,41,55,1);
+      width:26px;height:26px;border-radius:999px;
+      background:rgba(15,23,42,1);
+      display:flex;align-items:center;justify-content:center;
+      font-size:.85rem;
     }
-    .menu-text{
+    .menu-text{flex:1;}
+    .menu-label{font-size:.82rem;}
+    .sub{font-size:.72rem;color:var(--muted);}
+    .menu-item-dot{
+      width:8px;height:8px;border-radius:999px;
+      background:transparent;
+    }
+    .menu-item.active .menu-item-dot{background:#22c55e;}
+
+    /* MAIN CONTENT */
+    .main{
+      flex:1;
+      padding:1.2rem 1rem 1.8rem;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:1rem;
+    }
+    .top-left{
       display:flex;
       flex-direction:column;
-      gap:.15rem;
+      gap:.2rem;
     }
-    .menu-label{
+    .top-title{font-size:.95rem;font-weight:600;}
+    .top-sub{font-size:.75rem;color:var(--muted);}
+    .user-pill{
+      display:flex;
+      align-items:center;
+      gap:.4rem;
+      padding:.35rem .7rem;
+      border-radius:var(--radius-pill);
+      background:rgba(15,23,42,.9);
+      font-size:.75rem;
+    }
+    .user-avatar{
+      width:24px;height:24px;border-radius:999px;
+      background:radial-gradient(circle at 30% 0,#38bdf8 0,#4f46e5 40%,#a855f7 100%);
+      display:flex;align-items:center;justify-content:center;
       font-size:.8rem;
-      font-weight:500;
-    }
-    .menu-text .sub{
-      font-size:.7rem;
-      color:var(--muted);
-    }
-    .menu-item-dot{
-      width:8px;
-      height:8px;
-      border-radius:999px;
-      background:rgba(34,197,94,.28);
-      margin-left:auto;
-      transform:scale(.7);
-    }
-    .sidebar-footer-label{
-      font-size:.7rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:rgba(148,163,184,.9);
-      margin:.4rem .4rem .14rem;
-    }
-    .sidebar-section-title{
-      font-size:.7rem;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-      color:rgba(148,163,184,.9);
-      margin:.55rem .45rem .18rem;
     }
 
-    main{
-      border-radius:var(--radius-lg);
-      border:1px solid rgba(15,23,42,.95);
-      background:radial-gradient(circle at top,#020617 0,#000 72%);
-      box-shadow:0 0 0 1px rgba(15,23,42,.9),0 24px 40px rgba(15,23,42,.85);
-      padding:1.1rem 1.2rem 1.3rem;
-      min-height:500px;
+    .content{display:none;animation:fade .18s ease-out;}
+    .content.active{display:block;}
+    @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+
+    .grid{
+      display:grid;
+      grid-template-columns:2.1fr 1.4fr;
+      gap:1rem;
     }
-    .section-tag{
+    .card{
+      background:radial-gradient(circle at top,#020617 0,#020617 60%,#000 100%);
+      border-radius:var(--radius-lg);
+      border:1px solid rgba(15,23,42,.9);
+      padding:1rem 1.1rem;
+      box-shadow:0 18px 40px rgba(15,23,42,.8);
+    }
+    .card-header{
+      display:flex;justify-content:space-between;align-items:center;margin-bottom:.7rem;
+    }
+    .card-title{font-size:.9rem;font-weight:600;}
+    .card-sub{font-size:.75rem;color:var(--muted);}
+    .badge-outline{
+      font-size:.7rem;
+      padding:.2rem .55rem;
+      border-radius:var(--radius-pill);
+      border:1px solid rgba(148,163,184,.6);
+      color:#e5e7eb;
+    }
+    .wallet-amount{
+      font-size:1.5rem;
+      font-weight:700;
+      margin-bottom:.5rem;
+      text-shadow:0 0 18px rgba(56,189,248,.9);
+    }
+    .btn-sm{
+      border:none;
+      border-radius:var(--radius-pill);
+      padding:.38rem .8rem;
+      font-size:.78rem;
+      cursor:pointer;
       display:inline-flex;
       align-items:center;
-      padding:.16rem .65rem;
-      border-radius:999px;
-      border:1px solid rgba(56,189,248,.7);
-      color:rgba(56,189,248,1);
+      gap:.3rem;
+      background:linear-gradient(to right,#0ea5e9,#6366f1);
+      color:#ecfeff;
+    }
+    .btn-secondary{
+      border-radius:var(--radius-pill);
+      padding:.38rem .8rem;
+      font-size:.78rem;
+      border:1px solid rgba(148,163,184,.6);
+      background:rgba(15,23,42,1);
+      color:#e5e7eb;
+      cursor:pointer;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:.3rem;
+      font-size:.75rem;
+      padding:.2rem .55rem;
+      border-radius:var(--radius-pill);
+      background:rgba(15,23,42,1);
+      margin-top:.3rem;
+    }
+
+    /* QUICK CARDS */
+    .quick-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.7rem;
+      margin-top:.7rem;
+    }
+    .quick-card{
+      border-radius:var(--radius-md);
+      border:1px solid rgba(15,23,42,.9);
+      background:radial-gradient(circle at top,#020617 0,#020617 60%,#000 100%);
+      padding:.7rem .7rem .8rem;
+      font-size:.8rem;
+    }
+    .quick-top{
+      display:flex;align-items:center;justify-content:space-between;margin-bottom:.25rem;
+    }
+    .quick-icon{
+      width:26px;height:26px;border-radius:999px;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(15,23,42,1);
+      font-size:.9rem;
+    }
+    .quick-label{font-size:.8rem;}
+    .quick-main{font-size:1rem;font-weight:600;margin:.1rem 0 .25rem;}
+    .quick-link{
+      font-size:.75rem;
+      color:#38bdf8;
+      display:inline-flex;
+      align-items:center;
+      gap:.18rem;
+      cursor:pointer;
+    }
+
+    /* SECTION TITLES */
+    .section-tag{
       font-size:.7rem;
-      letter-spacing:.12em;
       text-transform:uppercase;
+      letter-spacing:.14em;
+      color:#a5b4fc;
       margin-bottom:.25rem;
     }
-    h1{
-      font-size:1.25rem;
-      margin-bottom:.15rem;
+    h1.section-title{
+      font-size:1.1rem;
+      margin-bottom:.3rem;
     }
     .section-sub{
       font-size:.8rem;
       color:var(--muted);
-      margin-bottom:.9rem;
-      max-width:620px;
+      margin-bottom:.8rem;
     }
-    .grid-main{
-      display:grid;
-      grid-template-columns:minmax(0,280px) minmax(0,1fr);
-      gap:1.1rem;
-      align-items:flex-start;
-    }
+    .section-sub.small{font-size:.76rem;}
 
-    .profile-card{
-      border-radius:var(--radius-lg);
-      padding:1rem .9rem 1.05rem;
-      background:radial-gradient(circle at top,#020617 0,#020617 55%,#000 100%);
-      border:1px solid rgba(15,23,42,.95);
-      box-shadow:0 0 0 1px rgba(15,23,42,.8),0 18px 40px rgba(15,23,42,.9);
-      display:flex;
-      flex-direction:column;
-      gap:.4rem;
-    }
-    .profile-header{
-      display:flex;
-      align-items:center;
-      gap:.8rem;
-      margin-bottom:.35rem;
-    }
-    .avatar{
-      width:64px;
-      height:64px;
-      border-radius:999px;
-      background:radial-gradient(circle at 30% 0,#38bdf8 0,#4f46e5 40%,#a855f7 80%);
-      box-shadow:0 0 16px rgba(56,189,248,.7);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:1.6rem;
-    }
-    .profile-title{
-      display:flex;
-      flex-direction:column;
-      gap:.15rem;
-    }
-    .profile-name{
-      font-weight:600;
-      font-size:1rem;
-    }
-    .profile-role{
-      font-size:.78rem;
-      color:rgba(148,163,184,1);
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-    .profile-id{
-      margin-top:.18rem;
-      padding:.16rem .55rem;
-      border-radius:999px;
-      border:1px solid rgba(55,65,81,1);
-      font-size:.72rem;
-      color:rgba(209,213,219,1);
-      background:radial-gradient(circle at left,rgba(56,189,248,.18),rgba(15,23,42,1));
-      width:max-content;
-    }
-    .profile-body{
-      font-size:.78rem;
-      color:var(--muted);
-      margin-bottom:.3rem;
-    }
-    .profile-divider{
-      height:1px;
-      border-radius:999px;
-      background:linear-gradient(to right,rgba(15,23,42,0),rgba(51,65,85,1),rgba(15,23,42,0));
-      margin:.4rem 0;
-    }
-    .profile-row{
-      display:flex;
-      align-items:center;
-      gap:.45rem;
-      font-size:.78rem;
-      margin:.1rem 0;
-    }
-    .profile-row-icon{
-      width:20px;
-      text-align:center;
-      opacity:.8;
-    }
-    .profile-row-text strong{
-      color:#e5e7eb;
-      font-weight:500;
-    }
-
-    .summary-column{
-      display:flex;
-      flex-direction:column;
-      gap:.7rem;
-    }
-    .balance-card{
-      border-radius:var(--radius-lg);
-      padding:.85rem 1rem 1rem;
-      background:radial-gradient(circle at top left,rgba(56,189,248,.24),#020617 52%,#020617 100%);
-      border:1px solid rgba(59,130,246,.9);
-      box-shadow:0 0 0 1px rgba(30,64,175,.95),0 18px 40px rgba(15,23,42,.95);
-      display:flex;
-      flex-direction:column;
-      gap:.5rem;
-    }
-    .card-subtitle{
-      font-size:.75rem;
-      color:var(--muted);
-      text-transform:uppercase;
-      letter-spacing:.12em;
-    }
-    .balance-value{
-      font-size:1.5rem;
-      font-weight:700;
-      text-shadow:0 0 16px rgba(56,189,248,.65);
-    }
-    .balance-actions{
-      margin-top:.45rem;
-      display:flex;
-      flex-wrap:wrap;
-      gap:.5rem;
-      align-items:center;
-    }
-    .btn{
-      border-radius:999px;
-      padding:.4rem .95rem;
-      border:none;
-      font-size:.78rem;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:.35rem;
-      background:linear-gradient(to right,#0ea5e9,#22c55e);
-      color:#ecfeff;
-      box-shadow:0 0 0 1px rgba(56,189,248,.7),0 0 16px rgba(56,189,248,.6);
-      white-space:nowrap;
-    }
-    .btn-small{
-      padding:.32rem .8rem;
-      font-size:.75rem;
-      box-shadow:none;
-    }
-    .btn-secondary{
-      background:radial-gradient(circle at top,#111827,#020617);
-      border:1px solid rgba(55,65,81,1);
-      box-shadow:0 0 0 1px rgba(31,41,55,1);
-      color:#e5e7eb;
-    }
-    .btn-secondary:hover{
-      border-color:rgba(148,163,184,1);
-    }
-
-    .bonus-card{
-      border-radius:var(--radius-lg);
-      padding:.9rem 1rem 1rem;
-      background:radial-gradient(circle at top right,rgba(244,63,94,.4),rgba(24,24,27,1));
-      border:1px solid rgba(244,63,94,.95);
-      box-shadow:0 0 0 1px rgba(127,29,29,1),0 18px 40px rgba(15,23,42,.95);
-      display:flex;
-      flex-direction:column;
-      gap:.45rem;
-    }
-    .badge{
-      border-radius:999px;
-      padding:.15rem .55rem;
-      font-size:.72rem;
-      border:1px solid rgba(55,65,81,1);
-      background:rgba(15,23,42,.9);
-      width:max-content;
-    }
-    .badge-accent{
-      border-color:rgba(56,189,248,.9);
-      color:rgba(56,189,248,1);
-      background:rgba(15,23,42,1);
-    }
-    .badge-pending{
-      border-color:rgba(245,158,11,1);
-      color:#fed7aa;
-      background:rgba(120,53,15,.7);
-    }
-    .badge-done{
-      border-color:rgba(34,197,94,1);
-      color:#bbf7d0;
-      background:rgba(22,101,52,.8);
-    }
-    .bonus-note{
-      font-size:.78rem;
-      color:rgba(248,250,252,.9);
-    }
-    .bonus-sub{
-      font-size:.75rem;
-      color:rgba(209,213,219,1);
-    }
-
-    .mini-dashboard{
-      margin-top:.8rem;
-      border-radius:var(--radius-lg);
-      padding:.85rem .9rem .95rem;
-      background:radial-gradient(circle at top left,rgba(15,23,42,1),rgba(15,23,42,.98));
-      border:1px solid rgba(31,41,55,1);
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
-      gap:.75rem;
-    }
-    .mini-card{
-      border-radius:18px;
-      padding:.6rem .7rem;
-      background:radial-gradient(circle at top,#020617,#020617 55%,#000 100%);
-      border:1px solid rgba(31,41,55,1);
-      display:flex;
-      flex-direction:column;
-      gap:.35rem;
-    }
-    .mini-card-header{
-      display:flex;
-      align-items:center;
-      gap:.45rem;
-      font-size:.78rem;
-    }
-    .mini-icon{
-      width:24px;
-      height:24px;
-      border-radius:999px;
-      background:radial-gradient(circle at 30% 0,#0ea5e9,#22c55e);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:1rem;
-      box-shadow:0 0 12px rgba(56,189,248,.8);
-    }
-    .mini-label{
-      text-transform:uppercase;
-      letter-spacing:.12em;
-    }
-    .mini-value{
-      font-size:1rem;
-      font-weight:600;
-    }
-    .mini-sub{
-      font-size:.75rem;
-      color:var(--muted);
-    }
-    .mini-link{
-      margin-top:.1rem;
-      font-size:.75rem;
-      color:#38bdf8;
-      cursor:pointer;
-    }
-
-    .home-products{
-      margin-top:1rem;
-      border-radius:var(--radius-lg);
-      padding:.9rem .9rem 1rem;
-      background:radial-gradient(circle at top,#020617,#020617 60%,#000 100%);
-      border:1px solid rgba(31,41,55,1);
-    }
-    .home-products-title{
-      font-size:.9rem;
-      margin-bottom:.2rem;
-    }
-    .home-products-sub{
-      font-size:.78rem;
-      color:var(--muted);
-      margin-bottom:.6rem;
-      max-width:640px;
-    }
-    .home-products-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
-      gap:.7rem;
-    }
-    .home-product-card{
-      border-radius:18px;
-      padding:.7rem .75rem;
-      background:radial-gradient(circle at top,#020617,#020617 60%,#020617 100%);
-      border:1px solid rgba(31,41,55,1);
-      display:flex;
-      flex-direction:column;
-      gap:.35rem;
-      cursor:pointer;
-      transition:background .15s ease,transform .1s ease,box-shadow .15s ease;
-    }
-    .home-product-card:hover{
-      background:radial-gradient(circle at top,#0b1120,#020617 70%);
-      transform:translateY(-1px);
-      box-shadow:0 0 0 1px rgba(56,189,248,.45),0 12px 24px rgba(15,23,42,.9);
-    }
-    .home-product-icon{
-      width:26px;
-      height:26px;
-      border-radius:999px;
-      background:radial-gradient(circle at 30% 0,#22c55e,#0ea5e9);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:1rem;
-      margin-bottom:.1rem;
-    }
-    .home-product-name{
-      font-size:.86rem;
-      font-weight:600;
-    }
-    .home-product-sub{
-      font-size:.75rem;
-      color:var(--muted);
-    }
-    .home-product-link{
-      margin-top:.2rem;
-      align-self:flex-start;
-    }
-
-    .content{
-      display:none;
-    }
-    .content.active{
-      display:block;
-    }
-
+    /* PRODUCTS */
     .products-grid{
       display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-      gap:1rem;
+      grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+      gap:.8rem;
     }
     .product-card{
       border-radius:var(--radius-lg);
-      padding:.9rem .9rem 1rem;
-      background:radial-gradient(circle at top,#020617,#020617 60%,#000 100%);
-      border:1px solid rgba(31,41,55,1);
-      display:flex;
-      flex-direction:column;
-      gap:.45rem;
+      border:1px solid rgba(15,23,42,.9);
+      background:radial-gradient(circle at top,#020617 0,#020617 60%,#000 100%);
+      padding:.8rem .9rem;
+      font-size:.8rem;
     }
     .product-header{
-      display:flex;
-      align-items:center;
-      gap:.5rem;
+      display:flex;gap:.55rem;margin-bottom:.3rem;align-items:center;
     }
     .product-icon{
-      width:30px;
-      height:30px;
-      border-radius:999px;
-      background:radial-gradient(circle at 30% 0,#22c55e,#0ea5e9);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:1.1rem;
-    }
-    .product-title{
-      font-size:.88rem;
-      font-weight:600;
-    }
-    .product-sub{
-      font-size:.76rem;
-      color:var(--muted);
-    }
-    .product-select-row{
-      margin-top:.4rem;
-      display:flex;
-      flex-direction:column;
-      gap:.35rem;
-    }
-    .product-select-row label{
-      font-size:.75rem;
-      color:var(--muted);
-    }
-    .product-select-row select,
-    .product-select-row input{
-      width:100%;
-      border-radius:var(--radius-pill);
-      border:1px solid rgba(31,41,55,1);
+      width:32px;height:32px;border-radius:999px;
       background:rgba(15,23,42,1);
-      padding:.4rem .7rem;
-      font-size:.8rem;
-      color:var(--text);
-      outline:none;
-    }
-    .product-select-row select:focus,
-    .product-select-row input:focus{
-      border-color:rgba(59,130,246,1);
-      box-shadow:0 0 0 1px rgba(59,130,246,.9);
-    }
-    .product-footer{
-      margin-top:.5rem;
-      display:flex;
-      flex-wrap:wrap;
-      align-items:center;
-      gap:.4rem;
-      justify-content:space-between;
-    }
-    .product-helper{
-      font-size:.72rem;
-      color:var(--muted);
-      max-width:240px;
-    }
-
-    .saldo-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-      gap:1rem;
-      align-items:flex-start;
-    }
-    .saldo-card{
-      border-radius:var(--radius-lg);
-      padding:.9rem .95rem 1rem;
-      background:radial-gradient(circle at top,#020617,#020617 55%,#000 100%);
-      border:1px solid rgba(31,41,55,1);
-      display:flex;
-      flex-direction:column;
-      gap:.5rem;
-    }
-    .saldo-method-list{
-      margin-top:.3rem;
-      display:flex;
-      flex-direction:column;
-      gap:.35rem;
-      font-size:.78rem;
-    }
-    .saldo-method-item{
-      display:flex;
-      align-items:flex-start;
-      gap:.45rem;
-      padding:.4rem .45rem;
-      border-radius:14px;
-      background:rgba(15,23,42,.95);
-      border:1px solid rgba(31,41,55,1);
-    }
-    .saldo-method-icon{
-      width:22px;
-      height:22px;
-      border-radius:999px;
-      background:radial-gradient(circle at 30% 0,#22c55e,#0ea5e9);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:.9rem;
-      flex-shrink:0;
-    }
-    .saldo-method-main{
-      display:flex;
-      flex-direction:column;
-      gap:.15rem;
-    }
-    .saldo-method-title{
-      font-size:.8rem;
-      font-weight:500;
-    }
-    .saldo-method-detail{
-      font-size:.76rem;
-      color:var(--muted);
-    }
-    .saldo-wa-card{
-      border-radius:18px;
-      padding:.7rem .75rem .8rem;
-      background:radial-gradient(circle at top left,rgba(16,185,129,.2),rgba(15,23,42,1));
-      border:1px solid rgba(16,185,129,1);
-    }
-    .saldo-wa-title{
-      font-size:.82rem;
-      font-weight:600;
-      display:flex;
-      align-items:center;
-      gap:.35rem;
-    }
-    .saldo-wa-title span{
-      width:20px;
-      height:20px;
-      border-radius:999px;
-      background:radial-gradient(circle at 30% 0,#22c55e,#0ea5e9);
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      display:flex;align-items:center;justify-content:center;
       font-size:1rem;
     }
-    .saldo-wa-body{
-      margin-top:.25rem;
-      font-size:.78rem;
-      color:var(--muted);
-    }
-    .saldo-wa-number{
-      margin-top:.25rem;
-      padding:.18rem .55rem;
-      border-radius:999px;
-      border:1px dashed rgba(34,197,94,1);
-      font-size:.8rem;
-      display:inline-flex;
-      align-items:center;
-      gap:.35rem;
-    }
-    .saldo-wa-number strong{
-      color:#bbf7d0;
-      font-weight:600;
-    }
-    .saldo-form-note{
+    .product-title{font-size:.9rem;font-weight:600;}
+    .product-sub{font-size:.75rem;color:var(--muted);}
+    .product-row{
+      display:flex;flex-wrap:wrap;align-items:center;
+      justify-content:space-between;
+      gap:.4rem;
       margin-top:.4rem;
-      font-size:.75rem;
-      color:var(--muted);
     }
-    .saldo-form{
-      margin-top:.45rem;
-      display:flex;
-      flex-direction:column;
-      gap:.45rem;
-      font-size:.78rem;
-    }
-    .saldo-form-row{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
-      gap:.45rem;
-    }
-    .saldo-form-row label{
-      display:flex;
-      flex-direction:column;
-      gap:.18rem;
-    }
-    .saldo-form-row select,
-    .saldo-form-row input{
+    .product-select{
+      flex:1 1 150px;
       border-radius:var(--radius-pill);
       border:1px solid rgba(31,41,55,1);
-      background:rgba(15,23,42,1);
-      padding:.4rem .7rem;
-      font-size:.8rem;
+      background:#020617;
       color:var(--text);
-      outline:none;
-    }
-    .saldo-form-row select:focus,
-    .saldo-form-row input:focus{
-      border-color:rgba(59,130,246,1);
-      box-shadow:0 0 0 1px rgba(59,130,246,.9);
-    }
-    .saldo-btn-whatsapp{
-      width:100%;
-      margin-top:.35rem;
-      background:linear-gradient(to right,#22c55e,#0ea5e9);
-      color:#ecfeff;
-      box-shadow:0 0 0 1px rgba(34,197,94,.8),0 0 14px rgba(45,212,191,.7);
-    }
-
-    .section-note{
+      padding:.4rem .6rem;
       font-size:.8rem;
-      color:var(--muted);
-      margin-bottom:.6rem;
-      max-width:640px;
     }
-    .small{
-      font-size:.75rem;
-    }
-
-    .intl-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-      gap:1rem;
-    }
-    .intl-card{
-      border-radius:var(--radius-lg);
-      padding:.9rem .95rem 1rem;
-      background:radial-gradient(circle at top,#020617,#020617 60%,#000 100%);
+    .product-input{
+      flex:1 1 120px;
+      border-radius:var(--radius-pill);
       border:1px solid rgba(31,41,55,1);
+      background:#020617;
+      color:var(--text);
+      padding:.4rem .6rem;
+      font-size:.8rem;
+    }
+    .product-actions{
       display:flex;
-      flex-direction:column;
-      gap:.5rem;
-    }
-    .intl-header{
-      display:flex;
-      align-items:center;
-      gap:.5rem;
-    }
-    .intl-icon{
-      width:30px;
-      height:30px;
-      border-radius:999px;
-      background:radial-gradient(circle at 30% 0,#22c55e,#0ea5e9);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:1.1rem;
-    }
-    .intl-title{
-      font-size:.88rem;
-      font-weight:600;
-    }
-    .intl-sub{
-      font-size:.76rem;
-      color:var(--muted);
-    }
-    .intl-note{
-      font-size:.78rem;
-      color:var(--muted);
-      margin-top:.1rem;
-    }
-    .intl-badges{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.3rem;
-      margin-top:.3rem;
-      font-size:.72rem;
-    }
-    .intl-badge{
-      border-radius:999px;
-      border:1px solid rgba(55,65,81,1);
-      padding:.16rem .55rem;
-      background:rgba(15,23,42,.95);
-    }
-
-    .orders-table{
-      border-radius:var(--radius-lg);
-      border:1px solid rgba(31,41,55,1);
-      overflow:hidden;
-      font-size:.78rem;
-    }
-    .orders-header,
-    .orders-row{
-      display:grid;
-      grid-template-columns:90px minmax(120px,1.4fr) minmax(110px,1fr) 80px 90px;
       gap:.35rem;
-      padding:.5rem .8rem;
-      align-items:center;
-    }
-    .orders-header{
-      background:rgba(15,23,42,1);
-      font-size:.8rem;
-      font-weight:600;
-    }
-    .orders-row:nth-child(odd){
-      background:rgba(15,23,42,.95);
-    }
-    .orders-row:nth-child(even){
-      background:rgba(15,23,42,.8);
-    }
-
-    .ranking-layout{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-      gap:1rem;
-      align-items:flex-start;
-    }
-    .ranking-prizes{
-      border-radius:var(--radius-lg);
-      padding:.9rem .95rem 1rem;
-      background:radial-gradient(circle at top,#020617,#020617 60%,#000 100%);
-      border:1px solid rgba(31,41,55,1);
-      display:flex;
-      flex-direction:column;
-      gap:.55rem;
-    }
-    .prize-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-      gap:.6rem;
-    }
-    .prize-card{
-      border-radius:18px;
-      padding:.6rem .7rem;
-      background:radial-gradient(circle at top,#020617,#020617 60%,#020617 100%);
-      border:1px solid rgba(31,41,55,1);
-      display:flex;
-      flex-direction:column;
-      gap:.3rem;
-    }
-    .prize-icon{
-      width:26px;
-      height:26px;
-      border-radius:999px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:1.1rem;
-      margin-bottom:.15rem;
-    }
-    .prize-icon.daily{
-      background:radial-gradient(circle at 30% 0,#22c55e,#0ea5e9);
-    }
-    .prize-icon.weekly{
-      background:radial-gradient(circle at 30% 0,#eab308,#f97316);
-    }
-    .prize-icon.monthly{
-      background:radial-gradient(circle at 30% 0,#f472b6,#ec4899);
-    }
-    .prize-amount{
-      font-size:1.1rem;
-      font-weight:700;
-    }
-    .prize-label{
-      font-size:.78rem;
-      color:var(--muted);
-    }
-    .prize-note{
-      font-size:.75rem;
-      color:var(--muted);
-    }
-
-    .ranking-lists{
-      border-radius:var(--radius-lg);
-      padding:.9rem .95rem 1rem;
-      background:radial-gradient(circle at top,#020617,#020617 60%,#000 100%);
-      border:1px solid rgba(31,41,55,1);
-      display:flex;
-      flex-direction:column;
-      gap:.6rem;
-    }
-    .ranking-tabs{
-      display:flex;
-      gap:.4rem;
-      margin-bottom:.35rem;
+      margin-top:.5rem;
       flex-wrap:wrap;
     }
-    .ranking-tab{
-      border-radius:999px;
-      padding:.15rem .7rem;
-      font-size:.75rem;
-      border:1px solid rgba(31,41,55,1);
+    .btn-ghost{
+      border-radius:var(--radius-pill);
+      border:1px solid rgba(148,163,184,.6);
       background:rgba(15,23,42,1);
+      color:#e5e7eb;
+      padding:.35rem .7rem;
+      font-size:.78rem;
       cursor:pointer;
     }
-    .ranking-tab.active{
-      border-color:rgba(56,189,248,1);
-      color:rgba(56,189,248,1);
-      background:radial-gradient(circle at top,#020617,#020617 60%,#000 100%);
-      box-shadow:0 0 0 1px rgba(56,189,248,.7),0 0 12px rgba(56,189,248,.6);
-    }
-    .ranking-columns{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-      gap:.7rem;
-    }
-    .ranking-column-card{
-      border-radius:18px;
-      padding:.6rem .7rem .7rem;
-      background:radial-gradient(circle at top,#020617,#020617 65%,#020617 100%);
-      border:1px solid rgba(31,41,55,1);
-    }
-    .ranking-column-title{
-      font-size:.86rem;
-      font-weight:600;
-      margin-bottom:.3rem;
-      display:flex;
-      align-items:center;
-      gap:.35rem;
-    }
-    .ranking-column-title span{
-      width:22px;
-      height:22px;
-      border-radius:999px;
-      background:radial-gradient(circle at 30% 0,#22c55e,#0ea5e9);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:1rem;
-    }
-    .ranking-list{
-      display:flex;
-      flex-direction:column;
-      gap:.3rem;
-    }
-    .ranking-item{
-      border-radius:999px;
-      padding:.2rem .55rem;
-      background:rgba(15,23,42,.95);
-      border:1px solid rgba(31,41,55,1);
-      display:flex;
-      align-items:center;
-      gap:.45rem;
+
+    /* TABLE SIMPLE */
+    table{
+      width:100%;
+      border-collapse:collapse;
       font-size:.78rem;
     }
-    .ranking-pos{
-      width:20px;
-      text-align:center;
-      font-weight:600;
-      color:rgba(250,250,249,1);
+    th,td{
+      padding:.45rem .5rem;
+      border-bottom:1px solid rgba(31,41,55,1);
+      text-align:left;
     }
-    .ranking-user{
-      flex:1;
+    th{font-weight:500;color:var(--muted);}
+    tr:last-child td{border-bottom:none;}
+
+    /* BADGES */
+    .badge-green{
+      padding:.18rem .45rem;border-radius:var(--radius-pill);
+      background:rgba(16,185,129,.16);color:#6ee7b7;font-size:.72rem;
     }
-    .ranking-badge{
-      font-size:.76rem;
-      color:#22c55e;
-    }
-    .ranking-amount{
-      font-variant-numeric:tabular-nums;
+    .badge-yellow{
+      padding:.18rem .45rem;border-radius:var(--radius-pill);
+      background:rgba(250,204,21,.12);color:#facc15;font-size:.72rem;
     }
 
-    .leaderboard-card{
-      border-radius:var(--radius-lg);
-      padding:.9rem .95rem 1rem;
-      background:radial-gradient(circle at top,#020617,#020617 60%,#000 100%);
-      border:1px solid rgba(31,41,55,1);
+    /* RANKING */
+    .tabs{
       display:flex;
-      flex-direction:column;
-      gap:.5rem;
-      margin-top:.9rem;
+      gap:.4rem;
+      margin-bottom:.7rem;
+      flex-wrap:wrap;
     }
-    .leaderboard-header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:.5rem;
-      margin-bottom:.2rem;
-    }
-    .leaderboard-title{
-      font-size:.9rem;
-      font-weight:600;
-    }
-    .leaderboard-sub{
-      font-size:.75rem;
-      color:var(--muted);
-    }
-    .leaderboard-list{
-      display:flex;
-      flex-direction:column;
-      gap:.35rem;
-      margin-top:.2rem;
-    }
-    .leaderboard-item{
-      border-radius:999px;
-      padding:.2rem .6rem;
-      background:rgba(15,23,42,.95);
-      border:1px solid rgba(31,41,55,1);
-      display:flex;
-      align-items:center;
-      gap:.45rem;
+    .tab{
+      border-radius:var(--radius-pill);
+      padding:.32rem .7rem;
       font-size:.78rem;
+      border:1px solid rgba(55,65,81,1);
+      background:#020617;
+      cursor:pointer;
     }
-    .leader-pos{
-      width:20px;
-      font-weight:600;
-      color:#fde68a;
-      text-align:center;
+    .tab.active{
+      background:linear-gradient(to right,#0ea5e9,#6366f1);
+      border-color:transparent;
+      color:#ecfeff;
     }
-    .leader-avatar{
-      width:22px;
-      height:22px;
-      border-radius:999px;
-      background:radial-gradient(circle at 30% 0,#facc15,#f97316);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:.8rem;
-      color:#111827;
-      font-weight:700;
-    }
-    .leader-main{
-      flex:1;
-      display:flex;
-      flex-direction:column;
-      gap:.1rem;
-    }
-    .leader-name{
-      font-size:.78rem;
-    }
-    .leader-sub{
-      font-size:.72rem;
-      color:var(--muted);
-    }
-    .leader-amount{
-      font-variant-numeric:tabular-nums;
-      font-size:.8rem;
-    }
-
-    .other-services-grid{
+    .ranking-grid{
       display:grid;
       grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-      gap:1rem;
+      gap:.9rem;
     }
-    .other-card{
+    .ranking-card{
       border-radius:var(--radius-lg);
-      padding:.9rem .95rem 1rem;
-      background:radial-gradient(circle at top,#020617,#020617 60%,#000 100%);
-      border:1px solid rgba(31,41,55,1);
-      display:flex;
-      flex-direction:column;
-      gap:.5rem;
+      border:1px solid rgba(15,23,42,.9);
+      background:radial-gradient(circle at top,#020617 0,#020617 60%,#000 100%);
+      padding:.9rem;
     }
-    .other-header{
+    .ranking-row{
       display:flex;
       align-items:center;
-      gap:.5rem;
+      justify-content:space-between;
+      padding:.35rem 0;
+      border-bottom:1px solid rgba(31,41,55,1);
+      font-size:.8rem;
     }
-    .other-icon{
-      width:30px;
-      height:30px;
-      border-radius:999px;
-      background:radial-gradient(circle at 30% 0,#22c55e,#0ea5e9);
+    .ranking-row:last-child{border-bottom:none;}
+    .ranking-left{
       display:flex;
       align-items:center;
-      justify-content:center;
-      font-size:1.1rem;
+      gap:.4rem;
     }
-    .other-title{
-      font-size:.88rem;
-      font-weight:600;
-    }
-    .other-sub{
-      font-size:.76rem;
-      color:var(--muted);
-    }
-    .other-api{
-      font-family:ui-monospace,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-      font-size:.72rem;
-      padding:.25rem .5rem;
-      border-radius:14px;
+    .ranking-badge{
+      width:24px;height:24px;border-radius:999px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:.8rem;
       background:rgba(15,23,42,1);
-      border:1px solid rgba(31,41,55,1);
-      word-break:break-all;
     }
-    .other-note{
-      font-size:.75rem;
-      color:var(--muted);
+    .ranking-name{font-size:.82rem;}
+    .ranking-meta{font-size:.72rem;color:var(--muted);}
+    .ranking-amount{
+      font-size:.85rem;font-weight:600;
+      text-shadow:0 0 12px rgba(56,189,248,.9);
     }
 
-    @media (max-width:980px){
-      .layout{
-        grid-template-columns:minmax(0,1fr);
-      }
-      .sidebar{
-        position:fixed;
-        inset:60px auto 0 0;
-        width:240px;
-        transform:translateX(-100%);
-        transition:transform .18s ease;
-        z-index:25;
-      }
-      .sidebar.open{
-        transform:translateX(0);
-      }
-      .hamburger{
-        display:flex;
-      }
-    }
-    @media (max-width:720px){
-      .topbar{
-        padding:.7rem .8rem;
-      }
-      .layout{
-        padding:0 .8rem 1.1rem;
-      }
-      main{
-        padding:.9rem .85rem 1.1rem;
-      }
-      .grid-main{
-        grid-template-columns:minmax(0,1fr);
-      }
-      .profile-card{
-        order:1;
-      }
-      .summary-column{
-        order:2;
-      }
+    /* UTILITIES */
+    .muted{color:var(--muted);font-size:.76rem;}
+    .mt-sm{margin-top:.35rem;}
+    .mt-md{margin-top:.7rem;}
+    .mt-lg{margin-top:1.1rem;}
+
+    @media (max-width:900px){
+      .sidebar{display:none;}
+      .main{padding:.8rem .7rem 1.2rem;}
+      .grid{grid-template-columns:1fr;}
     }
   </style>
 </head>
 <body>
-<header>
-  <div class="topbar">
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
     <div class="brand">
-      <div class="brand-logo">KV</div>
+      <div class="brand-badge">KV</div>
       <div class="brand-text">
         <div class="brand-title">KALIVENTAS</div>
-        <div class="brand-sub">Panel de recargas · revendedores</div>
+        <div class="brand-sub">Panel revendedores</div>
       </div>
     </div>
-    <div class="topbar-right">
-      <div class="user-chip">
-        Sesión activa de <strong>revendedor</strong>. Panel KaliVentas.
+
+    <div class="sidebar-section-title">General</div>
+
+    <div class="menu-item active" data-section="inicio">
+      <div class="menu-icon">🏠</div>
+      <div class="menu-text">
+        <div class="menu-label">Inicio</div>
+        <div class="sub">Resumen de tu cuenta</div>
       </div>
-      <button class="topbar-btn" onclick="window.location.href='login.html'">
-        Cerrar panel
-      </button>
-      <button class="hamburger" id="hamburger" aria-label="Abrir menú">
-        <span></span><span></span><span></span>
-      </button>
+      <div class="menu-item-dot"></div>
     </div>
-  </div>
-</header>
 
-<div class="layout">
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <div class="sidebar-header-title">KALIVENTAS</div>
-      <div class="sidebar-header-sub">Panel revendedores</div>
+    <div class="menu-item" data-section="juegos">
+      <div class="menu-icon">🎮</div>
+      <div class="menu-text">
+        <div class="menu-label">Recargas videojuegos</div>
+        <div class="sub">Free Fire, PUBG, CODM, etc.</div>
+      </div>
+      <div class="menu-item-dot"></div>
     </div>
-    <div class="sidebar-scroll">
-      <div class="menu-section-label">General</div>
-      <div class="menu-group">
-        <div class="menu-item active" data-section="perfil">
-          <div class="menu-icon"><span>🏠</span></div>
-          <div class="menu-text">
-            <div class="menu-label">Inicio</div>
-            <span class="sub">Resumen de tu cuenta</span>
-          </div>
-          <div class="menu-item-dot"></div>
-        </div>
 
-        <div class="menu-item" data-section="ff">
-          <div class="menu-icon"><span>🎮</span></div>
-          <div class="menu-text">
-            <div class="menu-label">Recargas videojuegos</div>
-            <span class="sub">Free Fire, PUBG, Fortnite, CODM…</span>
-          </div>
-          <div class="menu-item-dot"></div>
-        </div>
-
-        <div class="menu-item" data-section="streaming">
-          <div class="menu-icon"><span>🎬</span></div>
-          <div class="menu-text">
-            <div class="menu-label">Streaming</div>
-            <span class="sub">Netflix, Disney+, Spotify, etc.</span>
-          </div>
-          <div class="menu-item-dot"></div>
-        </div>
-
-        <div class="menu-item" data-section="saldo">
-          <div class="menu-icon"><span>💳</span></div>
-          <div class="menu-text">
-            <div class="menu-label">Métodos de pago</div>
-            <span class="sub">Stori, OXXO, Binance, LTC</span>
-          </div>
-          <div class="menu-item-dot"></div>
-        </div>
+    <div class="menu-item" data-section="streaming">
+      <div class="menu-icon">📺</div>
+      <div class="menu-text">
+        <div class="menu-label">Streaming</div>
+        <div class="sub">Netflix, Disney+, Spotify…</div>
       </div>
+      <div class="menu-item-dot"></div>
+    </div>
 
-      <div class="menu-section-label">Mi cuenta</div>
-      <div class="menu-group">
-        <div class="menu-item" data-section="dashboard">
-          <div class="menu-icon"><span>📊</span></div>
-          <div class="menu-text">
-            <div class="menu-label">Mi dashboard</div>
-            <span class="sub">Resumen rápido y últimos pedidos</span>
-          </div>
-          <div class="menu-item-dot"></div>
-        </div>
-
-        <div class="menu-item" data-section="saldo">
-          <div class="menu-icon"><span>➕</span></div>
-          <div class="menu-text">
-            <div class="menu-label">Recargar saldo</div>
-            <span class="sub">Formulario para mandar comprobante</span>
-          </div>
-          <div class="menu-item-dot"></div>
-        </div>
-
-        <div class="menu-item" data-section="intl">
-          <div class="menu-icon"><span>🌎</span></div>
-          <div class="menu-text">
-            <div class="menu-label">Recarga internacional</div>
-            <span class="sub">Saldo global y retiros</span>
-          </div>
-          <div class="menu-item-dot"></div>
-        </div>
-
-        <div class="menu-item" data-section="orders">
-          <div class="menu-icon"><span>🧾</span></div>
-          <div class="menu-text">
-            <div class="menu-label">Mis compras</div>
-            <span class="sub">Historial ilustrativo por ahora</span>
-          </div>
-          <div class="menu-item-dot"></div>
-        </div>
-
-        <div class="menu-item" data-section="rango">
-          <div class="menu-icon"><span>⭐</span></div>
-          <div class="menu-text">
-            <div class="menu-label">Mi rango</div>
-            <span class="sub">Niveles y descuentos en USD</span>
-          </div>
-          <div class="menu-item-dot"></div>
-        </div>
-
-        <div class="menu-item" data-section="ranking">
-          <div class="menu-icon"><span>🏆</span></div>
-          <div class="menu-text">
-            <div class="menu-label">Mi ranking</div>
-            <span class="sub">Top recargas y top gastos</span>
-          </div>
-          <div class="menu-item-dot"></div>
-        </div>
+    <div class="menu-item" data-section="pagos">
+      <div class="menu-icon">💳</div>
+      <div class="menu-text">
+        <div class="menu-label">Métodos de pago</div>
+        <div class="sub">Stori, OXXO, Binance, LTC</div>
       </div>
+      <div class="menu-item-dot"></div>
+    </div>
 
-      <div class="sidebar-footer-label">Otros</div>
-      <div class="menu-group">
-        <div class="menu-item" data-section="smm">
-          <div class="menu-icon"><span>🌐</span></div>
-          <div class="menu-text">
-            <div class="menu-label">SmmProdigyX</div>
-            <span class="sub">API externa de redes sociales</span>
-          </div>
-          <div class="menu-item-dot"></div>
-        </div>
+    <div class="sidebar-section-title">Mi cuenta</div>
 
-        <div class="menu-item" data-section="comida">
-          <div class="menu-icon"><span>🍔</span></div>
-          <div class="menu-text">
-            <div class="menu-label">ComidaMaster</div>
-            <span class="sub">Pedidos externos (API pública)</span>
-          </div>
-          <div class="menu-item-dot"></div>
-        </div>
+    <div class="menu-item" data-section="dashboard">
+      <div class="menu-icon">📊</div>
+      <div class="menu-text">
+        <div class="menu-label">Mi dashboard</div>
+        <div class="sub">Resumen rápido</div>
       </div>
+      <div class="menu-item-dot"></div>
+    </div>
+
+    <div class="menu-item" data-section="saldo">
+      <div class="menu-icon">➕</div>
+      <div class="menu-text">
+        <div class="menu-label">Recargar saldo</div>
+        <div class="sub">Formulario para comprobante</div>
+      </div>
+      <div class="menu-item-dot"></div>
+    </div>
+
+    <div class="menu-item" data-section="intl">
+      <div class="menu-icon">🌍</div>
+      <div class="menu-text">
+        <div class="menu-label">Recarga internacional</div>
+        <div class="sub">Saldo global y retiros</div>
+      </div>
+      <div class="menu-item-dot"></div>
+    </div>
+
+    <div class="menu-item" data-section="orders">
+      <div class="menu-icon">🧾</div>
+      <div class="menu-text">
+        <div class="menu-label">Mis compras</div>
+        <div class="sub">Historial de pedidos</div>
+      </div>
+      <div class="menu-item-dot"></div>
+    </div>
+
+    <div class="menu-item" data-section="rango">
+      <div class="menu-icon">⭐</div>
+      <div class="menu-text">
+        <div class="menu-label">Mi rango</div>
+        <div class="sub">Niveles y descuentos en USD</div>
+      </div>
+      <div class="menu-item-dot"></div>
+    </div>
+
+    <div class="menu-item" data-section="ranking">
+      <div class="menu-icon">🏆</div>
+      <div class="menu-text">
+        <div class="menu-label">Mi ranking</div>
+        <div class="sub">Top recargas y top gastos</div>
+      </div>
+      <div class="menu-item-dot"></div>
+    </div>
+
+    <div class="sidebar-section-title">Otros</div>
+
+    <div class="menu-item" data-section="smm">
+      <div class="menu-icon">🚀</div>
+      <div class="menu-text">
+        <div class="menu-label">SmmProdigyX</div>
+        <div class="sub">API externa redes sociales</div>
+      </div>
+      <div class="menu-item-dot"></div>
+    </div>
+
+    <div class="menu-item" data-section="comida">
+      <div class="menu-icon">🍔</div>
+      <div class="menu-text">
+        <div class="menu-label">ComidaMaster</div>
+        <div class="sub">API pedidos de comida</div>
+      </div>
+      <div class="menu-item-dot"></div>
+    </div>
+
+    <!-- Solo para cuentas admin -->
+    <div class="menu-item" data-section="admin" id="menu-admin" style="display:none;">
+      <div class="menu-icon">🛠️</div>
+      <div class="menu-text">
+        <div class="menu-label">Admin</div>
+        <div class="sub">Gestión interna del panel</div>
+      </div>
+      <div class="menu-item-dot"></div>
     </div>
   </aside>
 
-  <main>
-    <!-- INICIO / PERFIL -->
-    <section class="content" id="section-perfil">
-      <div class="section-tag">Mi cuenta</div>
-      <h1>Bienvenido a tu panel, revendedor</h1>
-      <p class="section-sub">
-        Administra tu perfil, revisa tu saldo y accede rápido a las acciones más usadas.
-        Toda recarga y movimiento se confirma siempre por <strong>WhatsApp oficial de KaliVentas</strong>.
-      </p>
-
-      <div class="grid-main">
-        <article class="profile-card">
-          <div class="profile-header">
-            <div class="avatar">🎮</div>
-            <div class="profile-title">
-              <div class="profile-name" id="perfil-name">Revendedor KaliVentas</div>
-              <div class="profile-role" id="perfil-role">REVENDEDOR · GAMER</div>
-              <div class="profile-id">
-                <span id="perfil-id">#KALI001</span>
-              </div>
-            </div>
-          </div>
-          <div class="profile-body">
-            Panel exclusivo para revendedores de confianza. Tu saldo, pedidos y beneficios
-            se administran desde aquí y se confirman siempre por chat directo.
-          </div>
-          <div class="profile-divider"></div>
-          <div class="profile-row">
-            <span class="profile-row-icon">🏬</span>
-            <span class="profile-row-text" id="perfil-store">Sin tienda / alias</span>
-          </div>
-          <div class="profile-row">
-            <span class="profile-row-icon">✉️</span>
-            <span class="profile-row-text" id="perfil-email">correo@ejemplo.com</span>
-          </div>
-          <div class="profile-row">
-            <span class="profile-row-icon">📱</span>
-            <span class="profile-row-text" id="perfil-phone">Sin número registrado</span>
-          </div>
-        </article>
-
-        <div class="summary-column">
-          <article class="balance-card">
-            <div class="card-subtitle">Saldo normal</div>
-            <div class="balance-value">$0.00 MXN</div>
-            <div class="section-sub small" style="margin-bottom:.45rem;">
-              El saldo real se confirma cuando envías tu comprobante y recibes respuesta
-              por WhatsApp.
-            </div>
-            <div class="balance-actions">
-              <button class="btn btn-small" onclick="document.querySelector('.menu-item[data-section=&quot;saldo&quot;]').click()">
-                <span>➕</span> Recargar saldo
-              </button>
-              <button class="btn btn-small btn-secondary" onclick="document.querySelector('.menu-item[data-section=&quot;orders&quot;]').click()">
-                <span>🧾</span> Ver compras
-              </button>
-            </div>
-          </article>
-
-          <article class="bonus-card">
-            <div class="card-subtitle">Saldo bonus</div>
-            <div class="balance-value">$0.00 MXN</div>
-            <div class="bonus-note">
-              Solo productos elegibles
-            </div>
-            <div class="bonus-sub">
-              Este bloque está listo para usar en el futuro si decides manejar promos, puntos
-              o saldo extra por volumen.
-            </div>
-          </article>
+  <!-- MAIN -->
+  <main class="main">
+    <header class="topbar">
+      <div class="top-left">
+        <div class="top-title" id="top-welcome">Sesión activa</div>
+        <div class="top-sub" id="top-subtitle">
+          Bienvenido a tu panel KaliVentas.
         </div>
       </div>
-
-      <section class="mini-dashboard">
-        <article class="mini-card">
-          <div class="mini-card-header">
-            <div class="mini-icon">💰</div>
-            <div>
-              <div class="mini-label">Saldo disponible</div>
-              <div class="mini-value">$0.00 MXN</div>
-            </div>
-          </div>
-          <div class="mini-sub">
-            Saldo ilustrativo. Puedes conectar tu BD más adelante para usarlo en tiempo real.
-          </div>
-          <div class="mini-link" onclick="document.querySelector('.menu-item[data-section=&quot;saldo&quot;]').click()">
-            Recargar saldo
-          </div>
-        </article>
-
-        <article class="mini-card">
-          <div class="mini-card-header">
-            <div class="mini-icon">🧾</div>
-            <div>
-              <div class="mini-label">Mis compras</div>
-              <div class="mini-value">0</div>
-            </div>
-          </div>
-          <div class="mini-sub">
-            Tus compras recientes aparecerán aquí una vez que empieces a usar el panel.
-          </div>
-          <div class="mini-link" onclick="document.querySelector('.menu-item[data-section=&quot;orders&quot;]').click()">
-            Ver historial
-          </div>
-        </article>
-
-        <article class="mini-card">
-          <div class="mini-card-header">
-            <div class="mini-icon">💬</div>
-            <div>
-              <div class="mini-label">WhatsApp</div>
-              <div class="mini-value">+52 56 4880 4810</div>
-            </div>
-          </div>
-          <div class="mini-sub">
-            Contacto directo con KaliVentas para aprobaciones, dudas y soporte.
-          </div>
-          <div class="mini-link" onclick="window.open('https://wa.me/525648804810','_blank')">
-            Abrir chat
-          </div>
-        </article>
-
-        <article class="mini-card">
-          <div class="mini-card-header">
-            <div class="mini-icon">🎮</div>
-            <div>
-              <div class="mini-label">Modo gamer</div>
-              <div class="mini-value">Activo</div>
-            </div>
-          </div>
-          <div class="mini-sub">
-            Tu panel está optimizado para vender recargas y servicios digitales a clientes.
-          </div>
-          <div class="mini-link" onclick="document.querySelector('.menu-item[data-section=&quot;ff&quot;]').click()">
-            Ver productos
-          </div>
-        </article>
-      </section>
-
-      <section class="home-products">
-        <h2 class="home-products-title">Productos destacados</h2>
-        <p class="home-products-sub">
-          Accesos rápidos a algunos de tus productos más usados. Puedes entrar directo a la
-          sección correspondiente del panel para crear pedidos.
-        </p>
-
-        <div class="home-products-grid">
-          <article class="home-product-card" data-section-target="ff">
-            <div class="home-product-icon">🔥</div>
-            <div class="home-product-name">Diamantes Free Fire</div>
-            <div class="home-product-sub">
-              Recargas por ID · Paquetes desde 110 hasta 12,320 diamantes.
-            </div>
-            <button type="button" class="btn btn-small home-product-link">
-              Ver recargas FF
-            </button>
-          </article>
-
-          <article class="home-product-card" data-section-target="streaming">
-            <div class="home-product-icon">🎬</div>
-            <div class="home-product-name">Streaming</div>
-            <div class="home-product-sub">
-              Perfiles de Netflix, Disney+, Spotify y más para revender a tus clientes.
-            </div>
-            <button type="button" class="btn btn-small home-product-link">
-              Ver streaming
-            </button>
-          </article>
-
-          <article class="home-product-card" data-section-target="intl">
-            <div class="home-product-icon">🌎</div>
-            <div class="home-product-name">Recarga internacional</div>
-            <div class="home-product-sub">
-              Saldo global y retiros con soporte directo por WhatsApp.
-            </div>
-            <button type="button" class="btn btn-small home-product-link">
-              Ver recarga internacional
-            </button>
-          </article>
+      <div class="user-pill" id="top-user-pill">
+        <div class="user-avatar" id="top-avatar">KV</div>
+        <div>
+          <div style="font-size:.78rem;" id="top-user-name">Usuario invitado</div>
+          <div style="font-size:.7rem;color:var(--muted);" id="top-user-role">REVENDEDOR · DEMO</div>
         </div>
-      </section>
+      </div>
+    </header>
+
+    <!-- INICIO -->
+    <section class="content active" id="section-inicio">
+      <div class="grid">
+        <!-- Perfil + saldos -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Bienvenido a tu panel, <span id="home-name">Revendedor</span></div>
+              <div class="card-sub">Administra tu cuenta y revisa tu saldo en tiempo real (simulado).</div>
+            </div>
+            <span class="badge-outline" id="home-id">ID #KALI001</span>
+          </div>
+
+          <div style="display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:.8rem;">
+            <div style="flex:1 1 180px;" class="card">
+              <div class="card-header">
+                <span class="card-title">Saldo normal</span>
+              </div>
+              <div class="wallet-amount" id="home-saldo">$0.00 MXN</div>
+              <button class="btn-sm" data-goto="saldo">➕ Recargar saldo</button>
+              <div class="muted mt-sm">El saldo real se confirma cuando envías tu comprobante por WhatsApp.</div>
+            </div>
+
+            <div style="flex:1 1 180px;" class="card">
+              <div class="card-header">
+                <span class="card-title">Saldo bonus</span>
+              </div>
+              <div class="wallet-amount" id="home-bonus">$0.00 MXN</div>
+              <span class="muted">Solo productos elegibles y promos especiales.</span>
+            </div>
+          </div>
+
+          <div class="quick-grid">
+            <div class="quick-card">
+              <div class="quick-top">
+                <div class="quick-icon">🧾</div>
+                <span class="badge-outline">Historial</span>
+              </div>
+              <div class="quick-label">Mis compras</div>
+              <div class="quick-main" id="home-orders-count">0 compras</div>
+              <div class="quick-link" data-goto="orders">👀 Ver todas</div>
+            </div>
+            <div class="quick-card">
+              <div class="quick-top">
+                <div class="quick-icon">📲</div>
+                <span class="badge-outline">WhatsApp</span>
+              </div>
+              <div class="quick-label">Soporte directo</div>
+              <div class="quick-main">+52 56 4880 4810</div>
+              <a class="quick-link" id="home-whatsapp" target="_blank">💬 Escribir ahora</a>
+            </div>
+            <div class="quick-card">
+              <div class="quick-top">
+                <div class="quick-icon">⚙️</div>
+                <span class="badge-outline">Perfil</span>
+              </div>
+              <div class="quick-label">Datos del revendedor</div>
+              <div class="quick-main" id="home-store">Mi tienda</div>
+              <div class="quick-link" data-goto="dashboard">✏️ Ajustar más adelante</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Productos destacados -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Productos destacados</div>
+              <div class="card-sub">Atajos rápidos a los productos más usados.</div>
+            </div>
+          </div>
+
+          <div class="products-grid">
+            <article class="product-card">
+              <div class="product-header">
+                <div class="product-icon">💎</div>
+                <div>
+                  <div class="product-title">Free Fire • Diamantes x ID</div>
+                  <div class="product-sub">Recargas por ID/Pin con saldo del panel.</div>
+                </div>
+              </div>
+              <div class="product-row">
+                <select class="product-select">
+                  <option>110 💎 — $17 MXN</option>
+                  <option>341 💎 — $56 MXN</option>
+                  <option>572 💎 — $85 MXN</option>
+                  <option>1166 💎 — $175 MXN</option>
+                </select>
+              </div>
+              <div class="product-actions">
+                <button class="btn-sm" data-goto="juegos">Ver más recargas</button>
+              </div>
+            </article>
+
+            <article class="product-card">
+              <div class="product-header">
+                <div class="product-icon">📺</div>
+                <div>
+                  <div class="product-title">Servicios de streaming</div>
+                  <div class="product-sub">Netflix, Disney+, Spotify y más.</div>
+                </div>
+              </div>
+              <div class="product-actions">
+                <button class="btn-sm" data-goto="streaming">Ver catálogo streaming</button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <!-- RANGO -->
-    <section class="content" id="section-rango" style="display:none;">
-      <div class="section-tag">Mi rango</div>
-      <h1>Mi rango como revendedor</h1>
+    <!-- RECARGAS VIDEOJUEGOS -->
+    <section class="content" id="section-juegos">
+      <div class="section-tag">Recargas</div>
+      <h1 class="section-title">Recargas de videojuegos</h1>
       <p class="section-sub">
-        Estos rangos son ilustrativos y se basan en <strong>volumen de compras en USD</strong>.
-        Más adelante puedes conectarlos a tu historial real para activar descuentos automáticos.
+        Todos los precios se procesan con saldo del panel. Envía siempre tu ID y nombre exactos.
+      </p>
+
+      <div class="products-grid">
+        <!-- Free Fire -->
+        <article class="product-card">
+          <div class="product-header">
+            <div class="product-icon">💎</div>
+            <div>
+              <div class="product-title">Free Fire • Diamantes x ID</div>
+              <div class="product-sub">Recargas rápidas por ID / PIN.</div>
+            </div>
+          </div>
+          <div class="product-row">
+            <select class="product-select" id="ff-pack">
+              <option value="110|17">110 💎 — $17 MXN</option>
+              <option value="341|56">341 💎 — $56 MXN</option>
+              <option value="572|85">572 💎 — $85 MXN</option>
+              <option value="1166|175">1166 💎 — $175 MXN</option>
+              <option value="2398|300">2398 💎 — $300 MXN</option>
+              <option value="6160|710">6160 💎 — $710 MXN</option>
+            </select>
+          </div>
+          <div class="product-row">
+            <input class="product-input" id="ff-id" placeholder="ID del jugador" />
+            <input class="product-input" id="ff-name" placeholder="Nombre del jugador" />
+            <input class="product-input" id="ff-region" placeholder="Región (Latam, USA…)" />
+          </div>
+          <div class="product-actions">
+            <button class="btn-sm" data-action="ff-order">Comprar con saldo</button>
+            <button class="btn-ghost" data-action="ff-whatsapp">Confirmar por WhatsApp</button>
+          </div>
+          <p class="section-sub small mt-sm">
+            Solo se acepta pago con saldo disponible en el panel. Confirma siempre que el ID esté correcto.
+          </p>
+        </article>
+
+        <!-- PUBG, Fortnite, CODM, etc. -->
+        <article class="product-card">
+          <div class="product-header">
+            <div class="product-icon">🎯</div>
+            <div>
+              <div class="product-title">PUBG Mobile</div>
+              <div class="product-sub">UC por ID (tabla ilustrativa).</div>
+            </div>
+          </div>
+          <div class="product-row">
+            <select class="product-select">
+              <option>60 UC — $22 MXN</option>
+              <option>325 UC — $99 MXN</option>
+              <option>660 UC — $190 MXN</option>
+            </select>
+          </div>
+          <div class="product-row">
+            <input class="product-input" placeholder="ID del jugador" />
+            <input class="product-input" placeholder="Nombre del jugador" />
+          </div>
+          <div class="product-actions">
+            <button class="btn-sm">Agregar al carrito</button>
+            <button class="btn-ghost">Confirmar por WhatsApp</button>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-header">
+            <div class="product-icon">🌀</div>
+            <div>
+              <div class="product-title">Fortnite</div>
+              <div class="product-sub">PaVos por Epic ID / correo.</div>
+            </div>
+          </div>
+          <div class="product-row">
+            <select class="product-select">
+              <option>1000 V-Bucks — $190 MXN</option>
+              <option>2800 V-Bucks — $480 MXN</option>
+            </select>
+          </div>
+          <div class="product-row">
+            <input class="product-input" placeholder="Epic ID / correo" />
+          </div>
+          <div class="product-actions">
+            <button class="btn-sm">Comprar con saldo</button>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-header">
+            <div class="product-icon">🔫</div>
+            <div>
+              <div class="product-title">COD Mobile</div>
+              <div class="product-sub">CP por ID / UID.</div>
+            </div>
+          </div>
+          <div class="product-row">
+            <select class="product-select">
+              <option>80 CP — $25 MXN</option>
+              <option>420 CP — $120 MXN</option>
+            </select>
+          </div>
+          <div class="product-row">
+            <input class="product-input" placeholder="UID del jugador" />
+          </div>
+          <div class="product-actions">
+            <button class="btn-sm">Comprar con saldo</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- STREAMING -->
+    <section class="content" id="section-streaming">
+      <div class="section-tag">Streaming</div>
+      <h1 class="section-title">Servicios de streaming</h1>
+      <p class="section-sub">
+        Maneja tus cuentas de Netflix, Disney+, Spotify y más. Ejemplos ilustrativos.
+      </p>
+
+      <div class="products-grid">
+        <article class="product-card">
+          <div class="product-header">
+            <div class="product-icon">🎬</div>
+            <div>
+              <div class="product-title">Netflix Premium</div>
+              <div class="product-sub">Perfil privado 1 mes.</div>
+            </div>
+          </div>
+          <div class="product-row">
+            <select class="product-select">
+              <option>1 mes — $120 MXN</option>
+              <option>3 meses — $330 MXN</option>
+            </select>
+          </div>
+          <div class="product-actions">
+            <button class="btn-sm">Comprar con saldo</button>
+            <button class="btn-ghost">Solicitar por WhatsApp</button>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-header">
+            <div class="product-icon">🎧</div>
+            <div>
+              <div class="product-title">Spotify Premium</div>
+              <div class="product-sub">Cuenta individual o Duo.</div>
+            </div>
+          </div>
+          <div class="product-row">
+            <select class="product-select">
+              <option>1 mes — $90 MXN</option>
+              <option>3 meses — $260 MXN</option>
+            </select>
+          </div>
+          <div class="product-actions">
+            <button class="btn-sm">Comprar con saldo</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- MÉTODOS DE PAGO -->
+    <section class="content" id="section-pagos">
+      <div class="section-tag">Pagos</div>
+      <h1 class="section-title">Métodos de pago KaliVentas</h1>
+      <p class="section-sub">
+        Estos son tus datos fijos para que los revendedores envíen saldo. Recuerda pedir siempre comprobante.
+      </p>
+
+      <div class="products-grid">
+        <article class="product-card">
+          <div class="product-header">
+            <div class="product-icon">🏦</div>
+            <div>
+              <div class="product-title">Transferencia MX (Stori)</div>
+              <div class="product-sub">Depósitos bancarios nacionales.</div>
+            </div>
+          </div>
+          <p class="mt-sm section-sub small">
+            <strong>Tarjeta:</strong> 6461 8040 2332 9646 86<br/>
+            <strong>Nombre:</strong> Matiana Rubi<br/>
+            <strong>Banco:</strong> Stori
+          </p>
+        </article>
+
+        <article class="product-card">
+          <div class="product-header">
+            <div class="product-icon">🏪</div>
+            <div>
+              <div class="product-title">Depósito OXXO</div>
+              <div class="product-sub">Referencia directa a tarjeta.</div>
+            </div>
+          </div>
+          <p class="mt-sm section-sub small">
+            <strong>Número OXXO:</strong><br/>
+            2242 1701 8069 2308
+          </p>
+        </article>
+
+        <article class="product-card">
+          <div class="product-header">
+            <div class="product-icon">🪙</div>
+            <div>
+              <div class="product-title">Binance</div>
+              <div class="product-sub">ID o USDT (TRC20).</div>
+            </div>
+          </div>
+          <p class="mt-sm section-sub small">
+            <strong>Binance ID:</strong> 1106987175<br/>
+            <strong>USDT (TRC20):</strong> TKkrmoStfuqpjP6C8oooJPqcuKchn8Gbdf
+          </p>
+        </article>
+
+        <article class="product-card">
+          <div class="product-header">
+            <div class="product-icon">💠</div>
+            <div>
+              <div class="product-title">Litecoin (LTC)</div>
+              <div class="product-sub">Pagos cripto rápidos.</div>
+            </div>
+          </div>
+          <p class="mt-sm section-sub small">
+            <strong>Wallet LTC:</strong><br/>
+            LYxnZA4b2TFbBopARSj29Md7J1gfsuGAhS
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- MI DASHBOARD -->
+    <section class="content" id="section-dashboard">
+      <div class="section-tag">Panel</div>
+      <h1 class="section-title">Mi dashboard</h1>
+      <p class="section-sub">
+        Aquí verás un resumen rápido de saldos, compras e historial de actividad.
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Resumen de saldo</div>
+              <div class="card-sub">Vista rápida de tu saldo actual.</div>
+            </div>
+          </div>
+          <table>
+            <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Monto</th>
+              <th>Notas</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>Saldo normal</td>
+              <td id="dash-saldo">$0.00 MXN</td>
+              <td>Disponible para recargas.</td>
+            </tr>
+            <tr>
+              <td>Saldo bonus</td>
+              <td id="dash-bonus">$0.00 MXN</td>
+              <td>Solo productos elegibles.</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Actividad rápida</div>
+              <div class="card-sub">Accesos directos a secciones clave.</div>
+            </div>
+          </div>
+          <div class="quick-grid" style="grid-template-columns:1fr 1fr;">
+            <div class="quick-card">
+              <div class="quick-top">
+                <div class="quick-icon">➕</div>
+              </div>
+              <div class="quick-label">Recargar saldo</div>
+              <div class="quick-main">Desde $200 MXN</div>
+              <div class="quick-link" data-goto="saldo">Ir a recargas</div>
+            </div>
+            <div class="quick-card">
+              <div class="quick-top">
+                <div class="quick-icon">🎮</div>
+              </div>
+              <div class="quick-label">Recargas de juegos</div>
+              <div class="quick-main">Catálogo completo</div>
+              <div class="quick-link" data-goto="juegos">Ver catálogo</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RECARGAR SALDO -->
+    <section class="content" id="section-saldo">
+      <div class="section-tag">Saldo</div>
+      <h1 class="section-title">Recargar saldo</h1>
+      <p class="section-sub">
+        El mínimo recomendado para revendedores es de <strong>$200 MXN</strong>.
+        Una vez hecho el pago, manda tu comprobante por WhatsApp usando el botón de abajo.
+      </p>
+
+      <div class="products-grid">
+        <article class="product-card">
+          <div class="product-header">
+            <div class="product-icon">🏦</div>
+            <div>
+              <div class="product-title">Transferencia MX (Stori)</div>
+              <div class="product-sub">Depósitos desde banca mexicana.</div>
+            </div>
+          </div>
+          <p class="section-sub small">
+            Tarjeta: 6461 8040 2332 9646 86<br/>
+            Nombre: Matiana Rubi<br/>
+            Banco: Stori
+          </p>
+        </article>
+
+        <article class="product-card">
+          <div class="product-header">
+            <div class="product-icon">🏪</div>
+            <div>
+              <div class="product-title">Depósito OXXO</div>
+              <div class="product-sub">Llévale este número al cajero.</div>
+            </div>
+          </div>
+          <p class="section-sub small">
+            Depósito OXXO:<br/>
+            2242 1701 8069 2308
+          </p>
+        </article>
+
+        <article class="product-card">
+          <div class="product-header">
+            <div class="product-icon">🪙</div>
+            <div>
+              <div class="product-title">Binance USDT / ID</div>
+              <div class="product-sub">Pagos cripto rápidos.</div>
+            </div>
+          </div>
+          <p class="section-sub small">
+            Binance ID: 1106987175<br/>
+            USDT (TRC20): TKkrmoStfuqpjP6C8oooJPqcuKchn8Gbdf
+          </p>
+        </article>
+
+        <article class="product-card">
+          <div class="product-header">
+            <div class="product-icon">💠</div>
+            <div>
+              <div class="product-title">Litecoin (LTC)</div>
+              <div class="product-sub">Pagos en Litecoin.</div>
+            </div>
+          </div>
+          <p class="section-sub small">
+            Wallet LTC:<br/>
+            LYxnZA4b2TFbBopARSj29Md7J1gfsuGAhS
+          </p>
+        </article>
+      </div>
+
+      <div class="card mt-md">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Enviar comprobante por WhatsApp</div>
+            <div class="card-sub">Llena estos datos y abre el chat listo para pegar tu captura.</div>
+          </div>
+        </div>
+        <div class="products-grid">
+          <div class="product-card">
+            <div class="product-row">
+              <input class="product-input" id="topup-amount" placeholder="Monto enviado (MXN)" />
+              <input class="product-input" id="topup-bank" placeholder="Banco / método (Stori, OXXO, Binance...)" />
+            </div>
+            <div class="product-row">
+              <input class="product-input" id="topup-ref" placeholder="Últimos dígitos / referencia" />
+            </div>
+            <div class="product-actions">
+              <button class="btn-sm" id="btn-topup-whatsapp">Enviar por WhatsApp</button>
+              <span class="muted">Se abrirá un mensaje con formato sugerido, solo adjuntas la captura.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RECARGA INTERNACIONAL -->
+    <section class="content" id="section-intl">
+      <div class="section-tag">Global</div>
+      <h1 class="section-title">Recarga internacional y retiros</h1>
+      <p class="section-sub">
+        Usa este módulo para manejar saldo global en USD y retiros hacia Binance o PayPal
+        (ilustrativo, sin conexión real todavía).
+      </p>
+
+      <div class="tabs">
+        <button class="tab active" data-intl-tab="deposit">Recargar saldo</button>
+        <button class="tab" data-intl-tab="withdraw">Retirar ganancias</button>
+      </div>
+
+      <div id="intl-deposit" class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Recargar saldo internacional</div>
+            <div class="card-sub">Próximamente podrás conectar bancos de otros países.</div>
+          </div>
+        </div>
+        <p class="section-sub small">
+          Por ahora solo es una vista informativa. Cuando agreguemos más bancos, aquí aparecerán.
+        </p>
+      </div>
+
+      <div id="intl-withdraw" class="card" style="display:none;">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Retirar fondos</div>
+            <div class="card-sub">
+              Saldo disponible: <span style="color:#4ade80;" id="intl-balance">$10.00 USD (demo)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="products-grid">
+          <article class="product-card">
+            <div class="product-header">
+              <div class="product-icon">🪙</div>
+              <div>
+                <div class="product-title">Binance</div>
+                <div class="product-sub">Pay / ID</div>
+              </div>
+            </div>
+          </article>
+          <article class="product-card">
+            <div class="product-header">
+              <div class="product-icon">💳</div>
+              <div>
+                <div class="product-title">PayPal</div>
+                <div class="product-sub">Correo electrónico</div>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="mt-md">
+          <label class="section-sub small">
+            Selecciona un método de pago primero
+            <select class="product-select" id="intl-method">
+              <option value="">Selecciona método</option>
+              <option value="binance">Binance</option>
+              <option value="paypal">PayPal</option>
+            </select>
+          </label>
+
+          <label class="section-sub small mt-sm">
+            Monto a retirar (USD)
+            <input class="product-input" id="intl-amount" placeholder="Mínimo: $10.00" />
+          </label>
+
+          <div class="product-actions mt-sm">
+            <button class="btn-sm" id="btn-intl-withdraw">🚀 Solicitar retiro</button>
+            <span class="muted">Demo visual, no envía retiro real.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MIS COMPRAS -->
+    <section class="content" id="section-orders">
+      <div class="section-tag">Historial</div>
+      <h1 class="section-title">Mis compras</h1>
+      <p class="section-sub">
+        Aquí verás todas las compras asociadas a tu cuenta en este navegador.
+        Más adelante se puede conectar a una base de datos real.
+      </p>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Historial ilustrativo</div>
+          <div class="card-sub" id="orders-count-sub">0 compras registradas.</div>
+        </div>
+        <table id="orders-table">
+          <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Producto</th>
+            <th>Monto</th>
+            <th>Estado</th>
+          </tr>
+          </thead>
+          <tbody id="orders-body">
+          <tr>
+            <td colspan="4" class="muted">Aún no hay compras guardadas en este dispositivo.</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- MI RANGO -->
+    <section class="content" id="section-rango">
+      <div class="section-tag">Niveles</div>
+      <h1 class="section-title">Mi rango como revendedor</h1>
+      <p class="section-sub">
+        Rangos ilustrativos según tu volumen de compras en USD. En el futuro se conectarán a tu historial real.
       </p>
 
       <div class="products-grid">
@@ -1602,14 +1214,8 @@
               <div class="product-sub">$0.00 – $99.99 USD</div>
             </div>
           </div>
-          <div class="badge badge-accent" style="margin-top:.4rem;">Nivel actual</div>
-          <p class="section-sub small" style="margin-top:.3rem;margin-bottom:.2rem;">
-            Empiezas como <strong>Usuario</strong>. Sin descuento, pero con acceso completo
-            al catálogo de recargas y servicios.
-          </p>
-          <div class="mini-sub">
-            Próximo rango: <strong>VIP</strong> a partir de $100 USD acumulados.
-          </div>
+          <div class="badge-green">0% descuento</div>
+          <button class="btn-secondary mt-sm" id="btn-rango-actual">Nivel actual</button>
         </article>
 
         <article class="product-card">
@@ -1620,11 +1226,8 @@
               <div class="product-sub">$100.00 – $249.99 USD</div>
             </div>
           </div>
-          <div class="badge badge-done" style="margin-top:.4rem;">5% descuento</div>
-          <p class="section-sub small" style="margin-top:.3rem;margin-bottom:.2rem;">
-            Para revendedores con compras constantes. Ideal si ya manejas varios clientes
-            fijos cada mes.
-          </p>
+          <div class="badge-green">5% descuento</div>
+          <span class="muted mt-sm">Bloqueado por ahora.</span>
         </article>
 
         <article class="product-card">
@@ -1635,24 +1238,20 @@
               <div class="product-sub">$250.00 – $499.99 USD</div>
             </div>
           </div>
-          <div class="badge badge-done" style="margin-top:.4rem;">10% descuento</div>
-          <p class="section-sub small" style="margin-top:.3rem;margin-bottom:.2rem;">
-            Pensado para revendedores que trabajan streaming + videojuegos con alto volumen.
-          </p>
+          <div class="badge-green">10% descuento</div>
+          <span class="muted mt-sm">Bloqueado por ahora.</span>
         </article>
 
         <article class="product-card">
           <div class="product-header">
-            <div class="product-icon">✴️</div>
+            <div class="product-icon">🔷</div>
             <div>
               <div class="product-title">Diamond</div>
               <div class="product-sub">$500.00 – $999.99 USD</div>
             </div>
           </div>
-          <div class="badge badge-done" style="margin-top:.4rem;">15% descuento</div>
-          <p class="section-sub small" style="margin-top:.3rem;margin-bottom:.2rem;">
-            Rangos pensados para revendedores fuertes con cartera de clientes ya establecida.
-          </p>
+          <div class="badge-green">15% descuento</div>
+          <span class="muted mt-sm">Bloqueado por ahora.</span>
         </article>
 
         <article class="product-card">
@@ -1663,10 +1262,8 @@
               <div class="product-sub">$1,000.00 – $4,999.99 USD</div>
             </div>
           </div>
-          <div class="badge badge-done" style="margin-top:.4rem;">20% descuento</div>
-          <p class="section-sub small" style="margin-top:.3rem;margin-bottom:.2rem;">
-            Ideal si ya manejas grupos grandes o vendes recargas a otras tiendas.
-          </p>
+          <div class="badge-green">20% descuento</div>
+          <span class="muted mt-sm">Bloqueado por ahora.</span>
         </article>
 
         <article class="product-card">
@@ -1674,564 +1271,173 @@
             <div class="product-icon">🔥</div>
             <div>
               <div class="product-title">Elite</div>
-              <div class="product-sub">$5,000.00 USD o más</div>
+              <div class="product-sub">$5,000.00+ USD</div>
             </div>
           </div>
-          <div class="badge badge-done" style="margin-top:.4rem;">30% descuento</div>
-          <p class="section-sub small" style="margin-top:.3rem;margin-bottom:.2rem;">
-            Nivel máximo para revendedores top. Aquí puedes manejar precios muy competitivos
-            frente a otros paneles.
-          </p>
+          <div class="badge-green">30% descuento</div>
+          <span class="muted mt-sm">Bloqueado por ahora.</span>
         </article>
-      </div>
-    </section>
-
-    <!-- FREE FIRE -->
-    <section class="content" id="section-ff" style="display:none;">
-      <div class="section-tag">Recargas videojuegos</div>
-      <h1>Free Fire – Recargas de diamantes por ID</h1>
-      <p class="section-sub">
-        Elige el paquete de diamantes que necesites, ingresa los datos del jugador y genera
-        tu pedido. Solo se descuenta de tu saldo interno del panel.
-      </p>
-
-      <div class="products-grid">
-        <article class="product-card">
-          <div class="product-header">
-            <div class="product-icon">💎</div>
-            <div>
-              <div class="product-title">Diamantes Free Fire</div>
-              <div class="product-sub">Recargas por ID · Paquetes oficiales</div>
-            </div>
-          </div>
-
-          <div class="product-select-row">
-            <label>
-              Paquete de diamantes
-              <select id="ff-paquete">
-                <option value="110">$17 MXN – 110 diamantes</option>
-                <option value="341">$56 MXN – 341 diamantes</option>
-                <option value="572">$85 MXN – 572 diamantes</option>
-                <option value="1166">$175 MXN – 1166 diamantes</option>
-                <option value="2398">$300 MXN – 2398 diamantes</option>
-                <option value="6160">$710 MXN – 6160 diamantes</option>
-                <option value="12320">$1,420 MXN – 12,320 diamantes</option>
-                <option value="18480">$2,130 MXN – 18,480 diamantes</option>
-                <option value="24640">$2,920 MXN – 24,640 diamantes</option>
-                <option value="30800">$3,650 MXN – 30,800 diamantes</option>
-                <option value="49280">$5,680 MXN – 49,280 diamantes</option>
-              </select>
-            </label>
-
-            <label>
-              ID del jugador
-              <input type="text" id="ff-id" placeholder="Ej. 1234567890" />
-            </label>
-
-            <label>
-              Nombre del jugador
-              <input type="text" id="ff-nombre" placeholder="Nombre del jugador" />
-            </label>
-
-            <label>
-              Región
-              <select id="ff-region">
-                <option value="LATAM">LATAM</option>
-                <option value="México">México</option>
-                <option value="EEUU">EE.UU.</option>
-                <option value="Otro">Otro</option>
-              </select>
-            </label>
-          </div>
-
-          <div class="product-footer">
-            <div class="product-helper">
-              Solo se aceptan pedidos si tienes saldo suficiente en el panel. La recarga
-              se procesa manualmente y se confirma por WhatsApp.
-            </div>
-            <div style="display:flex;gap:.4rem;flex-wrap:wrap;">
-              <button class="btn btn-small">
-                🛒 Agregar al carrito
-              </button>
-              <button class="btn btn-small btn-secondary" onclick="window.open('https://wa.me/525648804810','_blank')">
-                ⚡ Comprar y confirmar
-              </button>
-            </div>
-          </div>
-        </article>
-
-        <article class="product-card">
-          <div class="product-header">
-            <div class="product-icon">🎫</div>
-            <div>
-              <div class="product-title">Pines / bundles especiales</div>
-              <div class="product-sub">
-                Espacio reservado para eventos, pases élite o ofertas limitadas.
-              </div>
-            </div>
-          </div>
-          <p class="section-sub small" style="margin-top:.4rem;">
-            Más adelante puedes usar esta tarjeta para pines, gift cards o combos especiales
-            que tengas en tu catálogo.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <!-- STREAMING -->
-    <section class="content" id="section-streaming" style="display:none;">
-      <div class="section-tag">Streaming</div>
-      <h1>Servicios de streaming para tus clientes</h1>
-      <p class="section-sub">
-        Perfiles y cuentas listas para revender. Maneja tus pedidos desde este panel y
-        confirma siempre por WhatsApp.
-      </p>
-
-      <div class="products-grid">
-        <article class="product-card">
-          <div class="product-header">
-            <div class="product-icon">📺</div>
-            <div>
-              <div class="product-title">Netflix</div>
-              <div class="product-sub">
-                Perfiles mensuales (1 pantalla) – precio ilustrativo.
-              </div>
-            </div>
-          </div>
-          <div class="product-select-row">
-            <label>
-              Plan
-              <select>
-                <option>Perfil 1 mes – $3.00 USD (ejemplo)</option>
-              </select>
-            </label>
-            <label>
-              Notas para este pedido
-              <input type="text" placeholder="Ej. Enviar usuario y contraseña por WhatsApp" />
-            </label>
-          </div>
-          <div class="product-footer">
-            <div class="product-helper">
-              Este bloque es ilustrativo, listo para conectar a tu API o backend de streaming
-              más adelante.
-            </div>
-            <button class="btn btn-small btn-secondary" onclick="window.open('https://wa.me/525648804810','_blank')">
-              Hablar por WhatsApp
-            </button>
-          </div>
-        </article>
-
-        <article class="product-card">
-          <div class="product-header">
-            <div class="product-icon">🎧</div>
-            <div>
-              <div class="product-title">Spotify / otros</div>
-              <div class="product-sub">
-                Espacio para otros servicios: Disney+, HBO Max, etc.
-              </div>
-            </div>
-          </div>
-          <p class="section-sub small" style="margin-top:.4rem;">
-            Solo tienes que editar este HTML después para poner tus precios reales por
-            servicio.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <!-- SALDO / MÉTODOS DE PAGO -->
-    <section class="content" id="section-saldo" style="display:none;">
-      <div class="section-tag">Saldo</div>
-      <h1>Métodos de pago para recargar tu saldo</h1>
-      <p class="section-sub">
-        Usa estos datos para enviar tus depósitos. Después manda tu comprobante desde el
-        formulario de abajo para validar tu recarga por WhatsApp.
-      </p>
-
-      <div class="saldo-grid">
-        <article class="saldo-card">
-          <div class="card-subtitle">Métodos disponibles</div>
-          <div class="saldo-method-list">
-            <div class="saldo-method-item">
-              <div class="saldo-method-icon">🏦</div>
-              <div class="saldo-method-main">
-                <div class="saldo-method-title">Transferencia STORI (México)</div>
-                <div class="saldo-method-detail">
-                  Tarjeta: <strong>646180402332964686</strong><br />
-                  Nombre: <strong>Matiana Rubi</strong><br />
-                  Banco: <strong>Stori</strong>
-                </div>
-              </div>
-            </div>
-
-            <div class="saldo-method-item">
-              <div class="saldo-method-icon">🏪</div>
-              <div class="saldo-method-main">
-                <div class="saldo-method-title">Depósito OXXO</div>
-                <div class="saldo-method-detail">
-                  Número de tarjeta: <strong>2242 1701 8069 2308</strong>
-                </div>
-              </div>
-            </div>
-
-            <div class="saldo-method-item">
-              <div class="saldo-method-icon">🪙</div>
-              <div class="saldo-method-main">
-                <div class="saldo-method-title">Binance – USDT (TRC20)</div>
-                <div class="saldo-method-detail">
-                  ID: <strong>1106987175</strong><br />
-                  Wallet: <strong>TKkrmoStfuqpjP6C8oooJPqcuKchn8Gbdf</strong>
-                </div>
-              </div>
-            </div>
-
-            <div class="saldo-method-item">
-              <div class="saldo-method-icon">₿</div>
-              <div class="saldo-method-main">
-                <div class="saldo-method-title">Litecoin (LTC)</div>
-                <div class="saldo-method-detail">
-                  Wallet: <strong>LYxnZA4b2TFbBopARSj29Md7J1gfsuGAhS</strong>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="saldo-wa-card">
-            <div class="saldo-wa-title">
-              <span>💬</span> WhatsApp oficial de recargas
-            </div>
-            <div class="saldo-wa-body">
-              Toda recarga se confirma por mensaje. Si cambias de número en el futuro,
-              solo actualizas este bloque.
-            </div>
-            <div class="saldo-wa-number">
-              Número actual: <strong>+52 56 4880 4810</strong>
-            </div>
-          </div>
-        </article>
-
-        <article class="saldo-card">
-          <div class="card-subtitle">Enviar comprobante por WhatsApp</div>
-          <p class="saldo-form-note">
-            Completa estos datos para generar el mensaje listo para pegar en WhatsApp.
-            Solo recuerda adjuntar la captura del comprobante cuando se abra el chat.
-          </p>
-
-          <form id="saldo-comprobante-form" class="saldo-form">
-            <div class="saldo-form-row">
-              <label>
-                Banco / método
-                <select id="saldo-metodo">
-                  <option value="Transferencia STORI">Transferencia STORI (México)</option>
-                  <option value="Depósito OXXO">Depósito OXXO</option>
-                  <option value="Binance USDT (TRC20)">Binance USDT (TRC20)</option>
-                  <option value="Litecoin (LTC)">Litecoin (LTC)</option>
-                  <option value="Otro">Otro método</option>
-                </select>
-              </label>
-              <label>
-                Monto enviado
-                <input type="text" id="saldo-monto" placeholder="Ej. $250 MXN" />
-              </label>
-            </div>
-
-            <div class="saldo-form-row">
-              <label>
-                Nombre / alias
-                <input type="text" id="saldo-nombre" placeholder="Tu nombre o nombre de tienda" />
-              </label>
-              <label>
-                Últimos 4 dígitos / hash
-                <input type="text" id="saldo-ref" placeholder="Ej. 1234 o parte del hash" />
-              </label>
-            </div>
-
-            <button type="submit" class="btn saldo-btn-whatsapp">
-              💬 Enviar comprobante por WhatsApp
-            </button>
-          </form>
-        </article>
-      </div>
-    </section>
-
-    <!-- RECARGA INTERNACIONAL -->
-    <section class="content" id="section-intl" style="display:none;">
-      <div class="section-tag">Recarga internacional</div>
-      <h1>Recargas internacionales y retiros</h1>
-      <p class="section-sub">
-        Bloque listo para manejar saldo global y retiros de tus revendedores. Por ahora es
-        ilustrativo, pero ya está maquetado para conectar a tu backend o a servicios externos.
-      </p>
-
-      <div class="intl-grid">
-        <article class="intl-card">
-          <div class="intl-header">
-            <div class="intl-icon">🌎</div>
-            <div>
-              <div class="intl-title">Recargar saldo internacional</div>
-              <div class="intl-sub">
-                Usa este espacio para recargas globales, tarjetas internacionales o servicios
-                multi-país.
-              </div>
-            </div>
-          </div>
-          <div class="intl-note">
-            Más adelante puedes agregar aquí un formulario para manejar saldo en USD u otra
-            moneda y conectarlo a tu panel real.
-          </div>
-          <div class="intl-badges">
-            <span class="intl-badge">Recargas globales</span>
-            <span class="intl-badge">Saldo multi-país</span>
-            <span class="intl-badge">Confirmación por WhatsApp</span>
-          </div>
-        </article>
-
-        <article class="intl-card">
-          <div class="intl-header">
-            <div class="intl-icon">🏦</div>
-            <div>
-              <div class="intl-title">Retirar ganancias</div>
-              <div class="intl-sub">
-                Pantalla lista para gestionar retiros de tus revendedores.
-              </div>
-            </div>
-          </div>
-          <p class="intl-note">
-            Aquí puedes manejar solicitudes de retiro por Binance, bancos u otros métodos.
-            El diseño está inspirado en paneles de recarga profesionales para hacerlo
-            familiar a tus usuarios.
-          </p>
-          <div class="intl-badges">
-            <span class="intl-badge">Retiros vía Binance</span>
-            <span class="intl-badge">Cuenta bancaria</span>
-            <span class="intl-badge">Aprobación manual</span>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <!-- MIS COMPRAS -->
-    <section class="content" id="section-orders" style="display:none;">
-      <div class="section-tag">Historial</div>
-      <h1>Mis compras</h1>
-      <p class="section-sub">
-        Historial ilustrativo de compras. Más adelante puedes conectar esta tabla a tu base
-        de datos real o a un pequeño backend para mostrar pedidos por usuario.
-      </p>
-
-      <div class="orders-table">
-        <div class="orders-header">
-          <span>Fecha</span>
-          <span>Producto</span>
-          <span>Juego / servicio</span>
-          <span>Monto</span>
-          <span>Estado</span>
-        </div>
-        <div class="orders-row">
-          <span>—</span>
-          <span>Sin compras todavía</span>
-          <span>Empieza a usar el panel para ver tu historial aquí</span>
-          <span>$0.00</span>
-          <span class="badge badge-pending">En espera</span>
-        </div>
       </div>
     </section>
 
     <!-- MI RANKING -->
-    <section class="content" id="section-ranking" style="display:none;">
+    <section class="content" id="section-ranking">
       <div class="section-tag">Ranking</div>
-      <h1>Mi ranking y premios</h1>
+      <h1 class="section-title">Mi ranking</h1>
       <p class="section-sub">
-        Sección lista para mostrar <strong>tops diarios, semanales y mensuales</strong> por
-        recargas y gastos. Ideal si más adelante quieres hacer concursos entre revendedores.
+        Top recargas y top gastos (datos ilustrativos). Más adelante se puede conectar a tu historial real.
       </p>
 
-      <div class="ranking-layout">
-        <article class="ranking-prizes">
-          <div class="card-subtitle">Premios ilustrativos</div>
-          <div class="prize-grid">
-            <div class="prize-card">
-              <div class="prize-icon daily">⭐</div>
-              <div class="prize-amount">$3</div>
-              <div class="prize-label">Premio top 1 diario</div>
-              <div class="prize-note">Entre todos los revendedores activos de ese día.</div>
-            </div>
-            <div class="prize-card">
-              <div class="prize-icon weekly">👑</div>
-              <div class="prize-amount">$20</div>
-              <div class="prize-label">Premio top 1 semanal</div>
-              <div class="prize-note">Puedes usarlo como saldo bonus o premio externo.</div>
-            </div>
-            <div class="prize-card">
-              <div class="prize-icon monthly">💎</div>
-              <div class="prize-amount">$50</div>
-              <div class="prize-label">Premio top 1 mensual</div>
-              <div class="prize-note">
-                Ideal para concursos grandes entre todos tus revendedores.
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="ranking-lists">
-          <div class="ranking-tabs">
-            <button class="ranking-tab active">Diario ($3)</button>
-            <button class="ranking-tab">Semanal ($20)</button>
-            <button class="ranking-tab">Mensual ($50)</button>
-          </div>
-          <div class="ranking-columns">
-            <div class="ranking-column-card">
-              <div class="ranking-column-title">
-                <span>💰</span> Top recargas - Hoy
-              </div>
-              <div class="ranking-list">
-                <div class="ranking-item">
-                  <div class="ranking-pos">1</div>
-                  <div class="ranking-user">SAG</div>
-                  <div class="ranking-badge">1 recarga</div>
-                  <div class="ranking-amount">$10.00</div>
-                </div>
-                <div class="ranking-item">
-                  <div class="ranking-pos">2</div>
-                  <div class="ranking-user">ITACHI11</div>
-                  <div class="ranking-badge">1 recarga</div>
-                  <div class="ranking-amount">$10.00</div>
-                </div>
-                <div class="ranking-item">
-                  <div class="ranking-pos">3</div>
-                  <div class="ranking-user">Diogo</div>
-                  <div class="ranking-badge">1 recarga</div>
-                  <div class="ranking-amount">$10.00</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="ranking-column-card">
-              <div class="ranking-column-title">
-                <span>🛒</span> Top gastos - Hoy
-              </div>
-              <div class="ranking-list">
-                <div class="ranking-item">
-                  <div class="ranking-pos">1</div>
-                  <div class="ranking-user">yankarlosss</div>
-                  <div class="ranking-badge">1 compra</div>
-                  <div class="ranking-amount">$8.00</div>
-                </div>
-                <div class="ranking-item">
-                  <div class="ranking-pos">2</div>
-                  <div class="ranking-user">MrFresaYT</div>
-                  <div class="ranking-badge">3 compras</div>
-                  <div class="ranking-amount">$6.24</div>
-                </div>
-                <div class="ranking-item">
-                  <div class="ranking-pos">3</div>
-                  <div class="ranking-user">ITACHI11</div>
-                  <div class="ranking-badge">1 compra</div>
-                  <div class="ranking-amount">$6.00</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
+      <div class="tabs">
+        <button class="tab active" data-rank-tab="daily">Diario ($3)</button>
+        <button class="tab" data-rank-tab="weekly">Semanal ($20)</button>
+        <button class="tab" data-rank-tab="monthly">Mensual ($50)</button>
       </div>
 
-      <article class="leaderboard-card">
-        <div class="leaderboard-header">
-          <div>
-            <div class="leaderboard-title">Mi ranking personal</div>
-            <div class="leaderboard-sub">
-              Esta tabla se puede conectar después a tus datos reales para ver en qué lugar
-              vas cada día.
+      <div class="ranking-grid">
+        <div class="ranking-card" id="rank-top-up">
+          <div class="card-title" style="margin-bottom:.4rem;">Top recargas - hoy</div>
+          <div class="ranking-row">
+            <div class="ranking-left">
+              <div class="ranking-badge">1</div>
+              <div>
+                <div class="ranking-name">SAG</div>
+                <div class="ranking-meta">1 recarga</div>
+              </div>
             </div>
+            <div class="ranking-amount">$10.00</div>
+          </div>
+          <div class="ranking-row">
+            <div class="ranking-left">
+              <div class="ranking-badge">2</div>
+              <div>
+                <div class="ranking-name">ITACHI11</div>
+                <div class="ranking-meta">1 recarga</div>
+              </div>
+            </div>
+            <div class="ranking-amount">$10.00</div>
+          </div>
+          <div class="ranking-row">
+            <div class="ranking-left">
+              <div class="ranking-badge">3</div>
+              <div>
+                <div class="ranking-name">Diogo</div>
+                <div class="ranking-meta">1 recarga</div>
+              </div>
+            </div>
+            <div class="ranking-amount">$10.00</div>
           </div>
         </div>
 
-        <div class="leaderboard-list">
-          <div class="leaderboard-item">
-            <div class="leader-pos">1</div>
-            <div class="leader-avatar">S</div>
-            <div class="leader-main">
-              <div class="leader-name">SAG</div>
-              <div class="leader-sub">Top recargas hoy · $10.00</div>
-            </div>
-            <div class="leader-amount">$10.00</div>
-          </div>
-          <div class="leaderboard-item">
-            <div class="leader-pos">2</div>
-            <div class="leader-avatar">Y</div>
-            <div class="leader-main">
-              <div class="leader-name">yankarlosss</div>
-              <div class="leader-sub">Top gastos hoy · $8.00</div>
-            </div>
-            <div class="leader-amount">$8.00</div>
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <!-- SMM / OTROS SERVICIOS -->
-    <section class="content" id="section-smm" style="display:none;">
-      <div class="section-tag">Otros</div>
-      <h1>Servicios externos: SmmProdigyX</h1>
-      <p class="section-sub">
-        Espacio reservado para conectar tu panel con la API de <strong>SmmProdigyX</strong>
-        u otros servicios de redes sociales. Por ahora solo es una vista de referencia con
-        tus datos de API.
-      </p>
-
-      <div class="other-services-grid">
-        <article class="other-card">
-          <div class="other-header">
-            <div class="other-icon">📡</div>
-            <div>
-              <div class="other-title">SmmProdigyX</div>
-              <div class="other-sub">
-                Integración futura para pedidos automáticos de redes sociales.
+        <div class="ranking-card" id="rank-top-spend">
+          <div class="card-title" style="margin-bottom:.4rem;">Top gastos - hoy</div>
+          <div class="ranking-row">
+            <div class="ranking-left">
+              <div class="ranking-badge">1</div>
+              <div>
+                <div class="ranking-name">yankarIosss</div>
+                <div class="ranking-meta">1 compra</div>
               </div>
             </div>
+            <div class="ranking-amount">$8.00</div>
           </div>
-          <div class="other-api">
-            API URL: https://smmprodigyx.xyz/api/v2
+          <div class="ranking-row">
+            <div class="ranking-left">
+              <div class="ranking-badge">2</div>
+              <div>
+                <div class="ranking-name">MrFresaYT</div>
+                <div class="ranking-meta">3 compras</div>
+              </div>
+            </div>
+            <div class="ranking-amount">$6.24</div>
           </div>
-          <div class="other-api">
-            API KEY: a3e75bf6756a55afab039649ca5a0307
+          <div class="ranking-row">
+            <div class="ranking-left">
+              <div class="ranking-badge">3</div>
+              <div>
+                <div class="ranking-name">ITACHI11</div>
+                <div class="ranking-meta">1 compra</div>
+              </div>
+            </div>
+            <div class="ranking-amount">$6.00</div>
           </div>
-          <div class="other-note">
-            Cuando montes un backend, puedes usar estos datos para crear pedidos de forma
-            automática desde tu propio panel.
-          </div>
-        </article>
+        </div>
       </div>
     </section>
 
-    <!-- COMIDAMASTER -->
-    <section class="content" id="section-comida" style="display:none;">
-      <div class="section-tag">Otros</div>
-      <h1>ComidaMaster</h1>
+    <!-- SmmProdigyX -->
+    <section class="content" id="section-smm">
+      <div class="section-tag">APIs</div>
+      <h1 class="section-title">SmmProdigyX</h1>
       <p class="section-sub">
-        Sección lista para conectar con la API pública de <strong>ComidaMaster</strong>.
-        Puedes usarla en el futuro para vender cupones, pedidos o servicios relacionados
-        con comida desde el mismo panel.
+        Conexión ilustrativa a tu API externa de redes sociales.
+        API URL: <code>https://smmprodigyx.xyz/api/v2</code>
+      </p>
+      <div class="card">
+        <div class="card-title">Configuración rápida</div>
+        <p class="section-sub small mt-sm">
+          Más adelante podrás conectar tu key real y hacer pedidos desde aquí. Por ahora es solo visual
+          para que sepas dónde irá la integración.
+        </p>
+      </div>
+    </section>
+
+    <!-- ComidaMaster -->
+    <section class="content" id="section-comida">
+      <div class="section-tag">APIs</div>
+      <h1 class="section-title">ComidaMaster</h1>
+      <p class="section-sub">
+        API ilustrativa para pedidos de comida:<br />
+        <code>https://comidamaster.net/public</code>
+      </p>
+      <div class="card">
+        <div class="card-title">Panel de pedidos (demo)</div>
+        <p class="section-sub small mt-sm">
+          Aquí podrías ver órdenes de comida ligadas a tus revendedores cuando se conecte el backend.
+        </p>
+      </div>
+    </section>
+
+    <!-- ADMIN -->
+    <section class="content" id="section-admin" style="display:none;">
+      <div class="section-tag">Admin</div>
+      <h1 class="section-title">Panel de administrador</h1>
+      <p class="section-sub">
+        Esta sección solo se muestra a cuentas marcadas como <strong>Admin</strong>. Desde aquí
+        podrás gestionar productos, usuarios y saldos cuando se conecte una base de datos real.
       </p>
 
-      <div class="other-services-grid">
-        <article class="other-card">
-          <div class="other-header">
-            <div class="other-icon">🍔</div>
+      <div class="products-grid">
+        <article class="product-card">
+          <div class="product-header">
+            <div class="product-icon">📦</div>
             <div>
-              <div class="other-title">ComidaMaster API</div>
-              <div class="other-sub">
-                Integración externa · API pública lista para usarse con tu backend.
+              <div class="product-title">Gestión de productos</div>
+              <div class="product-sub">
+                Agregar, editar o desactivar paquetes de recargas y servicios.
               </div>
             </div>
           </div>
-          <div class="other-api">
-            API URL: https://comidamaster.net/public
+          <p class="section-sub small mt-sm">
+            Por ahora es informativo, pero puedes usarlo para planear tu catálogo:
+            Free Fire, PUBG, Fortnite, CODM, saldo internacional, etc.
+          </p>
+        </article>
+
+        <article class="product-card">
+          <div class="product-header">
+            <div class="product-icon">👥</div>
+            <div>
+              <div class="product-title">Gestión de revendedores</div>
+              <div class="product-sub">
+                Aprobar, bloquear o ajustar saldos manualmente.
+              </div>
+            </div>
           </div>
-          <div class="other-note">
-            Por ahora solo se muestran los datos de referencia. Más adelante puedes conectar
-            aquí endpoints reales para crear pedidos automatizados.
-          </div>
+          <p class="section-sub small mt-sm">
+            La idea es que aquí puedas ver el listado de usuarios guardados y aplicar acciones
+            cuando el panel esté conectado a tu backend.
+          </p>
         </article>
       </div>
     </section>
@@ -2239,196 +1445,253 @@
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-  // ========== 0) USUARIOS DESDE LOCALSTORAGE ==========
-  function getKaliUsers() {
+  // ---------- UTILIDADES DE USUARIOS ----------
+  function getUsers() {
     try {
       var raw = localStorage.getItem("kaliventas_users");
       if (!raw) return [];
       var parsed = JSON.parse(raw);
       return Array.isArray(parsed) ? parsed : [];
     } catch (e) {
-      console.error("Error leyendo usuarios locales", e);
       return [];
     }
   }
-
-  function getCurrentUserEmail() {
-    try {
-      return localStorage.getItem("kaliventas_current_user_email") || "";
-    } catch (e) {
-      return "";
-    }
-  }
-
   function findCurrentUser() {
-    var email = (getCurrentUserEmail() || "").toLowerCase();
-    if (!email) return null;
-    var users = getKaliUsers();
-    for (var i = 0; i < users.length; i++) {
-      var u = users[i] || {};
-      var uMail = (u.email || "").toLowerCase();
-      if (uMail === email) return u;
+    try {
+      var email = localStorage.getItem("kaliventas_current_user_email");
+      if (!email) return null;
+      var users = getUsers();
+      for (var i = 0; i < users.length; i++) {
+        if ((users[i].email || "").toLowerCase() === email.toLowerCase()) {
+          return users[i];
+        }
+      }
+      return null;
+    } catch (e) {
+      return null;
     }
-    return null;
   }
 
+  // ---------- APLICAR DATOS DEL USUARIO ----------
   function applyUserToUI(user) {
-    if (!user) return;
+    var name = user && user.name ? user.name : "Revendedor";
+    var email = user && user.email ? user.email : "";
+    var phone = user && user.phone ? user.phone : "+52 56 4880 4810";
+    var store = user && user.store ? user.store : "Mi tienda";
+    var type  = user && user.type  ? user.type  : "Revendedor";
 
-    var nameEl  = document.getElementById("perfil-name");
-    var roleEl  = document.getElementById("perfil-role");
-    var idEl    = document.getElementById("perfil-id");
-    var mailEl  = document.getElementById("perfil-email");
-    var phoneEl = document.getElementById("perfil-phone");
-    var storeEl = document.getElementById("perfil-store");
+    var idBase = "KALI" + String((user && user.id) ? user.id : 1).slice(-3);
 
-    if (nameEl)  nameEl.textContent  = user.name || "Revendedor KaliVentas";
-    if (mailEl)  mailEl.textContent  = user.email || "";
-    if (phoneEl) phoneEl.textContent = user.phone || "Sin número registrado";
-    if (storeEl) storeEl.textContent = user.store || "Sin tienda / alias";
+    document.getElementById("home-name").textContent = name;
+    document.getElementById("home-id").textContent = "ID revendedor #" + idBase;
 
-    if (roleEl) {
-      var tipo = user.type || "Revendedor";
-      roleEl.textContent = tipo ? ("REVENDEDOR · " + String(tipo).toUpperCase()) : "REVENDEDOR";
+    var topName = document.getElementById("top-user-name");
+    var topRole = document.getElementById("top-user-role");
+    if (topName) topName.textContent = name;
+    if (topRole) {
+      var baseRole = user && user.isAdmin ? "ADMIN · " : "REVENDEDOR · ";
+      topRole.textContent = baseRole + String(type).toUpperCase();
+    }
+    var topSub = document.getElementById("top-subtitle");
+    if (topSub) {
+      topSub.textContent = "Sesión activa de " + (user.isAdmin ? "admin" : "revendedor") +
+        " para " + name + ".";
     }
 
-    if (idEl) {
-      var idNum = user.id || new Date().getTime();
-      var suffix = String(idNum).slice(-4);
-      while (suffix.length < 4) suffix = "0" + suffix;
-      idEl.textContent = "#KALI" + suffix;
+    var avatarEl = document.getElementById("top-avatar");
+    if (avatarEl && name) {
+      avatarEl.textContent = (name[0] || "K").toUpperCase();
     }
+    var homeStore = document.getElementById("home-store");
+    if (homeStore) homeStore.textContent = store;
+
+    var wBtn = document.getElementById("home-whatsapp");
+    if (wBtn) {
+      var msg = encodeURIComponent("Hola, soy " + name + " y quiero revisar mi panel de recargas.");
+      wBtn.href = "https://wa.me/525648804810?text=" + msg;
+    }
+
+    // Saldos demo
+    var saldo = 0;
+    var bonus = 0;
+    var saldoTxt = "$" + saldo.toFixed(2) + " MXN";
+    var bonusTxt = "$" + bonus.toFixed(2) + " MXN";
+    var homeSaldo = document.getElementById("home-saldo");
+    var homeBonus = document.getElementById("home-bonus");
+    var dashSaldo = document.getElementById("dash-saldo");
+    var dashBonus = document.getElementById("dash-bonus");
+    if (homeSaldo) homeSaldo.textContent = saldoTxt;
+    if (homeBonus) homeBonus.textContent = bonusTxt;
+    if (dashSaldo) dashSaldo.textContent = saldoTxt;
+    if (dashBonus) dashBonus.textContent = bonusTxt;
   }
 
-  var currentUser = findCurrentUser();
-  if (currentUser) {
-    applyUserToUI(currentUser);
-  }
+  document.addEventListener("DOMContentLoaded", function () {
+    var currentUser = findCurrentUser();
+    if (currentUser) {
+      applyUserToUI(currentUser);
+    } else {
+      // Si no hay usuario, podrías redirigir al login:
+      // window.location.href = "login.html";
+    }
 
-  // ========== 1) HAMBURGUESA / SIDEBAR ==========
-  var sidebar   = document.getElementById("sidebar");
-  var hamburger = document.getElementById("hamburger");
+    // Mostrar / ocultar menú admin
+    var adminMenu = document.getElementById("menu-admin");
+    if (adminMenu) {
+      if (currentUser && currentUser.isAdmin) {
+        adminMenu.style.display = "flex";
+      } else {
+        adminMenu.style.display = "none";
+      }
+    }
 
-  function closeSidebar() {
-    if (sidebar) sidebar.classList.remove("open");
-  }
+    // ---------- NAVEGACIÓN DEL PANEL ----------
+    var sections = {
+      inicio:      document.getElementById("section-inicio"),
+      juegos:      document.getElementById("section-juegos"),
+      streaming:   document.getElementById("section-streaming"),
+      pagos:       document.getElementById("section-pagos"),
+      dashboard:   document.getElementById("section-dashboard"),
+      saldo:       document.getElementById("section-saldo"),
+      intl:        document.getElementById("section-intl"),
+      orders:      document.getElementById("section-orders"),
+      rango:       document.getElementById("section-rango"),
+      ranking:     document.getElementById("section-ranking"),
+      smm:         document.getElementById("section-smm"),
+      comida:      document.getElementById("section-comida"),
+      admin:       document.getElementById("section-admin")
+    };
 
-  if (hamburger && sidebar) {
-    hamburger.addEventListener("click", function () {
-      sidebar.classList.toggle("open");
+    function showSection(key) {
+      Object.keys(sections).forEach(function(k){
+        if (!sections[k]) return;
+        sections[k].classList.toggle("active", k === key);
+      });
+      var items = document.querySelectorAll(".menu-item");
+      items.forEach(function(item){
+        var sec = item.getAttribute("data-section");
+        item.classList.toggle("active", sec === key);
+      });
+    }
+
+    document.querySelectorAll(".menu-item").forEach(function(item){
+      item.addEventListener("click", function(){
+        var sec = item.getAttribute("data-section");
+        if (!sec) return;
+        if (sec === "admin" && !(currentUser && currentUser.isAdmin)) {
+          alert("Esta sección solo está disponible para cuentas admin.");
+          return;
+        }
+        showSection(sec);
+      });
     });
-  }
 
-  // ========== 2) MAPA DE SECCIONES ==========
-  var sections = {
-    perfil:    document.getElementById("section-perfil"),
-    rango:     document.getElementById("section-rango"),
-    ff:        document.getElementById("section-ff"),
-    pubg:      document.getElementById("section-pubg"),
-    fortnite:  document.getElementById("section-fortnite"),
-    codm:      document.getElementById("section-codm"),
-    streaming: document.getElementById("section-streaming"),
-    saldo:     document.getElementById("section-saldo"),
-    intl:      document.getElementById("section-intl"),
-    orders:    document.getElementById("section-orders"),
-    smm:       document.getElementById("section-smm"),
-    comida:    document.getElementById("section-comida"),
-    ranking:   document.getElementById("section-ranking")
-  };
+    document.querySelectorAll("[data-goto]").forEach(function(el){
+      el.addEventListener("click", function(){
+        var target = el.getAttribute("data-goto");
+        if (target === "admin" && !(currentUser && currentUser.isAdmin)) {
+          alert("Esta sección solo está disponible para cuentas admin.");
+          return;
+        }
+        showSection(target);
+      });
+    });
 
-  function showSection(key) {
-    for (var k in sections) {
-      if (!sections.hasOwnProperty(k)) continue;
-      var sec = sections[k];
-      if (!sec) continue;
-      sec.style.display = (k === key) ? "block" : "none";
+    // ---------- RECARGA INTERNACIONAL TABS ----------
+    var intlTabs = document.querySelectorAll("[data-intl-tab]");
+    intlTabs.forEach(function(tab){
+      tab.addEventListener("click", function(){
+        intlTabs.forEach(function(t){ t.classList.remove("active"); });
+        tab.classList.add("active");
+        var key = tab.getAttribute("data-intl-tab");
+        document.getElementById("intl-deposit").style.display = (key==="deposit"?"block":"none");
+        document.getElementById("intl-withdraw").style.display = (key==="withdraw"?"block":"none");
+      });
+    });
+
+    // ---------- BOTÓN WHATSAPP COMPROBANTE ----------
+    var btnTopup = document.getElementById("btn-topup-whatsapp");
+    if (btnTopup) {
+      btnTopup.addEventListener("click", function(){
+        var amount = document.getElementById("topup-amount").value.trim();
+        var bank   = document.getElementById("topup-bank").value.trim();
+        var ref    = document.getElementById("topup-ref").value.trim();
+        var name   = currentUser && currentUser.name ? currentUser.name : "Revendedor";
+
+        var msg = "Hola, soy " + name +
+          "%0AQuiero recargar saldo en KaliVentas.%0A%0A" +
+          "Monto: " + (amount || "N/D") + " MXN%0A" +
+          "Método: " + (bank || "N/D") + "%0A" +
+          "Referencia: " + (ref || "N/D");
+
+        window.open("https://wa.me/525648804810?text=" + msg, "_blank");
+      });
     }
-  }
 
-  // ========== 3) MENÚ LATERAL ==========
-  var menuItems = document.querySelectorAll(".menu-item[data-section]");
+    // ---------- DEMO DE GUARDAR UNA COMPRA LOCAL ----------
+    // si quieres probar, puedes hacer desde consola:
+    // localStorage.setItem("kaliventas_orders", JSON.stringify([...]))
+    function loadOrders() {
+      var tbody = document.getElementById("orders-body");
+      var sub   = document.getElementById("orders-count-sub");
+      if (!tbody) return;
 
-  if (menuItems && menuItems.length) {
-    for (var i = 0; i < menuItems.length; i++) {
-      (function (item) {
-        item.addEventListener("click", function () {
-          for (var j = 0; j < menuItems.length; j++) {
-            menuItems[j].classList.remove("active");
-          }
-          item.classList.add("active");
+      var allOrders = [];
+      try {
+        var raw = localStorage.getItem("kaliventas_orders");
+        if (raw) {
+          var parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) allOrders = parsed;
+        }
+      } catch (e) {}
 
-          var key = item.getAttribute("data-section") || "perfil";
-          showSection(key);
-          closeSidebar();
+      var userEmail = currentUser && currentUser.email ? currentUser.email.toLowerCase() : null;
+      var orders = !userEmail ? allOrders : allOrders.filter(function(o){
+        return (o.email || "").toLowerCase() === userEmail;
+      });
+
+      tbody.innerHTML = "";
+      if (!orders.length) {
+        var tr = document.createElement("tr");
+        var td = document.createElement("td");
+        td.colSpan = 4;
+        td.className = "muted";
+        td.textContent = "Aún no hay compras guardadas en este dispositivo.";
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+      } else {
+        orders.forEach(function(o){
+          var tr = document.createElement("tr");
+          var fecha = document.createElement("td");
+          fecha.textContent = o.date || "-";
+          var prod = document.createElement("td");
+          prod.textContent = o.product || "-";
+          var amt = document.createElement("td");
+          amt.textContent = o.amount || "-";
+          var st = document.createElement("td");
+          var span = document.createElement("span");
+          span.className = o.status === "aprobado" ? "badge-green" : "badge-yellow";
+          span.textContent = (o.status || "pendiente");
+          st.appendChild(span);
+
+          tr.appendChild(fecha);
+          tr.appendChild(prod);
+          tr.appendChild(amt);
+          tr.appendChild(st);
+          tbody.appendChild(tr);
         });
-      })(menuItems[i]);
-    }
-  }
-
-  // ========== 4) PRODUCTOS DESTACADOS EN INICIO ==========
-  var homeCards = document.querySelectorAll(".home-product-card");
-  if (homeCards && homeCards.length) {
-    for (var h = 0; h < homeCards.length; h++) {
-      (function (card) {
-        card.addEventListener("click", function () {
-          var target = card.getAttribute("data-section-target");
-          if (!target) return;
-
-          for (var j = 0; j < menuItems.length; j++) {
-            var item = menuItems[j];
-            var secKey = item.getAttribute("data-section");
-            if (secKey === target) {
-              item.click();
-              return;
-            }
-          }
-
-          showSection(target);
-        });
-      })(homeCards[h]);
-    }
-  }
-
-  // ========== 5) FORMULARIO DE COMPROBANTE (SALDO → WHATSAPP) ==========
-  var saldoForm = document.getElementById("saldo-comprobante-form");
-  if (saldoForm) {
-    saldoForm.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var metodoEl = document.getElementById("saldo-metodo");
-      var montoEl  = document.getElementById("saldo-monto");
-      var nombreEl = document.getElementById("saldo-nombre");
-      var refEl    = document.getElementById("saldo-ref");
-
-      var metodo = metodoEl ? metodoEl.value : "";
-      var monto  = montoEl ? montoEl.value : "";
-      var nombre = nombreEl ? nombreEl.value : "";
-      var ref    = refEl ? refEl.value : "";
-      var numero = "525648804810";
-
-      if (!metodo || !monto || !nombre) {
-        alert("Por favor llena al menos método, monto y nombre.");
-        return;
       }
 
-      var text = "Hola KaliVentas, te envío comprobante de depósito.\n\n";
-      text += "Banco / método: " + metodo + "\n";
-      text += "Monto: " + monto + "\n";
-      if (nombre) text += "Nombre / alias: " + nombre + "\n";
-      if (ref) text += "Últimos 4 dígitos / hash: " + ref + "\n";
-      text += "\nAdjunto mi comprobante en esta conversación de WhatsApp.";
+      if (sub) {
+        sub.textContent = orders.length + " compras en este dispositivo (ilustrativo).";
+      }
 
-      var url = "https://wa.me/" + numero + "?text=" + encodeURIComponent(text);
-      window.open(url, "_blank");
-    });
-  }
+      var homeCount = document.getElementById("home-orders-count");
+      if (homeCount) homeCount.textContent = orders.length + " compras";
+    }
 
-  // ========== 6) SECCIÓN INICIAL ==========
-  showSection("perfil");
-  if (menuItems && menuItems.length) {
-    menuItems[0].classList.add("active");
-  }
-});
+    loadOrders();
+  });
 </script>
 </body>
 </html>
