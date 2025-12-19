@@ -2,226 +2,222 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>KaliVentas | Acceso de revendedor</title>
+  <title>KaliVentas | Iniciar sesión</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    :root {
+    :root{
       --bg:#020617;
+      --card:#020617;
       --primary:#4f46e5;
       --accent:#22c55e;
       --text:#f9fafb;
       --muted:#9ca3af;
       --border:#1f2937;
+      --radius-lg:26px;
+      --radius-pill:999px;
     }
     *{box-sizing:border-box;margin:0;padding:0;}
     body{
-      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      background:radial-gradient(circle at top,#1e293b 0,#020617 55%,#000 100%);
-      color:var(--text);
       min-height:100vh;
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;
+      background:radial-gradient(circle at top,#020617 0,#000 60%);
+      color:var(--text);
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:1.5rem;
+      padding:1.5rem .8rem;
     }
-    a{color:inherit;text-decoration:none;}
-    .shell{width:100%;max-width:420px;}
-    .card{
-      background:radial-gradient(circle at 0% 0%,rgba(79,70,229,.35),rgba(15,23,42,.98));
-      border-radius:20px;
-      padding:1.8rem 1.6rem 1.5rem;
-      border:1px solid rgba(31,41,55,.95);
-      box-shadow:0 18px 45px rgba(15,23,42,.9);
-      position:relative;
-      overflow:hidden;
+    .shell{
+      width:100%;
+      max-width:380px;
+      border-radius:var(--radius-lg);
+      border:1px solid rgba(15,23,42,.95);
+      background:radial-gradient(circle at top,#020617 0,#020617 55%,#000 100%);
+      box-shadow:0 0 0 1px rgba(15,23,42,.9),0 26px 40px rgba(15,23,42,.9);
+      padding:1.4rem 1.3rem 1.6rem;
     }
-    .card::before{
-      content:"";position:absolute;inset:-60%;
-      background:
-        radial-gradient(circle at 0% 0%,rgba(79,70,229,.4),transparent 55%),
-        radial-gradient(circle at 100% 0%,rgba(236,72,153,.35),transparent 55%);
-      opacity:.6;pointer-events:none;
-    }
-    .inner{position:relative;z-index:1;}
-    .logo{display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;}
-    .logo-icon{
-      width:30px;height:30px;border-radius:999px;
-      background:radial-gradient(circle at 30% 0,#a855f7,#4338ca);
-      display:flex;align-items:center;justify-content:center;
-      font-weight:800;font-size:.85rem;
-      box-shadow:0 0 12px rgba(79,70,229,.9);
-    }
-    .logo-text span:first-child{
-      font-weight:600;font-size:.95rem;letter-spacing:.04em;
-    }
-    .logo-text span:last-child{
-      font-size:.7rem;text-transform:uppercase;color:var(--muted);letter-spacing:.16em;
-    }
-    h1{font-size:1.35rem;margin-bottom:.25rem;}
-    .sub{font-size:.84rem;color:var(--muted);margin-bottom:1rem;}
-    label{font-size:.8rem;color:var(--muted);display:block;margin-bottom:.2rem;}
-    .field{
-      background:rgba(15,23,42,.92);
-      border-radius:12px;
-      border:1px solid rgba(31,41,55,.95);
-      padding:.45rem .7rem;
+    .logo{
       display:flex;
       align-items:center;
-      gap:.4rem;
+      gap:.7rem;
+      margin-bottom:1rem;
     }
-    .field input{
-      background:transparent;
-      border:none;
-      outline:none;
-      color:var(--text);
-      font-size:.9rem;
-      width:100%;
-    }
-    .field input::placeholder{color:#64748b;}
-    .field-icon{font-size:.9rem;opacity:.85;}
-    form{display:flex;flex-direction:column;gap:.8rem;}
-    .btn{
-      margin-top:1rem;
-      width:100%;
+    .logo-badge{
+      width:38px;
+      height:38px;
       border-radius:999px;
-      padding:.55rem 1.1rem;
-      border:none;
-      background:linear-gradient(135deg,#4f46e5,#6366f1,#22c55e);
-      color:#fff;
+      background:radial-gradient(circle at 30% 0,#38bdf8 0,#4f46e5 45%,#a855f7 100%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      box-shadow:0 0 16px rgba(56,189,248,.8);
+    }
+    .logo-text{
+      display:flex;
+      flex-direction:column;
+      line-height:1.1;
+    }
+    .logo-title{
       font-size:.9rem;
-      font-weight:600;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+    }
+    .logo-sub{
+      font-size:.75rem;
+      color:var(--muted);
+    }
+    h1{
+      font-size:1.1rem;
+      margin-bottom:.2rem;
+    }
+    .subtitle{
+      font-size:.8rem;
+      color:var(--muted);
+      margin-bottom:.9rem;
+    }
+    form{
+      display:flex;
+      flex-direction:column;
+      gap:.6rem;
+    }
+    label{
+      font-size:.78rem;
+      display:flex;
+      flex-direction:column;
+      gap:.18rem;
+    }
+    input{
+      width:100%;
+      border-radius:var(--radius-pill);
+      border:1px solid rgba(31,41,55,1);
+      background:rgba(15,23,42,1);
+      padding:.45rem .8rem;
+      font-size:.82rem;
+      color:var(--text);
+      outline:none;
+    }
+    input:focus{
+      border-color:rgba(59,130,246,1);
+      box-shadow:0 0 0 1px rgba(59,130,246,.9);
+    }
+    .btn{
+      margin-top:.7rem;
+      width:100%;
+      border-radius:var(--radius-pill);
+      border:none;
+      padding:.5rem .9rem;
+      font-size:.85rem;
+      font-weight:500;
       cursor:pointer;
-      box-shadow:0 0 16px rgba(79,70,229,.9);
+      background:linear-gradient(to right,#0ea5e9,#22c55e);
+      color:#ecfeff;
+      box-shadow:0 0 0 1px rgba(56,189,248,.7),0 0 18px rgba(56,189,248,.7);
     }
-    .btn-secondary{
-      margin-top:.6rem;
-      background:transparent;
-      border:1px solid rgba(148,163,184,.7);
-      box-shadow:none;
+    .btn:hover{
+      filter:brightness(1.05);
     }
-    .info{margin-top:.8rem;font-size:.78rem;color:var(--muted);}
-    .switch{margin-top:.9rem;font-size:.8rem;color:var(--muted);text-align:center;}
-    .switch a{color:var(--accent);font-weight:500;}
+    .footer{
+      margin-top:.85rem;
+      font-size:.78rem;
+      color:var(--muted);
+      text-align:center;
+    }
+    .footer a{
+      color:#38bdf8;
+      text-decoration:none;
+    }
+    .error{
+      font-size:.75rem;
+      color:#fecaca;
+      margin-top:.2rem;
+      display:none;
+    }
   </style>
 </head>
 <body>
-<div class="shell">
-  <div class="card">
-    <div class="inner">
-      <a href="index.html" class="logo">
-        <div class="logo-icon">KV</div>
-        <div class="logo-text">
-          <span>KaliVentas</span>
-          <span>Acceso revendedor</span>
-        </div>
-      </a>
-
-      <h1>Acceso de revendedor</h1>
-      <p class="sub">
-        Este acceso es para revendedores registrados en KaliVentas. Usa tu correo o usuario
-        para entrar directamente a tu panel de productos.
-      </p>
-
-      <form id="loginForm">
-        <div>
-          <label for="login-email">Correo o usuario</label>
-          <div class="field">
-            <span class="field-icon">📧</span>
-            <input id="login-email" type="text" placeholder="tucorreo@ejemplo.com" required />
-          </div>
-        </div>
-
-        <div>
-          <label for="login-extra">Comentario (opcional)</label>
-          <div class="field">
-            <span class="field-icon">💬</span>
-            <input id="login-extra" type="text" placeholder="Ej. Quiero saber mi saldo, tuve un problema, etc." />
-          </div>
-        </div>
-
-        <button class="btn" type="submit">Entrar al panel</button>
-        <button class="btn btn-secondary" type="button" onclick="window.location.href='index.html'">
-          Volver al inicio
-        </button>
-      </form>
-
-      <p class="info">
-        Desde el panel puedes revisar el catálogo, tus productos y opciones de saldo. Para soporte o dudas
-        específicas, siempre podrás contactarnos por WhatsApp de forma manual si lo necesitas.
-      </p>
-
-      <div class="switch">
-        ¿Aún no eres revendedor?
-        <a href="registro.html">Solicitar alta</a>
+  <div class="shell">
+    <div class="logo">
+      <div class="logo-badge">KV</div>
+      <div class="logo-text">
+        <div class="logo-title">KALIVENTAS</div>
+        <div class="logo-sub">Inicio de sesión</div>
       </div>
     </div>
+
+    <h1>Inicia sesión en tu panel</h1>
+    <p class="subtitle">
+      Entra con el correo que usaste al registrarte como revendedor. Si todavía no tienes
+      cuenta, primero regístrate.
+    </p>
+
+    <form id="login-form">
+      <label>
+        Correo electrónico
+        <input type="email" id="login-email" required placeholder="tucorreo@ejemplo.com" />
+      </label>
+
+      <span id="login-error" class="error">
+        No encontramos una cuenta con ese correo. Revisa que esté bien escrito o regístrate primero.
+      </span>
+
+      <button type="submit" class="btn">Entrar al panel</button>
+    </form>
+
+    <div class="footer">
+      ¿Todavía no tienes cuenta?
+      <a href="registro.html">Regístrate aquí</a>
+    </div>
   </div>
-</div>
 
-<script>
-  const loginForm = document.getElementById('loginForm');
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var form  = document.getElementById("login-form");
+      var error = document.getElementById("login-error");
 
-  function getKaliUsers() {
-    try {
-      const raw = localStorage.getItem('kaliventas_users');
-      if (!raw) return [];
-      return JSON.parse(raw);
-    } catch (e) {
-      console.error('Error leyendo usuarios locales', e);
-      return [];
-    }
-  }
-
-  function saveKaliUsers(users) {
-    try {
-      localStorage.setItem('kaliventas_users', JSON.stringify(users));
-    } catch (e) {
-      console.error('Error guardando usuarios locales', e);
-    }
-  }
-
-  if (loginForm) {
-    loginForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-      const identifier = document.getElementById('login-email').value.trim();
-
-      if (!identifier) {
-        alert('Por favor escribe tu correo o usuario.');
-        return;
+      function getUsers() {
+        try {
+          var raw = localStorage.getItem("kaliventas_users");
+          if (!raw) return [];
+          var parsed = JSON.parse(raw);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch (e) {
+          return [];
+        }
       }
 
-      let users = getKaliUsers();
-      let user = users.find(u => {
-        const em = (u.email || '').toLowerCase();
-        const us = (u.usuario || '').toLowerCase();
-        const id = identifier.toLowerCase();
-        return em === id || us === id;
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        error.style.display = "none";
+
+        var email = document.getElementById("login-email").value.trim().toLowerCase();
+        if (!email) {
+          error.textContent = "Escribe tu correo para continuar.";
+          error.style.display = "block";
+          return;
+        }
+
+        var users = getUsers();
+        var found = null;
+        for (var i = 0; i < users.length; i++) {
+          if ((users[i].email || "").toLowerCase() === email) {
+            found = users[i];
+            break;
+          }
+        }
+
+        if (!found) {
+          error.textContent = "No encontramos una cuenta con ese correo. Regístrate primero.";
+          error.style.display = "block";
+          return;
+        }
+
+        // guardar sesión actual y entrar al panel
+        localStorage.setItem("kaliventas_current_user_email", email);
+        window.location.href = "panel.html";
       });
-
-      if (!user) {
-        user = {
-          id: Date.now(),
-          name: 'Nuevo revendedor',
-          store: '',
-          email: identifier,
-          phone: '',
-          country: '',
-          type: '',
-          extra: '',
-          createdAt: new Date().toISOString()
-        };
-        users.push(user);
-        saveKaliUsers(users);
-      } else {
-        saveKaliUsers(users);
-      }
-
-      localStorage.setItem('kaliventas_current_user_email', user.email || identifier);
-
-      window.location.href = 'panel.html';
     });
-  }
-</script>
-
+  </script>
 </body>
 </html>
