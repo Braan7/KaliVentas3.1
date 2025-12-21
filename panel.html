@@ -38,7 +38,6 @@
       min-height:100vh;
     }
 
-    /* SIDEBAR */
     .sidebar{
       width:270px;
       background:radial-gradient(circle at top left,#020617 0,#020617 40%,#000 100%);
@@ -112,7 +111,6 @@
     }
     .menu-item.active .menu-item-dot{background:#22c55e;}
 
-    /* MAIN CONTENT */
     .main{
       flex:1;
       padding:1.2rem 1rem 1.8rem;
@@ -214,7 +212,6 @@
       margin-top:.3rem;
     }
 
-    /* QUICK CARDS */
     .quick-grid{
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
@@ -248,7 +245,6 @@
       cursor:pointer;
     }
 
-    /* SECTION TITLES */
     .section-tag{
       font-size:.7rem;
       text-transform:uppercase;
@@ -267,7 +263,6 @@
     }
     .section-sub.small{font-size:.76rem;}
 
-    /* PRODUCTS */
     .products-grid{
       display:grid;
       grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
@@ -331,7 +326,6 @@
       cursor:pointer;
     }
 
-    /* TABLE SIMPLE */
     table{
       width:100%;
       border-collapse:collapse;
@@ -345,7 +339,6 @@
     th{font-weight:500;color:var(--muted);}
     tr:last-child td{border-bottom:none;}
 
-    /* BADGES */
     .badge-green{
       padding:.18rem .45rem;border-radius:var(--radius-pill);
       background:rgba(16,185,129,.16);color:#6ee7b7;font-size:.72rem;
@@ -355,7 +348,6 @@
       background:rgba(250,204,21,.12);color:#facc15;font-size:.72rem;
     }
 
-    /* RANKING */
     .tabs{
       display:flex;
       gap:.4rem;
@@ -413,7 +405,6 @@
       text-shadow:0 0 12px rgba(56,189,248,.9);
     }
 
-    /* UTILITIES */
     .muted{color:var(--muted);font-size:.76rem;}
     .mt-sm{margin-top:.35rem;}
     .mt-md{margin-top:.7rem;}
@@ -518,7 +509,7 @@
       <div class="menu-icon">⭐</div>
       <div class="menu-text">
         <div class="menu-label">Mi rango</div>
-        <div class="sub">Niveles y descuentos en USD</div>
+        <div class="sub">Niveles y descuentos</div>
       </div>
       <div class="menu-item-dot"></div>
     </div>
@@ -527,7 +518,7 @@
       <div class="menu-icon">🏆</div>
       <div class="menu-text">
         <div class="menu-label">Mi ranking</div>
-        <div class="sub">Top recargas y top gastos</div>
+        <div class="sub">Top recargas y gastos</div>
       </div>
       <div class="menu-item-dot"></div>
     </div>
@@ -552,12 +543,11 @@
       <div class="menu-item-dot"></div>
     </div>
 
-    <!-- Solo para cuentas admin -->
     <div class="menu-item" data-section="admin" id="menu-admin" style="display:none;">
       <div class="menu-icon">🛠️</div>
       <div class="menu-text">
         <div class="menu-label">Admin</div>
-        <div class="sub">Gestión interna del panel</div>
+        <div class="sub">Gestión interna</div>
       </div>
       <div class="menu-item-dot"></div>
     </div>
@@ -574,7 +564,7 @@
       </div>
       <div class="user-pill" id="top-user-pill">
         <div class="user-avatar" id="top-avatar">KV</div>
-        <div>
+       <div>
           <div style="font-size:.78rem;" id="top-user-name">Usuario invitado</div>
           <div style="font-size:.7rem;color:var(--muted);" id="top-user-role">REVENDEDOR · DEMO</div>
         </div>
@@ -584,12 +574,11 @@
     <!-- INICIO -->
     <section class="content active" id="section-inicio">
       <div class="grid">
-        <!-- Perfil + saldos -->
         <div class="card">
           <div class="card-header">
             <div>
-              <div class="card-title">Bienvenido a tu panel, <span id="home-name">Revendedor</span></div>
-              <div class="card-sub">Administra tu cuenta y revisa tu saldo en tiempo real (simulado).</div>
+              <div class="card-title">Bienvenido, <span id="home-name">Revendedor</span></div>
+              <div class="card-sub">Administra tu cuenta y revisa tu saldo (simulado).</div>
             </div>
             <span class="badge-outline" id="home-id">ID #KALI001</span>
           </div>
@@ -601,7 +590,7 @@
               </div>
               <div class="wallet-amount" id="home-saldo">$0.00 MXN</div>
               <button class="btn-sm" data-goto="saldo">➕ Recargar saldo</button>
-              <div class="muted mt-sm">El saldo real se confirma cuando envías tu comprobante por WhatsApp.</div>
+              <div class="muted mt-sm">El saldo real se confirma al aprobar tus recargas.</div>
             </div>
 
             <div style="flex:1 1 180px;" class="card">
@@ -609,7 +598,7 @@
                 <span class="card-title">Saldo bonus</span>
               </div>
               <div class="wallet-amount" id="home-bonus">$0.00 MXN</div>
-              <span class="muted">Solo productos elegibles y promos especiales.</span>
+              <span class="muted">Solo productos elegibles.</span>
             </div>
           </div>
 
@@ -635,21 +624,19 @@
             <div class="quick-card">
               <div class="quick-top">
                 <div class="quick-icon">⚙️</div>
-                <span class="badge-outline">Perfil</span>
               </div>
               <div class="quick-label">Datos del revendedor</div>
               <div class="quick-main" id="home-store">Mi tienda</div>
-              <div class="quick-link" data-goto="dashboard">✏️ Ajustar más adelante</div>
+              <div class="quick-link" data-goto="dashboard">✏️ Ajustar después</div>
             </div>
           </div>
         </div>
 
-        <!-- Productos destacados -->
         <div class="card">
           <div class="card-header">
             <div>
               <div class="card-title">Productos destacados</div>
-              <div class="card-sub">Atajos rápidos a los productos más usados.</div>
+              <div class="card-sub">Atajos rápidos.</div>
             </div>
           </div>
 
@@ -734,13 +721,13 @@
           </p>
         </article>
 
-        <!-- PUBG, Fortnite, CODM, etc. -->
+        <!-- Ejemplos PUBG / Fortnite / CODM -->
         <article class="product-card">
           <div class="product-header">
             <div class="product-icon">🎯</div>
             <div>
               <div class="product-title">PUBG Mobile</div>
-              <div class="product-sub">UC por ID (tabla ilustrativa).</div>
+              <div class="product-sub">UC por ID (ilustrativo).</div>
             </div>
           </div>
           <div class="product-row">
@@ -811,7 +798,7 @@
       <div class="section-tag">Streaming</div>
       <h1 class="section-title">Servicios de streaming</h1>
       <p class="section-sub">
-        Maneja tus cuentas de Netflix, Disney+, Spotify y más. Ejemplos ilustrativos.
+        Maneja cuentas de Netflix, Disney+, Spotify y más (ilustrativo).
       </p>
 
       <div class="products-grid">
@@ -861,7 +848,7 @@
       <div class="section-tag">Pagos</div>
       <h1 class="section-title">Métodos de pago KaliVentas</h1>
       <p class="section-sub">
-        Estos son tus datos fijos para que los revendedores envíen saldo. Recuerda pedir siempre comprobante.
+        Datos fijos para que los revendedores envíen saldo. Pide siempre comprobante.
       </p>
 
       <div class="products-grid">
@@ -929,7 +916,7 @@
       <div class="section-tag">Panel</div>
       <h1 class="section-title">Mi dashboard</h1>
       <p class="section-sub">
-        Aquí verás un resumen rápido de saldos, compras e historial de actividad.
+        Resumen rápido de saldos y accesos directos.
       </p>
 
       <div class="grid">
@@ -937,7 +924,7 @@
           <div class="card-header">
             <div>
               <div class="card-title">Resumen de saldo</div>
-              <div class="card-sub">Vista rápida de tu saldo actual.</div>
+              <div class="card-sub">Vista rápida.</div>
             </div>
           </div>
           <table>
@@ -967,7 +954,7 @@
           <div class="card-header">
             <div>
               <div class="card-title">Actividad rápida</div>
-              <div class="card-sub">Accesos directos a secciones clave.</div>
+              <div class="card-sub">Accesos directos.</div>
             </div>
           </div>
           <div class="quick-grid" style="grid-template-columns:1fr 1fr;">
@@ -997,8 +984,8 @@
       <div class="section-tag">Saldo</div>
       <h1 class="section-title">Recargar saldo</h1>
       <p class="section-sub">
-        El mínimo recomendado para revendedores es de <strong>$200 MXN</strong>.
-        Una vez hecho el pago, manda tu comprobante por WhatsApp usando el botón de abajo.
+        Mínimo sugerido para revendedores: <strong>$200 MXN</strong>.
+        Crea la solicitud y luego envía tu comprobante por WhatsApp.
       </p>
 
       <div class="products-grid">
@@ -1064,7 +1051,7 @@
         <div class="card-header">
           <div>
             <div class="card-title">Enviar comprobante por WhatsApp</div>
-            <div class="card-sub">Llena estos datos y abre el chat listo para pegar tu captura.</div>
+            <div class="card-sub">Llena estos datos y abre el chat listo.</div>
           </div>
         </div>
         <div class="products-grid">
@@ -1077,8 +1064,8 @@
               <input class="product-input" id="topup-ref" placeholder="Últimos dígitos / referencia" />
             </div>
             <div class="product-actions">
-              <button class="btn-sm" id="btn-topup-whatsapp">Enviar por WhatsApp</button>
-              <span class="muted">Se abrirá un mensaje con formato sugerido, solo adjuntas la captura.</span>
+              <button class="btn-sm" id="btn-topup-whatsapp">Crear solicitud + WhatsApp</button>
+              <span class="muted">Primero se registra como PENDIENTE en el sistema.</span>
             </div>
           </div>
         </div>
@@ -1090,8 +1077,7 @@
       <div class="section-tag">Global</div>
       <h1 class="section-title">Recarga internacional y retiros</h1>
       <p class="section-sub">
-        Usa este módulo para manejar saldo global en USD y retiros hacia Binance o PayPal
-        (ilustrativo, sin conexión real todavía).
+        Módulo demo para manejar saldo global en USD y retiros (a futuro).
       </p>
 
       <div class="tabs">
@@ -1103,11 +1089,11 @@
         <div class="card-header">
           <div>
             <div class="card-title">Recargar saldo internacional</div>
-            <div class="card-sub">Próximamente podrás conectar bancos de otros países.</div>
+            <div class="card-sub">Aquí irán bancos de otros países.</div>
           </div>
         </div>
         <p class="section-sub small">
-          Por ahora solo es una vista informativa. Cuando agreguemos más bancos, aquí aparecerán.
+          De momento solo es visual. Cuando se agreguen bancos externos, se conectarán aquí.
         </p>
       </div>
 
@@ -1116,7 +1102,7 @@
           <div>
             <div class="card-title">Retirar fondos</div>
             <div class="card-sub">
-              Saldo disponible: <span style="color:#4ade80;" id="intl-balance">$10.00 USD (demo)</span>
+              Saldo disponible (demo): <span style="color:#4ade80;" id="intl-balance">$10.00 USD</span>
             </div>
           </div>
         </div>
@@ -1144,7 +1130,7 @@
 
         <div class="mt-md">
           <label class="section-sub small">
-            Selecciona un método de pago primero
+            Método de retiro
             <select class="product-select" id="intl-method">
               <option value="">Selecciona método</option>
               <option value="binance">Binance</option>
@@ -1170,8 +1156,7 @@
       <div class="section-tag">Historial</div>
       <h1 class="section-title">Mis compras</h1>
       <p class="section-sub">
-        Aquí verás todas las compras asociadas a tu cuenta en este navegador.
-        Más adelante se puede conectar a una base de datos real.
+        Aquí verás tus compras (de momento solo ilustrativas / localStorage).
       </p>
 
       <div class="card">
@@ -1202,7 +1187,7 @@
       <div class="section-tag">Niveles</div>
       <h1 class="section-title">Mi rango como revendedor</h1>
       <p class="section-sub">
-        Rangos ilustrativos según tu volumen de compras en USD. En el futuro se conectarán a tu historial real.
+        Rangos ilustrativos según volumen de compras en USD.
       </p>
 
       <div class="products-grid">
@@ -1215,7 +1200,7 @@
             </div>
           </div>
           <div class="badge-green">0% descuento</div>
-          <button class="btn-secondary mt-sm" id="btn-rango-actual">Nivel actual</button>
+          <span class="muted mt-sm">Nivel base.</span>
         </article>
 
         <article class="product-card">
@@ -1285,7 +1270,7 @@
       <div class="section-tag">Ranking</div>
       <h1 class="section-title">Mi ranking</h1>
       <p class="section-sub">
-        Top recargas y top gastos (datos ilustrativos). Más adelante se puede conectar a tu historial real.
+        Top recargas y top gastos (datos ilustrativos).
       </p>
 
       <div class="tabs">
@@ -1370,14 +1355,12 @@
       <div class="section-tag">APIs</div>
       <h1 class="section-title">SmmProdigyX</h1>
       <p class="section-sub">
-        Conexión ilustrativa a tu API externa de redes sociales.
-        API URL: <code>https://smmprodigyx.xyz/api/v2</code>
+        Conexión ilustrativa a tu API externa: <code>https://smmprodigyx.xyz/api/v2</code>.
       </p>
       <div class="card">
         <div class="card-title">Configuración rápida</div>
         <p class="section-sub small mt-sm">
-          Más adelante podrás conectar tu key real y hacer pedidos desde aquí. Por ahora es solo visual
-          para que sepas dónde irá la integración.
+          Más adelante podrás conectar tu key real y hacer pedidos desde aquí.
         </p>
       </div>
     </section>
@@ -1399,154 +1382,534 @@
     </section>
 
     <!-- ADMIN -->
-    <section class="content" id="section-admin" style="display:none;">
+   <section class="content" id="section-admin">
+    <!-- aquí va todo el contenido de admin -->
+</section>
       <div class="section-tag">Admin</div>
       <h1 class="section-title">Panel de administrador</h1>
       <p class="section-sub">
-        Esta sección solo se muestra a cuentas marcadas como <strong>Admin</strong>. Desde aquí
-        podrás gestionar productos, usuarios y saldos cuando se conecte una base de datos real.
+        Solo cuentas <strong>admin</strong> pueden ver esta sección. Aquí gestionas recargas, usuarios y productos.
       </p>
 
-      <div class="products-grid">
-        <article class="product-card">
-          <div class="product-header">
-            <div class="product-icon">📦</div>
-            <div>
-              <div class="product-title">Gestión de productos</div>
-              <div class="product-sub">
-                Agregar, editar o desactivar paquetes de recargas y servicios.
-              </div>
-            </div>
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Recargas pendientes</div>
+            <div class="card-sub">Aprueba o rechaza solicitudes de saldo.</div>
           </div>
-          <p class="section-sub small mt-sm">
-            Por ahora es informativo, pero puedes usarlo para planear tu catálogo:
-            Free Fire, PUBG, Fortnite, CODM, saldo internacional, etc.
-          </p>
-        </article>
+        </div>
+        <table>
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Monto</th>
+            <th>Método</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+          </thead>
+          <tbody id="admin-topups-body">
+          <tr><td colspan="6" class="muted">Cargando recargas...</td></tr>
+          </tbody>
+        </table>
+      </div>
 
-        <article class="product-card">
-          <div class="product-header">
-            <div class="product-icon">👥</div>
+      <div class="grid mt-md">
+        <div class="card">
+          <div class="card-header">
             <div>
-              <div class="product-title">Gestión de revendedores</div>
-              <div class="product-sub">
-                Aprobar, bloquear o ajustar saldos manualmente.
-              </div>
+              <div class="card-title">Usuarios registrados</div>
+              <div class="card-sub">Listado rápido de revendedores.</div>
             </div>
           </div>
-          <p class="section-sub small mt-sm">
-            La idea es que aquí puedas ver el listado de usuarios guardados y aplicar acciones
-            cuando el panel esté conectado a tu backend.
-          </p>
-        </article>
+          <table>
+            <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Rol</th>
+            </tr>
+            </thead>
+            <tbody id="admin-users-body">
+            <tr><td colspan="4" class="muted">Cargando usuarios...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Productos</div>
+              <div class="card-sub">Agregar o desactivar productos.</div>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Categoría</th>
+              <th>Precio</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody id="admin-products-body">
+            <tr><td colspan="5" class="muted">Cargando productos...</td></tr>
+            </tbody>
+          </table>
+
+          <div class="mt-md">
+            <p class="section-sub small"><strong>Agregar producto rápido</strong></p>
+            <div class="product-row">
+              <input class="product-input" id="prod-name" placeholder="Nombre" />
+              <input class="product-input" id="prod-price" placeholder="Precio MXN" />
+            </div>
+            <div class="product-row">
+              <input class="product-input" id="prod-cat" placeholder="Categoría (juego, streaming...)" />
+              <input class="product-input" id="prod-subcat" placeholder="Subcategoría (freefire, pubg...)" />
+            </div>
+            <div class="product-actions">
+              <button class="btn-sm" id="btn-add-product">➕ Agregar producto</button>
+              <span class="muted">Se guardará en la tabla products del backend.</span>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </main>
 </div>
 
 <script>
-  // ---------- UTILIDADES DE USUARIOS ----------
-  function getUsers() {
-    try {
-      var raw = localStorage.getItem("kaliventas_users");
-      if (!raw) return [];
-      var parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed : [];
-    } catch (e) {
-      return [];
-    }
+  // ✅ API REAL EN RENDER
+  const API_BASE = "https://kaliventas-api.onrender.com/api";
+  // ✅ COINCIDE CON ADMIN_MASTER_PASSWORD EN RENDER
+  const ADMIN_KEY = "KALI-ADMIN-777";
+
+  function isAdmin(user) {
+    if (!user) return false;
+    if (user.isAdmin) return true;
+    if (user.role && String(user.role).toLowerCase() === "admin") return true;
+    return false;
   }
+
   function findCurrentUser() {
     try {
-      var email = localStorage.getItem("kaliventas_current_user_email");
-      if (!email) return null;
-      var users = getUsers();
-      for (var i = 0; i < users.length; i++) {
-        if ((users[i].email || "").toLowerCase() === email.toLowerCase()) {
-          return users[i];
-        }
-      }
-      return null;
+      const raw = localStorage.getItem("kaliventas_current_user");
+      if (!raw) return null;
+      return JSON.parse(raw);
     } catch (e) {
+      console.error("Error leyendo usuario actual:", e);
       return null;
     }
   }
 
-  // ---------- APLICAR DATOS DEL USUARIO ----------
   function applyUserToUI(user) {
-    var name = user && user.name ? user.name : "Revendedor";
-    var email = user && user.email ? user.email : "";
-    var phone = user && user.phone ? user.phone : "+52 56 4880 4810";
-    var store = user && user.store ? user.store : "Mi tienda";
-    var type  = user && user.type  ? user.type  : "Revendedor";
+    const name = user && user.name ? user.name : "Revendedor";
+    const email = user && user.email ? user.email : "";
+    const phone = user && user.phone ? user.phone : "+52 56 4880 4810";
+    const store = user && (user.store_name || user.store) ? (user.store_name || user.store) : "Mi tienda";
+    const role = user && user.role ? user.role : "revendedor";
+    const type = user && user.type ? user.type : (role === "admin" ? "Admin" : "Revendedor");
 
-    var idBase = "KALI" + String((user && user.id) ? user.id : 1).slice(-3);
+    const idBase = "KALI" + String(user && user.id ? user.id : 1).padStart(3, "0");
 
     document.getElementById("home-name").textContent = name;
     document.getElementById("home-id").textContent = "ID revendedor #" + idBase;
 
-    var topName = document.getElementById("top-user-name");
-    var topRole = document.getElementById("top-user-role");
+    const topName = document.getElementById("top-user-name");
+    const topRole = document.getElementById("top-user-role");
     if (topName) topName.textContent = name;
     if (topRole) {
-      var baseRole = user && user.isAdmin ? "ADMIN · " : "REVENDEDOR · ";
+      const baseRole = isAdmin(user) ? "ADMIN · " : "REVENDEDOR · ";
       topRole.textContent = baseRole + String(type).toUpperCase();
     }
-    var topSub = document.getElementById("top-subtitle");
+
+    const topSub = document.getElementById("top-subtitle");
     if (topSub) {
-      topSub.textContent = "Sesión activa de " + (user.isAdmin ? "admin" : "revendedor") +
+      topSub.textContent = "Sesión activa de " + (isAdmin(user) ? "admin" : "revendedor") +
         " para " + name + ".";
     }
 
-    var avatarEl = document.getElementById("top-avatar");
+    const avatarEl = document.getElementById("top-avatar");
     if (avatarEl && name) {
       avatarEl.textContent = (name[0] || "K").toUpperCase();
     }
-    var homeStore = document.getElementById("home-store");
+    const homeStore = document.getElementById("home-store");
     if (homeStore) homeStore.textContent = store;
 
-    var wBtn = document.getElementById("home-whatsapp");
+    const wBtn = document.getElementById("home-whatsapp");
     if (wBtn) {
-      var msg = encodeURIComponent("Hola, soy " + name + " y quiero revisar mi panel de recargas.");
+      const msg = encodeURIComponent("Hola, soy " + name + " y quiero revisar mi panel de recargas.");
       wBtn.href = "https://wa.me/525648804810?text=" + msg;
     }
 
-    // Saldos demo
-    var saldo = 0;
-    var bonus = 0;
-    var saldoTxt = "$" + saldo.toFixed(2) + " MXN";
-    var bonusTxt = "$" + bonus.toFixed(2) + " MXN";
-    var homeSaldo = document.getElementById("home-saldo");
-    var homeBonus = document.getElementById("home-bonus");
-    var dashSaldo = document.getElementById("dash-saldo");
-    var dashBonus = document.getElementById("dash-bonus");
+    const saldo = 0;
+    const bonus = 0;
+    const saldoTxt = "$" + saldo.toFixed(2) + " MXN";
+    const bonusTxt = "$" + bonus.toFixed(2) + " MXN";
+
+    const homeSaldo = document.getElementById("home-saldo");
+    const homeBonus = document.getElementById("home-bonus");
+    const dashSaldo = document.getElementById("dash-saldo");
+    const dashBonus = document.getElementById("dash-bonus");
     if (homeSaldo) homeSaldo.textContent = saldoTxt;
     if (homeBonus) homeBonus.textContent = bonusTxt;
     if (dashSaldo) dashSaldo.textContent = saldoTxt;
     if (dashBonus) dashBonus.textContent = bonusTxt;
   }
 
-  document.addEventListener("DOMContentLoaded", function () {
-    var currentUser = findCurrentUser();
-    if (currentUser) {
-      applyUserToUI(currentUser);
-    } else {
-      // Si no hay usuario, podrías redirigir al login:
-      // window.location.href = "login.html";
+  async function crearTopupDesdePanel(currentUser) {
+    const amountEl = document.getElementById("topup-amount");
+    const bankEl   = document.getElementById("topup-bank");
+    const refEl    = document.getElementById("topup-ref");
+
+    if (!amountEl || !bankEl) {
+      alert("No se encontró el formulario de recarga.");
+      return;
     }
 
-    // Mostrar / ocultar menú admin
-    var adminMenu = document.getElementById("menu-admin");
-    if (adminMenu) {
-      if (currentUser && currentUser.isAdmin) {
-        adminMenu.style.display = "flex";
-      } else {
-        adminMenu.style.display = "none";
+    const amount = amountEl.value.trim();
+    const method = bankEl.value.trim() || "stori";
+    const reference = refEl ? refEl.value.trim() : "";
+
+    if (!currentUser || !currentUser.id) {
+      alert("No se encontró el usuario actual. Inicia sesión de nuevo.");
+      return;
+    }
+    if (!amount) {
+      alert("Escribe un monto para recargar.");
+      return;
+    }
+
+    try {
+      const res = await fetch(API_BASE + "/topups", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: currentUser.id,
+          amount_mxn: Number(amount),
+          method,
+          reference
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        console.error(data);
+        alert("Error creando la solicitud: " + (data.error || "intenta de nuevo"));
+        return;
       }
+
+      alert("Solicitud de saldo creada como PENDIENTE en el sistema.");
+    } catch (err) {
+      console.error(err);
+      alert("Error de conexión con el servidor.");
+    }
+  }
+
+  async function cargarTopupsAdmin() {
+    const bodyEl = document.getElementById("admin-topups-body");
+    if (!bodyEl) return;
+    bodyEl.innerHTML = `<tr><td colspan="6" class="muted">Cargando recargas...</td></tr>`;
+
+    try {
+      const res = await fetch(`${API_BASE}/admin/topups?adminKey=${encodeURIComponent(ADMIN_KEY)}&status=pendiente`);
+      const data = await res.json();
+      if (!res.ok) {
+        console.error(data);
+        bodyEl.innerHTML = `<tr><td colspan="6" class="muted">Error cargando recargas</td></tr>`;
+        return;
+      }
+
+      if (!data.length) {
+        bodyEl.innerHTML = `<tr><td colspan="6" class="muted">No hay recargas pendientes.</td></tr>`;
+        return;
+      }
+
+      bodyEl.innerHTML = "";
+      data.forEach((t) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${t.id}</td>
+          <td>${t.user_name || "-"}<br/><span class="muted">${t.user_email || ""}</span></td>
+          <td>$${t.amount_mxn}</td>
+          <td>${t.method}</td>
+          <td>${t.status}</td>
+          <td>
+            <button class="btn-sm" data-approve="${t.id}">Aprobar</button>
+            <button class="btn-secondary" data-reject="${t.id}">Rechazar</button>
+          </td>
+        `;
+        bodyEl.appendChild(tr);
+      });
+
+      bodyEl.onclick = async (e) => {
+        const approveId = e.target.getAttribute("data-approve");
+        const rejectId  = e.target.getAttribute("data-reject");
+        if (approveId) {
+          await actualizarTopupEstado(approveId, "aprobado");
+          cargarTopupsAdmin();
+        } else if (rejectId) {
+          await actualizarTopupEstado(rejectId, "rechazado");
+          cargarTopupsAdmin();
+        }
+      };
+    } catch (err) {
+      console.error(err);
+      bodyEl.innerHTML = `<tr><td colspan="6" class="muted">Error de conexión</td></tr>`;
+    }
+  }
+
+  async function actualizarTopupEstado(id, status) {
+    try {
+      const res = await fetch(
+        `${API_BASE}/admin/topups/${id}?adminKey=${encodeURIComponent(ADMIN_KEY)}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status })
+        }
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        console.error(data);
+        alert("Error actualizando estado.");
+        return;
+      }
+      alert(`Topup #${id} marcado como ${status.toUpperCase()}`);
+    } catch (err) {
+      console.error(err);
+      alert("Error de conexión al actualizar topup");
+    }
+  }
+
+  async function cargarUsuariosAdmin() {
+    const bodyEl = document.getElementById("admin-users-body");
+    if (!bodyEl) return;
+    bodyEl.innerHTML = `<tr><td colspan="4" class="muted">Cargando usuarios...</td></tr>`;
+
+    try {
+      const res = await fetch(`${API_BASE}/admin/users?adminKey=${encodeURIComponent(ADMIN_KEY)}`);
+      const data = await res.json();
+      if (!res.ok) {
+        console.error(data);
+        bodyEl.innerHTML = `<tr><td colspan="4" class="muted">Error cargando usuarios</td></tr>`;
+        return;
+      }
+
+      if (!data.length) {
+        bodyEl.innerHTML = `<tr><td colspan="4" class="muted">No hay usuarios registrados aún.</td></tr>`;
+        return;
+      }
+
+      bodyEl.innerHTML = "";
+      data.forEach((u) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${u.id}</td>
+          <td>${u.name || "-"}</td>
+          <td>${u.email || "-"}</td>
+          <td>${u.role || "revendedor"}</td>
+        `;
+        bodyEl.appendChild(tr);
+      });
+    } catch (err) {
+      console.error(err);
+      bodyEl.innerHTML = `<tr><td colspan="4" class="muted">Error de conexión</td></tr>`;
+    }
+  }
+
+  async function cargarProductosAdmin() {
+    const bodyEl = document.getElementById("admin-products-body");
+    if (!bodyEl) return;
+    bodyEl.innerHTML = `<tr><td colspan="5" class="muted">Cargando productos...</td></tr>`;
+
+    try {
+      const res = await fetch(`${API_BASE}/products`);
+      const data = await res.json();
+      if (!res.ok) {
+        console.error(data);
+        bodyEl.innerHTML = `<tr><td colspan="5" class="muted">Error cargando productos</td></tr>`;
+        return;
+      }
+
+      if (!data.length) {
+        bodyEl.innerHTML = `<tr><td colspan="5" class="muted">No hay productos activos.</td></tr>`;
+        return;
+      }
+
+      bodyEl.innerHTML = "";
+      data.forEach((p) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${p.id}</td>
+          <td>${p.name}</td>
+          <td>${p.category}${p.subcategory ? " / " + p.subcategory : ""}</td>
+          <td>$${p.price_mxn}</td>
+          <td><button class="btn-secondary" data-prod-off="${p.id}">Desactivar</button></td>
+        `;
+        bodyEl.appendChild(tr);
+      });
+
+      bodyEl.onclick = async (e) => {
+        const id = e.target.getAttribute("data-prod-off");
+        if (id) {
+          if (!confirm("¿Desactivar producto #" + id + "?")) return;
+          await desactivarProducto(id);
+          cargarProductosAdmin();
+        }
+      };
+    } catch (err) {
+      console.error(err);
+      bodyEl.innerHTML = `<tr><td colspan="5" class="muted">Error de conexión</td></tr>`;
+    }
+  }
+
+  async function desactivarProducto(id) {
+    try {
+      const res = await fetch(
+        `${API_BASE}/admin/products/${id}?adminKey=${encodeURIComponent(ADMIN_KEY)}`,
+        { method: "DELETE" }
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        console.error(data);
+        alert("Error desactivando producto");
+        return;
+      }
+      alert("Producto #" + id + " desactivado.");
+    } catch (err) {
+      console.error(err);
+      alert("Error de conexión al desactivar producto");
+    }
+  }
+
+  async function agregarProductoAdmin() {
+    const nameEl = document.getElementById("prod-name");
+    const priceEl = document.getElementById("prod-price");
+    const catEl = document.getElementById("prod-cat");
+    const subcatEl = document.getElementById("prod-subcat");
+
+    const name = nameEl.value.trim();
+    const price = priceEl.value.trim();
+    const category = catEl.value.trim() || "otro";
+    const subcategory = subcatEl.value.trim();
+
+    if (!name || !price) {
+      alert("Nombre y precio son obligatorios.");
+      return;
     }
 
-    // ---------- NAVEGACIÓN DEL PANEL ----------
-    var sections = {
+    try {
+      const res = await fetch(
+        `${API_BASE}/admin/products?adminKey=${encodeURIComponent(ADMIN_KEY)}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name,
+            category,
+            subcategory,
+            price_mxn: Number(price),
+            description: ""
+          })
+        }
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        console.error(data);
+        alert("Error agregando producto: " + (data.error || "intenta de nuevo"));
+        return;
+      }
+
+      alert("Producto agregado con éxito (ID " + data.id + ").");
+      nameEl.value = "";
+      priceEl.value = "";
+      catEl.value = "";
+      subcatEl.value = "";
+      cargarProductosAdmin();
+    } catch (err) {
+      console.error(err);
+      alert("Error de conexión al agregar producto.");
+    }
+  }
+
+  function loadOrdersLocal(currentUser) {
+    const tbody = document.getElementById("orders-body");
+    const sub   = document.getElementById("orders-count-sub");
+    if (!tbody) return;
+
+    let allOrders = [];
+    try {
+      const raw = localStorage.getItem("kaliventas_orders");
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) allOrders = parsed;
+      }
+    } catch (e) {}
+
+    const userEmail = currentUser && currentUser.email ? currentUser.email.toLowerCase() : null;
+    const orders = !userEmail ? allOrders : allOrders.filter(o => (o.email || "").toLowerCase() === userEmail);
+
+    tbody.innerHTML = "";
+    if (!orders.length) {
+      const tr = document.createElement("tr");
+      const td = document.createElement("td");
+      td.colSpan = 4;
+      td.className = "muted";
+      td.textContent = "Aún no hay compras guardadas en este dispositivo.";
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+    } else {
+      orders.forEach(o => {
+        const tr = document.createElement("tr");
+        const fecha = document.createElement("td");
+        fecha.textContent = o.date || "-";
+        const prod = document.createElement("td");
+        prod.textContent = o.product || "-";
+        const amt = document.createElement("td");
+        amt.textContent = o.amount || "-";
+        const st = document.createElement("td");
+        const span = document.createElement("span");
+        span.className = o.status === "aprobado" ? "badge-green" : "badge-yellow";
+        span.textContent = (o.status || "pendiente");
+        st.appendChild(span);
+
+        tr.appendChild(fecha);
+        tr.appendChild(prod);
+        tr.appendChild(amt);
+        tr.appendChild(st);
+        tbody.appendChild(tr);
+      });
+    }
+
+    if (sub) {
+      sub.textContent = orders.length + " compras en este dispositivo (ilustrativo).";
+    }
+
+    const homeCount = document.getElementById("home-orders-count");
+    if (homeCount) homeCount.textContent = orders.length + " compras";
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const currentUser = findCurrentUser();
+    if (!currentUser) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    applyUserToUI(currentUser);
+    loadOrdersLocal(currentUser);
+
+    const adminMenu = document.getElementById("menu-admin");
+    if (adminMenu) {
+      adminMenu.style.display = isAdmin(currentUser) ? "flex" : "none";
+    }
+
+    const sections = {
       inicio:      document.getElementById("section-inicio"),
       juegos:      document.getElementById("section-juegos"),
       streaming:   document.getElementById("section-streaming"),
@@ -1563,22 +1926,27 @@
     };
 
     function showSection(key) {
-      Object.keys(sections).forEach(function(k){
+      Object.keys(sections).forEach(k => {
         if (!sections[k]) return;
         sections[k].classList.toggle("active", k === key);
       });
-      var items = document.querySelectorAll(".menu-item");
-      items.forEach(function(item){
-        var sec = item.getAttribute("data-section");
+      document.querySelectorAll(".menu-item").forEach(item => {
+        const sec = item.getAttribute("data-section");
         item.classList.toggle("active", sec === key);
       });
+
+      if (key === "admin" && isAdmin(currentUser)) {
+        cargarTopupsAdmin();
+        cargarUsuariosAdmin();
+        cargarProductosAdmin();
+      }
     }
 
-    document.querySelectorAll(".menu-item").forEach(function(item){
-      item.addEventListener("click", function(){
-        var sec = item.getAttribute("data-section");
+    document.querySelectorAll(".menu-item").forEach(item => {
+      item.addEventListener("click", function () {
+        const sec = item.getAttribute("data-section");
         if (!sec) return;
-        if (sec === "admin" && !(currentUser && currentUser.isAdmin)) {
+        if (sec === "admin" && !isAdmin(currentUser)) {
           alert("Esta sección solo está disponible para cuentas admin.");
           return;
         }
@@ -1586,10 +1954,10 @@
       });
     });
 
-    document.querySelectorAll("[data-goto]").forEach(function(el){
-      el.addEventListener("click", function(){
-        var target = el.getAttribute("data-goto");
-        if (target === "admin" && !(currentUser && currentUser.isAdmin)) {
+    document.querySelectorAll("[data-goto]").forEach(el => {
+      el.addEventListener("click", function () {
+        const target = el.getAttribute("data-goto");
+        if (target === "admin" && !isAdmin(currentUser)) {
           alert("Esta sección solo está disponible para cuentas admin.");
           return;
         }
@@ -1597,28 +1965,28 @@
       });
     });
 
-    // ---------- RECARGA INTERNACIONAL TABS ----------
-    var intlTabs = document.querySelectorAll("[data-intl-tab]");
-    intlTabs.forEach(function(tab){
-      tab.addEventListener("click", function(){
-        intlTabs.forEach(function(t){ t.classList.remove("active"); });
+    const intlTabs = document.querySelectorAll("[data-intl-tab]");
+    intlTabs.forEach(tab => {
+      tab.addEventListener("click", function () {
+        intlTabs.forEach(t => t.classList.remove("active"));
         tab.classList.add("active");
-        var key = tab.getAttribute("data-intl-tab");
-        document.getElementById("intl-deposit").style.display = (key==="deposit"?"block":"none");
-        document.getElementById("intl-withdraw").style.display = (key==="withdraw"?"block":"none");
+        const key = tab.getAttribute("data-intl-tab");
+        document.getElementById("intl-deposit").style.display = key === "deposit" ? "block" : "none";
+        document.getElementById("intl-withdraw").style.display = key === "withdraw" ? "block" : "none";
       });
     });
 
-    // ---------- BOTÓN WHATSAPP COMPROBANTE ----------
-    var btnTopup = document.getElementById("btn-topup-whatsapp");
+    const btnTopup = document.getElementById("btn-topup-whatsapp");
     if (btnTopup) {
-      btnTopup.addEventListener("click", function(){
-        var amount = document.getElementById("topup-amount").value.trim();
-        var bank   = document.getElementById("topup-bank").value.trim();
-        var ref    = document.getElementById("topup-ref").value.trim();
-        var name   = currentUser && currentUser.name ? currentUser.name : "Revendedor";
+      btnTopup.addEventListener("click", function () {
+        crearTopupDesdePanel(currentUser);
 
-        var msg = "Hola, soy " + name +
+        const amount = document.getElementById("topup-amount").value.trim();
+        const bank   = document.getElementById("topup-bank").value.trim();
+        const ref    = document.getElementById("topup-ref").value.trim();
+        const name   = currentUser && currentUser.name ? currentUser.name : "Revendedor";
+
+        const msg = "Hola, soy " + name +
           "%0AQuiero recargar saldo en KaliVentas.%0A%0A" +
           "Monto: " + (amount || "N/D") + " MXN%0A" +
           "Método: " + (bank || "N/D") + "%0A" +
@@ -1628,69 +1996,16 @@
       });
     }
 
-    // ---------- DEMO DE GUARDAR UNA COMPRA LOCAL ----------
-    // si quieres probar, puedes hacer desde consola:
-    // localStorage.setItem("kaliventas_orders", JSON.stringify([...]))
-    function loadOrders() {
-      var tbody = document.getElementById("orders-body");
-      var sub   = document.getElementById("orders-count-sub");
-      if (!tbody) return;
-
-      var allOrders = [];
-      try {
-        var raw = localStorage.getItem("kaliventas_orders");
-        if (raw) {
-          var parsed = JSON.parse(raw);
-          if (Array.isArray(parsed)) allOrders = parsed;
+    const btnAddProduct = document.getElementById("btn-add-product");
+    if (btnAddProduct) {
+      btnAddProduct.addEventListener("click", function () {
+        if (!isAdmin(currentUser)) {
+          alert("Solo un admin puede agregar productos.");
+          return;
         }
-      } catch (e) {}
-
-      var userEmail = currentUser && currentUser.email ? currentUser.email.toLowerCase() : null;
-      var orders = !userEmail ? allOrders : allOrders.filter(function(o){
-        return (o.email || "").toLowerCase() === userEmail;
+        agregarProductoAdmin();
       });
-
-      tbody.innerHTML = "";
-      if (!orders.length) {
-        var tr = document.createElement("tr");
-        var td = document.createElement("td");
-        td.colSpan = 4;
-        td.className = "muted";
-        td.textContent = "Aún no hay compras guardadas en este dispositivo.";
-        tr.appendChild(td);
-        tbody.appendChild(tr);
-      } else {
-        orders.forEach(function(o){
-          var tr = document.createElement("tr");
-          var fecha = document.createElement("td");
-          fecha.textContent = o.date || "-";
-          var prod = document.createElement("td");
-          prod.textContent = o.product || "-";
-          var amt = document.createElement("td");
-          amt.textContent = o.amount || "-";
-          var st = document.createElement("td");
-          var span = document.createElement("span");
-          span.className = o.status === "aprobado" ? "badge-green" : "badge-yellow";
-          span.textContent = (o.status || "pendiente");
-          st.appendChild(span);
-
-          tr.appendChild(fecha);
-          tr.appendChild(prod);
-          tr.appendChild(amt);
-          tr.appendChild(st);
-          tbody.appendChild(tr);
-        });
-      }
-
-      if (sub) {
-        sub.textContent = orders.length + " compras en este dispositivo (ilustrativo).";
-      }
-
-      var homeCount = document.getElementById("home-orders-count");
-      if (homeCount) homeCount.textContent = orders.length + " compras";
     }
-
-    loadOrders();
   });
 </script>
 </body>

@@ -116,7 +116,7 @@
     <h1>Crea tu cuenta de revendedor</h1>
     <p class="subtitle">
       Usa datos reales para que tu panel se vea con tu nombre, tienda y WhatsApp.
-      Todo se guarda en este navegador y se usa para mostrar tu información en el panel.
+      Esta información se guardará en el servidor (API) y se usará en tu panel.
     </p>
 
     <form id="register-form">
@@ -145,19 +145,19 @@
         <select id="reg-type">
           <option value="Gamer">Gamer</option>
           <option value="Streamer">Streamer</option>
-          <option value="Revendedor">Revendedor</option>
+          <option value="Revendedor" selected>Revendedor</option>
           <option value="Otro">Otro</option>
         </select>
       </label>
 
       <label>
-        Código admin (opcional)
-        <input type="password" id="reg-admin-code" placeholder="Solo tú lo conoces" />
+        Contraseña (simple, demo)
+        <input type="password" id="reg-pass" placeholder="Opcional por ahora" />
       </label>
 
       <p class="help">
-        Si escribes el código correcto de administrador, tu cuenta tendrá acceso
-        al panel de <strong>Admin</strong> (gestión interna). Nadie más verá ese apartado.
+        Si el correo coincide con el configurado como <strong>ADMIN</strong> en la API,
+        esa cuenta tendrá acceso al panel de administración.
       </p>
 
       <button type="submit" class="btn">Crear cuenta y entrar al panel</button>
@@ -170,81 +170,56 @@
   </div>
 
   <script>
+    // ✅ API REAL EN RENDER
+    const API_BASE = "https://kaliventas-api.onrender.com/api";
+
     document.addEventListener("DOMContentLoaded", function () {
-      var form = document.getElementById("register-form");
+      const form = document.getElementById("register-form");
 
-      // 👉 CAMBIA ESTE CÓDIGO SI QUIERES OTRO
-      var ADMIN_SECRET = "KALI-ADMIN-777";
-
-      function getUsers() {
-        try {
-          var raw = localStorage.getItem("kaliventas_users");
-          if (!raw) return [];
-          var parsed = JSON.parse(raw);
-          return Array.isArray(parsed) ? parsed : [];
-        } catch (e) {
-          return [];
-        }
-      }
-
-      function saveUsers(arr) {
-        localStorage.setItem("kaliventas_users", JSON.stringify(arr || []));
-      }
-
-      form.addEventListener("submit", function (e) {
+      form.addEventListener("submit", async function (e) {
         e.preventDefault();
 
-        var name  = document.getElementById("reg-name").value.trim();
-        var email = document.getElementById("reg-email").value.trim().toLowerCase();
-        var phone = document.getElementById("reg-phone").value.trim();
-        var store = document.getElementById("reg-store").value.trim();
-        var type  = document.getElementById("reg-type").value;
-        var adminCode = document.getElementById("reg-admin-code").value.trim();
+        const name  = document.getElementById("reg-name").value.trim();
+        const email = document.getElementById("reg-email").value.trim().toLowerCase();
+        const phone = document.getElementById("reg-phone").value.trim();
+        const store = document.getElementById("reg-store").value.trim();
+        const type  = document.getElementById("reg-type").value;
+        const password = document.getElementById("reg-pass").value.trim();
 
-        if (!name || !email || !phone) {
-          alert("Por favor llena al menos nombre, correo y WhatsApp.");
+        if (!name || !email) {
+          alert("Nombre y correo son obligatorios.");
           return;
         }
 
-        var users = getUsers();
-        var existingIndex = -1;
-        for (var i = 0; i < users.length; i++) {
-          if ((users[i].email || "").toLowerCase() === email) {
-            existingIndex = i;
-            break;
-          }
-        }
-
-        var wantsAdmin = adminCode && adminCode === ADMIN_SECRET;
-        var now = new Date().toISOString();
-
-        if (existingIndex >= 0) {
-          var u = users[existingIndex];
-          u.name  = name;
-          u.phone = phone;
-          u.store = store;
-          u.type  = type;
-          if (adminCode) {
-            u.isAdmin = wantsAdmin;
-          }
-          u.updatedAt = now;
-        } else {
-          var newId = Date.now();
-          users.push({
-            id: newId,
-            name: name,
-            email: email,
-            phone: phone,
-            store: store,
-            type: type,
-            isAdmin: wantsAdmin,
-            createdAt: now
+        try {
+          const res = await fetch(API_BASE + "/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name,
+              email,
+              phone,
+              storeName: store,
+              password,
+              type
+            })
           });
-        }
 
-        saveUsers(users);
-        localStorage.setItem("kaliventas_current_user_email", email);
-        window.location.href = "panel.html";
+          const data = await res.json();
+          if (!res.ok) {
+            console.error(data);
+            alert("Error al registrar: " + (data.error || "intenta de nuevo"));
+            return;
+          }
+
+          localStorage.setItem("kaliventas_current_user", JSON.stringify(data));
+          localStorage.setItem("kaliventas_current_user_email", data.email);
+
+          window.location.href = "panel.html";
+        } catch (err) {
+          console.error(err);
+          alert("Error de conexión con el servidor.");
+        }
       });
     });
   </script>

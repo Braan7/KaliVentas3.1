@@ -53,41 +53,18 @@
       font-weight:700;
       box-shadow:0 0 16px rgba(56,189,248,.8);
     }
-    .logo-text{
-      display:flex;
-      flex-direction:column;
-      line-height:1.1;
-    }
+    .logo-text{display:flex;flex-direction:column;line-height:1.1;}
     .logo-title{
       font-size:.9rem;
       font-weight:700;
       text-transform:uppercase;
       letter-spacing:.12em;
     }
-    .logo-sub{
-      font-size:.75rem;
-      color:var(--muted);
-    }
-    h1{
-      font-size:1.1rem;
-      margin-bottom:.2rem;
-    }
-    .subtitle{
-      font-size:.8rem;
-      color:var(--muted);
-      margin-bottom:.9rem;
-    }
-    form{
-      display:flex;
-      flex-direction:column;
-      gap:.6rem;
-    }
-    label{
-      font-size:.78rem;
-      display:flex;
-      flex-direction:column;
-      gap:.18rem;
-    }
+    .logo-sub{font-size:.75rem;color:var(--muted);}
+    h1{font-size:1.1rem;margin-bottom:.2rem;}
+    .subtitle{font-size:.8rem;color:var(--muted);margin-bottom:.9rem;}
+    form{display:flex;flex-direction:column;gap:.6rem;}
+    label{font-size:.78rem;display:flex;flex-direction:column;gap:.18rem;}
     input{
       width:100%;
       border-radius:var(--radius-pill);
@@ -115,19 +92,14 @@
       color:#ecfeff;
       box-shadow:0 0 0 1px rgba(56,189,248,.7),0 0 18px rgba(56,189,248,.7);
     }
-    .btn:hover{
-      filter:brightness(1.05);
-    }
+    .btn:hover{filter:brightness(1.05);}
     .footer{
       margin-top:.85rem;
       font-size:.78rem;
       color:var(--muted);
       text-align:center;
     }
-    .footer a{
-      color:#38bdf8;
-      text-decoration:none;
-    }
+    .footer a{color:#38bdf8;text-decoration:none;}
     .error{
       font-size:.75rem;
       color:#fecaca;
@@ -148,8 +120,7 @@
 
     <h1>Inicia sesión en tu panel</h1>
     <p class="subtitle">
-      Entra con el correo que usaste al registrarte como revendedor. Si todavía no tienes
-      cuenta, primero regístrate.
+      Entra con el correo que usaste al registrarte. Si todavía no tienes cuenta, primero regístrate.
     </p>
 
     <form id="login-form">
@@ -158,8 +129,13 @@
         <input type="email" id="login-email" required placeholder="tucorreo@ejemplo.com" />
       </label>
 
+      <label>
+        Contraseña (si la configuraste)
+        <input type="password" id="login-pass" placeholder="Opcional por ahora" />
+      </label>
+
       <span id="login-error" class="error">
-        No encontramos una cuenta con ese correo. Revisa que esté bien escrito o regístrate primero.
+        Error al iniciar sesión.
       </span>
 
       <button type="submit" class="btn">Entrar al panel</button>
@@ -172,50 +148,50 @@
   </div>
 
   <script>
+    // ✅ API REAL EN RENDER
+    const API_BASE = "https://kaliventas-api.onrender.com/api";
+
     document.addEventListener("DOMContentLoaded", function () {
-      var form  = document.getElementById("login-form");
-      var error = document.getElementById("login-error");
+      const form  = document.getElementById("login-form");
+      const error = document.getElementById("login-error");
 
-      function getUsers() {
-        try {
-          var raw = localStorage.getItem("kaliventas_users");
-          if (!raw) return [];
-          var parsed = JSON.parse(raw);
-          return Array.isArray(parsed) ? parsed : [];
-        } catch (e) {
-          return [];
-        }
-      }
-
-      form.addEventListener("submit", function (e) {
+      form.addEventListener("submit", async function (e) {
         e.preventDefault();
         error.style.display = "none";
 
-        var email = document.getElementById("login-email").value.trim().toLowerCase();
+        const email = document.getElementById("login-email").value.trim().toLowerCase();
+        const password = document.getElementById("login-pass").value.trim();
+
         if (!email) {
-          error.textContent = "Escribe tu correo para continuar.";
+          error.textContent = "Escribe tu correo.";
           error.style.display = "block";
           return;
         }
 
-        var users = getUsers();
-        var found = null;
-        for (var i = 0; i < users.length; i++) {
-          if ((users[i].email || "").toLowerCase() === email) {
-            found = users[i];
-            break;
+        try {
+          const res = await fetch(API_BASE + "/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+          });
+
+          const data = await res.json();
+          if (!res.ok) {
+            console.error(data);
+            error.textContent = data.error || "Error al iniciar sesión.";
+            error.style.display = "block";
+            return;
           }
-        }
 
-        if (!found) {
-          error.textContent = "No encontramos una cuenta con ese correo. Regístrate primero.";
+          localStorage.setItem("kaliventas_current_user", JSON.stringify(data));
+          localStorage.setItem("kaliventas_current_user_email", data.email);
+
+          window.location.href = "panel.html";
+        } catch (err) {
+          console.error(err);
+          error.textContent = "Error de conexión con el servidor.";
           error.style.display = "block";
-          return;
         }
-
-        // guardar sesión actual y entrar al panel
-        localStorage.setItem("kaliventas_current_user_email", email);
-        window.location.href = "panel.html";
       });
     });
   </script>
